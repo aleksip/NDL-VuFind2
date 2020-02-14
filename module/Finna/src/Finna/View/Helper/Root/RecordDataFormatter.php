@@ -30,6 +30,9 @@
  */
 namespace Finna\View\Helper\Root;
 
+use Finna\View\Helper\Root\RecordDataFormatter\FieldGroupBuilder;
+use VuFind\RecordDriver\AbstractBase as RecordDriver;
+
 /**
  * Record driver data formatting view helper
  *
@@ -216,5 +219,62 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
             : $this->filterEAD3Fields($coreFields);
 
         return $coreFields;
+    }
+
+    /**
+     * Get a spec of field groups.
+     *
+     * @param array $groups Array specifying the groups.
+     * @param array $lines  All lines used in the groups.
+     *
+     * @return array
+     */
+    public function getGroupedFields($groups, $lines)
+    {
+        $fieldGroups = new FieldGroupBuilder();
+        foreach ($groups as $key => $spec) {
+            $groupLines
+                = array_intersect_key($lines, array_flip($spec['lines'])) ?? [];
+            $template = $spec['template'] ?? 'core-fields.phtml';
+            $options = $spec['options'] ?? [];
+            $fieldGroups->setGroup($key, $groupLines, $template, $options);
+        }
+        return $fieldGroups->getArray();
+    }
+
+    /**
+     * Create formatted key/value data based on a record driver and grouped
+     * field spec.
+     *
+     * @param RecordDriver $driver      Record driver object.
+     * @param array        $groupedSpec Grouped formatting specification.
+     *
+     * @return array
+     */
+    public function getGroupedData(RecordDriver $driver, array $groupedSpec)
+    {
+        // Apply the group spec.
+        $result = [];
+        foreach ($groupedSpec as $key => $options) {
+            $spec = $options['spec'];
+            $data = $this->getData($driver, $spec);
+            // Render the fields in the group as the value for the group.
+            try {
+                $value = $this->renderRecordDriverTemplate(
+                    $driver, $data, ['template' => $options['template']]
+                );
+            } catch (\Exception $e) {
+                $value = '';
+            }
+            $result[] = [
+                'label' => $key,
+                'value' => $value,
+                'context' => $options['context'],
+                'pos' => $options['pos'],
+            ];
+        }
+        // Sort the result.
+        usort($result, [$this, 'sortCallback']);
+        return $result;
     }
 }
