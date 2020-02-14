@@ -226,13 +226,17 @@
       <?php
         $this->record($this->driver)->setRenderedUrls($renderedURLs);
         $formatter = $this->recordDataFormatter();
-        $coreFields = $formatter->getData(
-            $driver, $formatter->filterForwardFields($formatter->getDefaults('core'))
-        );
+        $coreFields = $formatter->filterForwardFields($formatter->getDefaults('core'));
+        $coreFieldGroups = $formatter->getGroupedData($driver, $formatter->getGroupedFields([
+            'Actors' => ['lines' => ['Actors']],
+            'Authors' => ['lines' => ['Secondary Authors']],
+            'Production' => ['lines' => ['Other Titles', 'Production', 'Publish date']],
+            'Distribution' => ['lines' => ['Distribution', 'Premiere Night', 'Other Screenings']],
+        ], $coreFields));
       ?>
-      <?php if (!empty($coreFields)): ?>
+      <?php if (!empty($coreFieldGroups)): ?>
         <table class="table table-finna-record record-details record-details-more">
-          <?=$this->record($this->driver)->renderTemplate('core-fields.phtml', ['coreFields' => $coreFields]);?>
+          <?=$this->record($this->driver)->renderTemplate('core-field-groups.phtml', ['data' => $coreFieldGroups]);?>
         </table>
       <?php endif; ?>
       <button class="btn show-details-button hidden"><?=$this->transEsc('show_more_details');?> <i class="fa fa-arrow-down"></i></button>
