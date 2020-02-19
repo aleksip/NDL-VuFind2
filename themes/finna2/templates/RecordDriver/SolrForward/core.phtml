@@ -227,15 +227,25 @@
         $this->record($this->driver)->setRenderedUrls($renderedURLs);
         $formatter = $this->recordDataFormatter();
         $coreFields = $formatter->filterForwardFields($formatter->getDefaults('core'));
+        $coreFields['Distribution']['context']['title'] = 'Distributor';
+        $coreFields['Description FWD']['context']['title'] = '';
         $coreFieldGroups = $formatter->getGroupedData($driver, $formatter->getGroupedFields([
-            'Actors' => ['lines' => ['Actors']],
-            'Authors' => ['lines' => ['Secondary Authors']],
-            'Production' => ['lines' => ['Other Titles', 'Production', 'Publish date']],
-            'Distribution' => ['lines' => ['Distribution', 'Premiere Night', 'Other Screenings']],
+            ['lines' => ['Genre', 'Age Limit', 'Actors', 'Secondary Authors']],
+            ['label' => 'Production Information',
+              'lines' => ['Other Titles', 'Production', 'Published']],
+            ['label' => 'Distribution Information',
+              'lines' => ['Distribution', 'Premiere Night', 'Premiere Theaters',
+              'Film Copies', 'Other Screenings', 'Broadcasting Dates']],
+            ['label' => 'Description FWD',
+              'lines' => ['Description FWD', 'Subjects']],
+            ['lines' => ['Press Reviews', 'Item Description FWD', 'Music']],
+            ['label' => 'Rating Data / Technical Data',
+              'lines' => ['Inspection Details', 'Color', 'Sound', 'Aspect Ratio', 'Playing Time']],
+            ['lines' => ['Access']]
         ], $coreFields));
       ?>
       <?php if (!empty($coreFieldGroups)): ?>
-        <table class="table table-finna-record record-details record-details-more">
+        <table class="table table-finna-record record-details record-details-more record-field-groups">
           <?=$this->record($this->driver)->renderTemplate('core-field-groups.phtml', ['data' => $coreFieldGroups]);?>
         </table>
       <?php endif; ?>
