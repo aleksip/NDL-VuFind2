@@ -224,21 +224,31 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
     /**
      * Get a spec of field groups.
      *
-     * @param array $groups Array specifying the groups.
-     * @param array $lines  All lines used in the groups.
+     * @param array  $groups        Array specifying the groups.
+     * @param array  $lines         All lines used in the groups.
+     * @param string $template      Default group template to use if not
+     *                              specified (optional).
+     * @param array  $options       Additional options to use if not specified
+     *                              for a group (optional).
+     * @param int    $unused        What to do to unused lines (optional).
+     * @param array  $unusedOptions Additional options for unused lines
+     *                              (optional).
      *
      * @return array
      */
-    public function getGroupedFields($groups, $lines)
-    {
+    public function getGroupedFields($groups, &$lines, $template = null,
+        $options = null, $unused = FieldGroupBuilder::UNUSED_SET_LAST,
+        $unusedOptions = []
+    ) {
+        $template = $template ?? 'core-field-group-fields.phtml';
+        $options = $options ?? ['order' => 'array'];
+        $options['context']['class']
+            = $options['context']['class'] ?? 'record-field-group';
+        $unusedOptions = $unusedOptions ?? $options;
         $fieldGroups = new FieldGroupBuilder();
-        foreach ($groups as $key => $spec) {
-            $groupLines
-                = array_intersect_key($lines, array_flip($spec['lines'])) ?? [];
-            $template = $spec['template'] ?? 'core-fields.phtml';
-            $options = $spec['options'] ?? [];
-            $fieldGroups->setGroup($key, $groupLines, $template, $options);
-        }
+        $fieldGroups->setGroups(
+            $groups, $lines, $template, $options, $unused, $unusedOptions
+        );
         return $fieldGroups->getArray();
     }
 
@@ -246,31 +256,31 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
      * Create formatted key/value data based on a record driver and grouped
      * field spec.
      *
-     * @param RecordDriver $driver      Record driver object.
-     * @param array        $groupedSpec Grouped formatting specification.
+     * @param RecordDriver $driver Record driver object.
+     * @param array        $groups Grouped formatting specification.
      *
      * @return array
      */
-    public function getGroupedData(RecordDriver $driver, array $groupedSpec)
+    public function getGroupedData(RecordDriver $driver, array $groups)
     {
         // Apply the group spec.
         $result = [];
-        foreach ($groupedSpec as $key => $options) {
-            $spec = $options['spec'];
-            $data = $this->getData($driver, $spec);
+        foreach ($groups as $group) {
+            $lines = $group['lines'];
+            $data = $this->getData($driver, $lines);
             // Render the fields in the group as the value for the group.
             try {
                 $value = $this->renderRecordDriverTemplate(
-                    $driver, $data, ['template' => $options['template']]
+                    $driver, $data, ['template' => $group['template']]
                 );
             } catch (\Exception $e) {
                 $value = '';
             }
             $result[] = [
-                'label' => $key,
+                'label' => $group['label'],
                 'value' => $value,
-                'context' => $options['context'],
-                'pos' => $options['pos'],
+                'context' => $group['context'],
+                'pos' => $group['pos'],
             ];
         }
         // Sort the result.

@@ -1,15 +1,23 @@
 <!-- START of: finna - RecordDriver/DefaultRecord/core-field-groups.phtml -->
-<?php foreach ($data as $key => $current): ?>
+<?php foreach ($data as $current): ?>
   <?php $header = $this->transEsc($current['context']['title'] ?? $current['label']); ?>
   <?php if ($header): ?>
     <?php if ($class = $current['context']['class'] ?? null): ?>
-      <tr class="<?=$this->escapeHtmlAttr($class)?>">
+      <tbody class="<?=$this->escapeHtmlAttr($class)?>">
     <?php else: ?>
-      <tr>
+      <tbody>
     <?php endif; ?>
-        <th colspan="2"><?=$header?></th>
-      </tr>
-      <?=$current['value']?>
+        <tr>
+          <th><?=$header?></th>
+        </tr>
+        <tr>
+          <td>
+            <table>
+              <?=$current['value']?>
+            </table>
+          </td>
+        </tr>
+      </tbody>
   <?php else: ?>
     <?=$current['value']?>
   <?php endif; ?>

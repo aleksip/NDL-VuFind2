@@ -223,6 +223,26 @@ table.content-table {
 .table.citation {
   table-layout: fixed;
 }
+.table.record-field-groups {
+  > tbody > tr > td {
+    @media (min-width: @screen-sm-min) {
+      padding-left: 80px;
+    }
+    > table {
+      > thead,
+      > tbody,
+      > tfoot {
+        > tr {
+          > th,
+          > td {
+            padding: @table-finna-record-cell-padding;
+            word-wrap: break-word;
+          }
+        }
+      }
+    }
+  }
+}
 
 table#componentparts {
   & th {
