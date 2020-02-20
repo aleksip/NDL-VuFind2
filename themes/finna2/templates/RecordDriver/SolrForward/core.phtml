@@ -230,18 +230,18 @@
         $coreFields['Distribution']['context']['title'] = 'Distributor';
         $coreFields['Description FWD']['context']['title'] = '';
         $coreFieldGroups = $formatter->getGroupedData($driver, $formatter->getGroupedFields([
-            ['lines' => ['Genre', 'Age Limit', 'Actors', 'Secondary Authors']],
-            ['label' => 'Production Information',
-              'lines' => ['Other Titles', 'Production', 'Published']],
-            ['label' => 'Distribution Information',
-              'lines' => ['Distribution', 'Premiere Night', 'Premiere Theaters',
-              'Film Copies', 'Other Screenings', 'Broadcasting Dates']],
-            ['label' => 'Description FWD',
-              'lines' => ['Description FWD', 'Subjects']],
-            ['lines' => ['Press Reviews', 'Item Description FWD', 'Music']],
-            ['label' => 'Rating Data / Technical Data',
-              'lines' => ['Inspection Details', 'Color', 'Sound', 'Aspect Ratio', 'Playing Time']],
-            ['lines' => ['Access']]
+          ['lines' => ['Genre', 'Age Limit', 'Actors', 'Secondary Authors']],
+          ['label' => 'Production Information',
+            'lines' => ['Other Titles', 'Production', 'Published']],
+          ['label' => 'Distribution Information',
+            'lines' => ['Distribution', 'Premiere Night', 'Premiere Theaters',
+            'Film Copies', 'Other Screenings', 'Broadcasting Dates']],
+          ['label' => 'Description FWD',
+            'lines' => ['Description FWD', 'Subjects']],
+          ['lines' => ['Press Reviews', 'Item Description FWD', 'Music']],
+          ['label' => 'Rating Data / Technical Data',
+            'lines' => ['Inspection Details', 'Color', 'Sound', 'Aspect Ratio', 'Playing Time']],
+          ['lines' => ['Access']]
         ], $coreFields));
       ?>
       <?php if (!empty($coreFieldGroups)): ?>

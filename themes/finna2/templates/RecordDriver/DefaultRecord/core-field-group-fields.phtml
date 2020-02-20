@@ -7,15 +7,15 @@
   <?php endif; ?>
   <?php $header = $this->transEsc($current['context']['title'] ?? $current['label']); ?>
   <?php if ($header): ?>
-      <tr>
-        <th><?=$header?></th>
-      </tr>
+    <tr>
+      <th><?=$header?></th>
+    </tr>
   <?php endif; ?>
-      <tr>
-        <td>
-          <?=$current['value']?>
-        </td>
-      </tr>
-    </tbody>
+    <tr>
+      <td>
+        <?=$current['value']?>
+      </td>
+    </tr>
+  </tbody>
 <?php endforeach; ?>
 <!-- END of: finna - RecordDriver/DefaultRecord/core-field-group-fields.phtml -->
