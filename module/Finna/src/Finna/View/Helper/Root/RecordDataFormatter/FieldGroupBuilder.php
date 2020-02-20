@@ -115,6 +115,9 @@ class FieldGroupBuilder
     /**
      * Convenience method for setting multiple groups at once.
      *
+     * The $lines array is passed as a reference and may be modified depending
+     * on the value of $unused (see FieldGroupBuilder::UNUSED_REMOVE_USED).
+     *
      * @param array  $groups        Array specifying the groups.
      * @param array  $lines         All lines used in the groups.
      * @param string $template      Default group template to use if not
