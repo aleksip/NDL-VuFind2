@@ -235,12 +235,11 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
      *
      * @return array
      */
-    public function getGroupedFields($groups, &$lines, $template = null,
-        $options = null, $unused = FieldGroupBuilder::UNUSED_SET_LAST,
-        $unusedOptions = []
+    public function getGroupedFields($groups, &$lines,
+        $template = 'core-field-group-fields.phtml',
+        $options = ['order' => 'array'],
+        $unused = FieldGroupBuilder::UNUSED_SET_LAST, $unusedOptions = null
     ) {
-        $template = $template ?? 'core-field-group-fields.phtml';
-        $options = $options ?? ['order' => 'array'];
         $options['context']['class']
             = $options['context']['class'] ?? 'record-field-group';
         $unusedOptions = $unusedOptions ?? $options;
