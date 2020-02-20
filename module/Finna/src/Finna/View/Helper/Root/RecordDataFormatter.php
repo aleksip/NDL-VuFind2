@@ -240,8 +240,16 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
         $options = ['order' => 'array'],
         $unused = FieldGroupBuilder::UNUSED_SET_LAST, $unusedOptions = null
     ) {
-        $options['context']['class']
-            = $options['context']['class'] ?? 'record-field-group';
+        foreach ($groups as $i => &$group) {
+            if (!isset($group['options']['context']['class'])) {
+                $groupClass = $group['label'] ?? $i;
+                $groupClass = preg_replace(
+                    '/[^A-Za-z0-9_-]/', '', $groupClass
+                );
+                $group['options']['context']['class']
+                    = 'record-field-group fieldGroup' . $groupClass;
+            }
+        }
         $unusedOptions = $unusedOptions ?? $options;
         $fieldGroups = new FieldGroupBuilder();
         $fieldGroups->setGroups(
