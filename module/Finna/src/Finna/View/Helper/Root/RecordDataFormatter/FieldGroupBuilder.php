@@ -79,7 +79,7 @@ class FieldGroupBuilder
      */
     public function __construct($groups = [])
     {
-        $this->groups = is_array($groups) ? $groups : [];
+        $this->groups = $groups;
         foreach ($groups as $current) {
             if (isset($current['pos']) && $current['pos'] > $this->maxPos) {
                 $this->maxPos = $current['pos'];
