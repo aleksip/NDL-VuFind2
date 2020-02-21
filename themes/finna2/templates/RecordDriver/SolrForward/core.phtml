@@ -232,15 +232,19 @@
         $coreFieldGroups = $formatter->getGroupedData($driver, $formatter->getGroupedFields([
           ['lines' => ['Genre', 'Age Limit', 'Actors', 'Secondary Authors']],
           ['label' => 'Production Information',
-            'lines' => ['Other Titles', 'Production', 'Production Costs', 'Published']],
+            'lines' => ['Other Titles', 'Production', 'Production Costs', 'Published'],
+            'options' => ['context' => ['class' => 'fieldGroupProduction']]],
           ['label' => 'Distribution Information',
             'lines' => ['Distribution', 'Premiere Night', 'Premiere Theaters',
-            'Film Copies', 'Other Screenings', 'Broadcasting Dates']],
+              'Film Copies', 'Other Screenings', 'Broadcasting Dates'],
+            'options' => ['context' => ['class' => 'fieldGroupDistribution']]],
           ['label' => 'Description FWD',
-            'lines' => ['Description FWD', 'Subjects']],
+            'lines' => ['Description FWD', 'Subjects'],
+            'options' => ['context' => ['class' => 'fieldGroupContentDescription']]],
           ['lines' => ['Press Reviews', 'Item Description FWD', 'Music']],
           ['label' => 'Rating Data / Technical Data',
-            'lines' => ['Inspection Details', 'Color', 'Sound', 'Aspect Ratio', 'Playing Time']],
+            'lines' => ['Inspection Details', 'Color', 'Sound', 'Aspect Ratio', 'Playing Time'],
+            'options' => ['context' => ['class' => 'fieldGroupRatingTechnicalData']]],
           ['lines' => ['Access']]
         ], $coreFields));
       ?>
