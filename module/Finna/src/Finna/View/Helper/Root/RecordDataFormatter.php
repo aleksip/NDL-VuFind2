@@ -243,6 +243,12 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
         $options = ['order' => 'array'],
         $unused = FieldGroupBuilder::UNUSED_SET_LAST, $unusedOptions = null
     ) {
+        // Default to array order if not specified.
+        // Set ['options']['order'] = 'pos' to use existing line 'pos' values.
+        $order = $options['order'] ?? 'array';
+        foreach ($groups as &$group) {
+            $group['options']['order'] = $group['options']['order'] ?? $order;
+        }
         $unusedOptions = $unusedOptions ?? $options;
         $fieldGroups = new FieldGroupBuilder();
         $fieldGroups->setGroups(
