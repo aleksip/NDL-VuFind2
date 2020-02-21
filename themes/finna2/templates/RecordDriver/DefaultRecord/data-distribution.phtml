@@ -11,7 +11,7 @@
           $additional[] = $this->escapeHtml($item['date']);
         }
       ?>
-      <?=$index > 0 ? '<br/>' : '' ?><?=$this->escapeHtml($item['name']) ?><?php if (!empty($additional)): ?>, <?=implode(' ', $additional) ?><?php endif; ?>
+      <?=$index > 0 ? '<br/>' : '' ?><?=$this->record($this->driver)->getAuthorityLinkElement('author', $item['name'], $item, ['role' => true, 'authorityType' => $item['type'] ?? null, 'showInlineInfo' => true])?><?php if (!empty($additional)): ?>, <?=implode(' ', $additional) ?><?php endif; ?>
     <?php endforeach; ?>
   </div>
 <?php endif; ?>
