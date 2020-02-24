@@ -54,9 +54,11 @@ class StripTags extends \Zend\View\Helper\AbstractHelper
             return $string;
         }
 
-        // Add a space after all tags. This is to prevent words from being
+        // Replace specific tags with a space. This is to prevent words from being
         // concatenated in cases like foo<br>bar and <p>foo</p><p>bar</p>.
-        $string = preg_replace('/(<([^>]+)>)/', '${1} ', $string);
+        $string = str_replace(
+            ['<p>', '<br>', '<br/>', '<br />', '<li>'], ' ', $string
+        );
 
         // Remove the contents of <script> and <style> tags.
         $string = preg_replace(
