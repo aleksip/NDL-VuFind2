@@ -185,8 +185,9 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
     {
         $filter = [
             'Publisher','Edition', 'Extent', 'Archive', 'Published in', 'Format',
-            'Presenters', 'Organisation', 'Authors', 'Access Restrictions',
-            'Item Description', 'Publisher', 'Relations', 'Source Collection'
+            'Other Titles', 'Presenters', 'Organisation', 'Authors',
+            'Access Restrictions', 'Item Description', 'Publisher', 'Relations',
+            'Source Collection'
         ];
         foreach ($filter as $key) {
             unset($coreFields[$key]);
