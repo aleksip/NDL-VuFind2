@@ -323,3 +323,24 @@ ol {
   border: none;
   background-color: transparent;
 }
+
+// Switcher flexbox layout mixin
+.switcher-layout(@breakpoint: 30rem, @padding-left: 1.5rem) {
+  & > * {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  & > * > * {
+    flex-grow: 1;
+    flex-basis: calc((@breakpoint - 100%) * 999);
+  }
+  & > * > * + * {
+    padding-left: @padding-left;
+  }
+}
+.switcher {
+  .switcher-layout();
+}
+.switcher-s {
+  .switcher-layout(25rem);
+}
