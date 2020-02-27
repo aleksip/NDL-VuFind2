@@ -266,6 +266,8 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
      * @param array        $groups Grouped formatting specification.
      *
      * @return array
+     *
+     * @throws \Exception
      */
     public function getGroupedData(RecordDriver $driver, array $groups)
     {
@@ -275,13 +277,9 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
             $lines = $group['lines'];
             $data = $this->getData($driver, $lines);
             // Render the fields in the group as the value for the group.
-            try {
-                $value = $this->renderRecordDriverTemplate(
-                    $driver, $data, ['template' => $group['template']]
-                );
-            } catch (\Exception $e) {
-                $value = '';
-            }
+            $value = $this->renderRecordDriverTemplate(
+                $driver, $data, ['template' => $group['template']]
+            );
             $result[] = [
                 'label' => $group['label'],
                 'value' => $value,
