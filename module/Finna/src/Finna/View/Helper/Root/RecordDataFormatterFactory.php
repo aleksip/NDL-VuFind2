@@ -478,7 +478,7 @@ class RecordDataFormatterFactory
         $setTemplateLine(
             'Production Costs', 'getProductionCost', 'data-escapeHtml.phtml',
             [
-                'context' => ['class' => 'recordManufacturer']
+                'context' => ['class' => 'record-production-cost']
             ]
         );
         $setTemplateLine(
