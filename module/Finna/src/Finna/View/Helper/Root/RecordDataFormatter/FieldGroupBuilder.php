@@ -39,38 +39,11 @@ namespace Finna\View\Helper\Root\RecordDataFormatter;
 class FieldGroupBuilder
 {
     /**
-     * Do nothing to provided lines array.
-     */
-    const UNUSED_DO_NOTHING = 0;
-
-    /**
-     * Remove lines used in groups from provided lines array.
-     */
-    const UNUSED_REMOVE_USED = 1;
-
-    /**
-     * Set unused lines from provided lines array as the first group.
-     */
-    const UNUSED_SET_FIRST = 2;
-
-    /**
-     * Set unused lines from provided lines array as the last group.
-     */
-    const UNUSED_SET_LAST = 3;
-
-    /**
      * Groups.
      *
      * @var array
      */
     protected $groups = [];
-
-    /**
-     * Highest position value so far.
-     *
-     * @var int
-     */
-    protected $maxPos = 0;
 
     /**
      * FieldGroupBuilder constructor.
@@ -80,11 +53,6 @@ class FieldGroupBuilder
     public function __construct($groups = [])
     {
         $this->groups = $groups;
-        foreach ($groups as $current) {
-            if (isset($current['pos']) && $current['pos'] > $this->maxPos) {
-                $this->maxPos = $current['pos'];
-            }
-        }
     }
 
     /**
@@ -105,18 +73,11 @@ class FieldGroupBuilder
         if (!isset($options['context'])) {
             $options['context'] = [];
         }
-        if (!isset($options['pos'])) {
-            $this->maxPos += 100;
-            $options['pos'] = $this->maxPos;
-        }
         $this->groups[] = $options;
     }
 
     /**
-     * Convenience method for setting multiple groups at once.
-     *
-     * The $lines array is passed as a reference and may be modified depending
-     * on the value of $unused (see FieldGroupBuilder::UNUSED_REMOVE_USED).
+     * Helper method for setting multiple groups at once.
      *
      * @param array  $groups        Array specifying the groups.
      * @param array  $lines         All lines used in the groups.
@@ -124,14 +85,13 @@ class FieldGroupBuilder
      *                              specified for a group.
      * @param array  $options       Additional options to use if not specified
      *                              for a group (optional).
-     * @param int    $unused        What to do to unused lines (optional).
      * @param array  $unusedOptions Additional options for unused lines
      *                              (optional).
      *
      * @return void
      */
-    public function setGroups($groups, &$lines, $template, $options = [],
-        $unused = self::UNUSED_DO_NOTHING, $unusedOptions = []
+    public function setGroups($groups, $lines, $template, $options = [],
+        $unusedOptions = []
     ) {
         $allUsed = [];
         foreach ($groups as $group) {
@@ -141,40 +101,26 @@ class FieldGroupBuilder
             $groupLabel = $group['label'] ?? false;
             $groupTemplate = $group['template'] ?? $template;
             $groupOptions = $group['options'] ?? $options;
+
+            // Get group lines from provided lines array and use group spec
+            // array order for line pos values.
             $groupLines = [];
-            if (isset($groupOptions['order'])
-                && $groupOptions['order'] === 'array'
-            ) {
-                $pos = 0;
-                foreach ($group['lines'] as $key) {
-                    $groupLine = $lines[$key];
-                    $pos += 100;
-                    $groupLine['pos'] = $pos;
-                    $groupLines[$key] = $groupLine;
-                }
-            } else {
-                $groupLines
-                    = array_intersect_key($lines, array_flip($group['lines']))
-                    ?? $groupLines;
+            $pos = 0;
+            foreach ($group['lines'] as $key) {
+                $groupLine = $lines[$key];
+                $pos += 100;
+                $groupLine['pos'] = $pos;
+                $groupLines[$key] = $groupLine;
             }
+
             $allUsed = array_merge($allUsed, $groupLines);
             $this->addGroup($groupLabel, $groupLines, $groupTemplate, $groupOptions);
         }
-        if ($unused === self::UNUSED_DO_NOTHING) {
-            return;
-        }
         $allUnused = array_diff_key($lines, $allUsed);
-        if ($unused === self::UNUSED_REMOVE_USED) {
-            $lines = $allUnused;
-        } else {
-            $unusedTemplate = $unusedOptions['template'] ?? $template;
-            if ($unused === self::UNUSED_SET_FIRST && !empty($this->groups)) {
-                $unusedOptions['pos'] = reset($this->groups)['pos'] - 100;
-            }
-            $this->addGroup(
-                false, $allUnused, $unusedTemplate, $unusedOptions
-            );
-        }
+        $unusedTemplate = $unusedOptions['template'] ?? $template;
+        $this->addGroup(
+            false, $allUnused, $unusedTemplate, $unusedOptions
+        );
     }
 
     /**

@@ -222,10 +222,7 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
     }
 
     /**
-     * Get a spec of field groups.
-     *
-     * The $lines array is passed as a reference and may be modified depending
-     * on the value of $unused (see FieldGroupBuilder::UNUSED_REMOVE_USED).
+     * Helper method for getting a spec of field groups.
      *
      * @param array  $groups        Array specifying the groups.
      * @param array  $lines         All lines used in the groups.
@@ -233,27 +230,18 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
      *                              specified (optional).
      * @param array  $options       Additional options to use if not specified
      *                              for a group (optional).
-     * @param int    $unused        What to do to unused lines (optional).
      * @param array  $unusedOptions Additional options for unused lines
      *                              (optional).
      *
      * @return array
      */
-    public function getGroupedFields($groups, &$lines,
-        $template = 'core-field-group-fields.phtml',
-        $options = ['order' => 'array'],
-        $unused = FieldGroupBuilder::UNUSED_SET_LAST, $unusedOptions = null
+    public function getGroupedFields($groups, $lines,
+        $template = 'core-field-group-fields.phtml', $options = [],
+        $unusedOptions = []
     ) {
-        // Default to array order if not specified.
-        // Set ['options']['order'] = 'pos' to use existing line 'pos' values.
-        $order = $options['order'] ?? 'array';
-        foreach ($groups as &$group) {
-            $group['options']['order'] = $group['options']['order'] ?? $order;
-        }
-        $unusedOptions = $unusedOptions ?? $options;
         $fieldGroups = new FieldGroupBuilder();
         $fieldGroups->setGroups(
-            $groups, $lines, $template, $options, $unused, $unusedOptions
+            $groups, $lines, $template, $options, $unusedOptions
         );
         return $fieldGroups->getArray();
     }
@@ -284,11 +272,8 @@ class RecordDataFormatter extends \VuFind\View\Helper\Root\RecordDataFormatter
                 'label' => $group['label'],
                 'value' => $value,
                 'context' => $group['context'],
-                'pos' => $group['pos'],
             ];
         }
-        // Sort the result.
-        usort($result, [$this, 'sortCallback']);
         return $result;
     }
 }
