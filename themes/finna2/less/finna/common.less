@@ -224,6 +224,12 @@ table.content-table {
   table-layout: fixed;
 }
 .table.record-field-groups {
+  > tbody > tr > th {
+    text-transform: uppercase;
+    @media (min-width: @screen-sm-min) {
+      text-transform: none;
+    }
+  }
   > tbody > tr > td {
     @media (min-width: @screen-sm-min) {
       padding-left: 80px;
@@ -240,12 +246,6 @@ table.content-table {
           }
         }
       }
-    }
-  }
-  .record-field-group-header {
-    text-transform: uppercase;
-    @media (min-width: @screen-sm-min) {
-      text-transform: none;
     }
   }
 }
