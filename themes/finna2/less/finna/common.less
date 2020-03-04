@@ -347,7 +347,7 @@ ol {
   // different flex-grow for specific items.
   & > * > * {
     flex-grow: 1;
-    flex-basis: calc((@switcher-breakpoint - 100%) * 999);
+    flex-basis: calc(~'('@switcher-breakpoint ~'- 100%) * 999');
   }
   // These rules provide additional robustness for horizontal layouts containing
   // many (five or more) elements.
