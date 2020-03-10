@@ -359,7 +359,7 @@ class Record extends \VuFind\View\Helper\Root\Record
             if (isset($params['role'])) {
                 if (!empty($data['roleName'])) {
                     $additionalData['role'] = $data['roleName'];
-                } else if (!empty($data['role'])) {
+                } elseif (!empty($data['role'])) {
                     $translator = $this->getView()->plugin('translate');
                     $additionalData['role']
                         = $translator('CreatorRoles::' . $data['role']);
