@@ -4,15 +4,15 @@
     <?php foreach ($data as $index => $item): ?>
       <?php
         $additional = [];
-        if (!empty($item['type'])) {
-          $additional['type'] = $this->escapeHtml($item['type']);
+        if (!empty($item['fundingType'])) {
+          $additional['funding-type'] = $this->escapeHtml($item['fundingType']);
         }
         if (!empty($item['amount'])) {
           $additional['amount'] = $this->escapeHtml($item['amount']);
         }
         $additional = $this->record($this->driver)->getAuthorityLinkAdditionalData($additional);
       ?>
-      <li><?=$this->record($this->driver)->getAuthorityLinkElement('author', $item['name'], $item, ['additionalData' => $additional, 'showInlineInfo' => true])?></li>
+      <li><?=$this->record($this->driver)->getAuthorityLinkElement('author', $item['name'], $item, ['authorityType' => $item['type'] ?? null, 'additionalData' => $additional, 'showInlineInfo' => true])?></li>
     <?php endforeach; ?>
   </ul>
 <?php endif; ?>
