@@ -1,6 +1,6 @@
 <?php
 /**
- * Additional functionality for Finna and Primo records.
+ * Defines label constants for records.
  *
  * PHP version 7
  *
@@ -28,7 +28,7 @@
 namespace Finna\RecordDriver;
 
 /**
- * Additional functionality for Finna and Primo records.
+ * Defines label constants for records.
  *
  * @category VuFind
  * @package  RecordDrivers
@@ -36,7 +36,7 @@ namespace Finna\RecordDriver;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
  */
-interface FinnaRecordInterface
+interface FinnaRecordLabelInterface
 {
     const OPEN_ACCESS = 'open_access';
 

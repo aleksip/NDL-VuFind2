@@ -19,7 +19,7 @@
     </div>
     <h1 property="name" class="record-title"><?=$this->escapeHtml($this->driver->getShortTitle() . ' ' . $this->driver->getSubtitle() . ' ' . $this->driver->getTitleSection())?></h1>
 
-    <?=$this->render('record/metadata-labels.phtml', ['labels' => $this->driver->getMetadataLabels()]); ?>
+    <?=$this->render('record/labels.phtml', ['labels' => $this->driver->getRecordLabels()]); ?>
 
     <?php
       $openUrl = $this->openUrl($this->driver, 'record');

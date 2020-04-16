@@ -4,7 +4,7 @@
  *
  * PHP version 7
  *
- * Copyright (C) The National Library 2015-2020.
+ * Copyright (C) The National Library 2015-2019.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
@@ -23,7 +23,6 @@
  * @package  RecordDrivers
  * @author   Samuli Sillanpää <samuli.sillanpaa@helsinki.fi>
  * @author   Konsta Raunio <konsta.raunio@helsinki.fi>
- * @author   Aleksi Peebles <aleksi.peebles@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
  */
@@ -38,7 +37,6 @@ use Finna\Db\Row\User;
  * @package  RecordDrivers
  * @author   Samuli Sillanpää <samuli.sillanpaa@helsinki.fi>
  * @author   Konsta Raunio <konsta.raunio@helsinki.fi>
- * @author   Aleksi Peebles <aleksi.peebles@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
  */
@@ -191,39 +189,28 @@ trait FinnaRecordTrait
     }
 
     /**
-     * Return information whether this is a peer reviewed record.
+     * Whether to show record labels for this record.
      *
-     * @return bool|null
+     * @return boolean
      */
-    public function getPeerReviewed()
+    public function getRecordLabelsEnabled()
     {
-        return null;
-    }
-
-    /**
-     * Return information whether this is an open access record.
-     *
-     * @return bool|null
-     */
-    public function getOpenAccess()
-    {
-        return null;
-    }
-
-    /**
-     * Get metadata labels for the record.
-     *
-     * @return array
-     */
-    public function getMetadataLabels()
-    {
-        $labels = [];
-        if ($this->getPeerReviewed()) {
-            $labels[] = FinnaRecordInterface::PEER_REVIEWED;
+        $labelsConfig = $this->mainConfig->RecordLabels;
+        if (!$labelsConfig->showLabels) {
+            return false;
         }
-        if ($this->getOpenAccess()) {
-            $labels[] = FinnaRecordInterface::OPEN_ACCESS;
+        $backend = $this->getSourceIdentifier();
+        $wildcardSetting = null;
+        $specificSetting = null;
+        foreach ($labelsConfig->showLabels as $key => $value) {
+            if ($key === '*') {
+                $wildcardSetting = (boolean) $value;
+            } else if ($key === $backend) {
+                $specificSetting = (boolean) $value;
+            }
         }
-        return $labels;
+        $showLabels = is_null($wildcardSetting) ? false : $wildcardSetting;
+        $showLabels = is_null($specificSetting) ? $showLabels : $specificSetting;
+        return $showLabels;
     }
 }

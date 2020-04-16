@@ -465,6 +465,27 @@ class Primo extends \VuFind\RecordDriver\Primo
     }
 
     /**
+     * Returns an array of 0 or more record label constants, or null if labels
+     * are not enabled in configuration.
+     *
+     * @return array|null
+     */
+    public function getRecordLabels()
+    {
+        if (!$this->getRecordLabelsEnabled()) {
+            return null;
+        }
+        $labels = [];
+        if ($this->getPeerReviewed()) {
+            $labels[] = FinnaRecordLabelInterface::PEER_REVIEWED;
+        }
+        if ($this->getOpenAccess()) {
+            $labels[] = FinnaRecordLabelInterface::OPEN_ACCESS;
+        }
+        return $labels;
+    }
+
+    /**
      * Get default OpenURL parameters.
      *
      * @return array
