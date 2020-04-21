@@ -195,22 +195,13 @@ trait FinnaRecordTrait
      */
     public function getRecordLabelsEnabled()
     {
-        $labelsConfig = $this->mainConfig->RecordLabels;
-        if (!$labelsConfig->showLabels) {
+        $labelsConfig = $this->mainConfig->RecordLabels->showLabels ?? null;
+        if (!$labelsConfig) {
             return false;
         }
         $backend = $this->getSourceIdentifier();
-        $wildcardSetting = null;
-        $specificSetting = null;
-        foreach ($labelsConfig->showLabels as $key => $value) {
-            if ($key === '*') {
-                $wildcardSetting = (boolean) $value;
-            } else if ($key === $backend) {
-                $specificSetting = (boolean) $value;
-            }
-        }
-        $showLabels = is_null($wildcardSetting) ? false : $wildcardSetting;
-        $showLabels = is_null($specificSetting) ? $showLabels : $specificSetting;
-        return $showLabels;
+        return $labelsConfig[$backend]
+            ?? $labelsConfig['*']
+            ?? false;
     }
 }
