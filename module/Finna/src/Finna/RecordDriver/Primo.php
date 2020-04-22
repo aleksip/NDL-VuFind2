@@ -476,6 +476,9 @@ class Primo extends \VuFind\RecordDriver\Primo
             return null;
         }
         $labels = [];
+        if ($this->getFulltextAvailable()) {
+            $labels[] = FinnaRecordLabelInterface::FULL_TEXT_AVAILABLE;
+        }
         if ($this->getPeerReviewed()) {
             $labels[] = FinnaRecordLabelInterface::PEER_REVIEWED;
         }

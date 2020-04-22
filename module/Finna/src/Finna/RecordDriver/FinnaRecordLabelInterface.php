@@ -38,6 +38,8 @@ namespace Finna\RecordDriver;
  */
 interface FinnaRecordLabelInterface
 {
+    const FULL_TEXT_AVAILABLE = 'full_text_available';
+
     const OPEN_ACCESS = 'open_access';
 
     const PEER_REVIEWED = 'peer_reviewed';
