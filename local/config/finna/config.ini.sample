@@ -1599,4 +1599,6 @@ url = "https://my.surveypal.com/Finnasurvey"
 ; showLabels[*] can be used to set the value for all backends.
 ; Different backends can also have specific settings, e.g. showLabels[Primo].
 ; Note that backend specific settings always win.
-;showLabels[*] = true
+showLabels[*] = false
+showLabels[Primo] = true
+
