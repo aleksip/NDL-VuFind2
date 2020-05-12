@@ -254,9 +254,13 @@ $config = [
     'controller_plugins' => [
         'factories' => [
             'Finna\Controller\Plugin\Recaptcha' => 'Finna\Controller\Plugin\RecaptchaFactory',
+            'Finna\Controller\Plugin\SearchMemory' => 'Finna\Controller\Plugin\SearchMemoryFactory',
+            'Finna\Controller\Plugin\Partial\SearchBox' => 'Finna\Controller\Plugin\Partial\SearchBoxFactory',
         ],
         'aliases' => [
-            'VuFind\Controller\Plugin\Recaptcha' => 'Finna\Controller\Plugin\Recaptcha'
+            'VuFind\Controller\Plugin\Recaptcha' => 'Finna\Controller\Plugin\Recaptcha',
+            'searchMemory' => 'Finna\Controller\Plugin\SearchMemory',
+            'searchBox' => 'Finna\Controller\Plugin\Partial\SearchBox',
         ],
     ],
     'service_manager' => [

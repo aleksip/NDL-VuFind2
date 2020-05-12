@@ -14,25 +14,6 @@
   $searchType = $this->params->getSearchType();
   $geoFilter = '';
 
-    // Set up search box:
-    $this->layout()->searchbox = $this->context($this)->renderInContext(
-        'search/searchbox.phtml',
-        [
-            'lookfor' => $lookfor,
-            'searchIndex' => $this->params->getSearchHandler(),
-            'searchType' => $this->params->getSearchType(),
-            'searchId' => $this->results->getSearchId(),
-            'searchClassId' => $this->params->getSearchClassId(),
-            'checkboxFilters' => $this->params->getCheckboxFacets(),
-            'filterList' => $this->params->getFilterList(true),
-            'hasDefaultsApplied' => $this->params->hasDefaultsApplied(),
-            'selectedShards' => $this->params->getSelectedShards(),
-            'savedSearches' => $this->layout()->savedTabs,
-            'ignoreHiddenFiltersInRequest' => isset($this->ignoreHiddenFiltersInRequest) ? $this->ignoreHiddenFiltersInRequest : false,
-            'ignoreHiddenFilterMemory' => isset($this->ignoreHiddenFilterMemory) ? $this->ignoreHiddenFilterMemory : false,
-        ]
-    );
-
   // Set up breadcrumbs:
   if (isset($this->overrideTitle)) {
     $this->layout()->breadcrumbs .= '<li class="active">' . $this->transEsc($this->overrideTitle) . '</li>';
