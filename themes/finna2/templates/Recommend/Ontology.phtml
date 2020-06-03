@@ -1,0 +1,15 @@
+<!-- START of: finna - Recommend/Ontology.phtml -->
+<?php foreach ($this->recommend->getOntologyResults() as $type => $typeResults): ?>
+  <?php if ($typeResults): ?>
+    <?php foreach ($typeResults as $query => $queryResults): ?>
+      <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info">
+        <?= $this->transEsc('ontology_recommendation_' . $type,
+          ['%%query%%' => $query]) ?>
+        <?php foreach ($queryResults as $queryResult): ?>
+          <a href="<?= $queryResult['href'] ?>"><?= $queryResult['label'] ?></a>
+        <?php endforeach; ?>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
+<?php endforeach; ?>
+<!-- END of: finna - Recommend/Ontology.phtml -->
