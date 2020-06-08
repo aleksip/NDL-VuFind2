@@ -90,4 +90,31 @@ class Factory
             $sm->get(\Finna\Search\Solr\AuthorityHelper::class)
         );
     }
+
+    /**
+     * Factory for Ontology module.
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return Ontology
+     */
+    public static function getOntology(ServiceManager $sm)
+    {
+        return new Ontology(
+            $sm->get(\Finna\Connection\Finto::class),
+            $sm->get('ViewHelperManager')->get('url')
+        );
+    }
+
+    /**
+     * Factory for OntologyDeferred module.
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return OntologyDeferred
+     */
+    public static function getOntologyDeferred(ServiceManager $sm)
+    {
+        return new OntologyDeferred();
+    }
 }
