@@ -69,5 +69,4 @@ class FintoFactory implements FactoryInterface
         $client = $container->get(\VuFindHttp\HttpService::class)->createClient();
         return new $requestedName($config->Finto ?? null, $client);
     }
-
 }
