@@ -135,31 +135,30 @@ class Finto implements LoggerAwareInterface
     /**
      * Narrower concepts of the requested concept.
      *
-     * @param string $vocid A Skosmos vocabulary identifier e.g. "stw" or "yso"
-     * @param string $uri   URI of the concept whose narrower concept to return
-     * @param string $lang  Label language, e.g. "en" or "fi"
-     * @param array  $other Keyed array of other parameters accepted by Finto
-     *                      API's /{vocid}/narrower method
+     * @param string  $vocid A Skosmos vocabulary identifier e.g. "stw" or "yso"
+     * @param string  $uri   URI of the concept whose narrower concept to return
+     * @param string  $lang  Label language, e.g. "en" or "fi"
+     * @param boolean $sort  Whether to sort results alphabetically or not
      *
      * @return array|bool Results or false if none
      * @throws \Exception
      */
-    public function narrower($vocid, $uri, $lang = null, $other = [])
+    public function narrower($vocid, $uri, $lang = null, $sort = false)
     {
-        // Set default values for parameters
-        $params = [];
-
-        // Override defaults with other provided values.
-        if (is_array($other)) {
-            $params = array_merge($params, $other);
-        }
-        $params['uri'] = $uri;
+        // Set parameters.
+        $params = ['vocid' => $vocid, 'uri' => $uri];
         if ($lang) {
             $params['lang'] = $lang;
         }
 
         // Make request.
         $response = $this->makeRequest([$vocid, 'narrower'], $params);
+
+        // Sort values alphabetically if required.
+        if ($sort && !empty($response['narrower'])) {
+            $label = array_column($response['narrower'], 'prefLabel');
+            array_multisort($label, SORT_ASC, $response['narrower']);
+        }
 
         return !empty($response['narrower']) ? $response : false;
     }

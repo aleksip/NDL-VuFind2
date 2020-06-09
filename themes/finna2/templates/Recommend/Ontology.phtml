@@ -1,21 +1,19 @@
 <!-- START of: finna - Recommend/Ontology.phtml -->
 <?php foreach ($this->recommend->getOntologyResults() as $type => $typeResults): ?>
-  <?php if ($typeResults): ?>
-    <?php foreach ($typeResults as $term => $termResults): ?>
-      <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info">
-        <?= $this->transEsc('ontology_recommendation_' . $type,
-          [
-            '%%term%%' => $term,
-            '%%results_count%%' => count($termResults)
-          ]
-        ) ?>
-        <ul>
-          <?php foreach ($termResults as $termResult): ?>
-            <li><a href="<?= $termResult['href'] ?>"><?= $termResult['label'] ?></a></li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-    <?php endforeach; ?>
-  <?php endif; ?>
+  <?php foreach ($typeResults as $term => $termResults): ?>
+    <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info">
+      <?= $this->transEsc('ontology_recommendation_' . $type,
+        [
+          '%%term%%' => $term,
+          '%%results_count%%' => count($termResults)
+        ]
+      ) ?>
+      <ul<?php if (count($termResults) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
+        <?php foreach ($termResults as $termResult): ?>
+          <li><a href="<?= $termResult['href'] ?>"><?= $termResult['label'] ?></a></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php endforeach; ?>
 <?php endforeach; ?>
 <!-- END of: finna - Recommend/Ontology.phtml -->

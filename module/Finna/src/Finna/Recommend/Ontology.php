@@ -83,11 +83,18 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $hyponymResults = [];
 
     /**
-     * Total number of processed ontology term results.
+     * Total number of API calls made.
      *
      * @var int
      */
-    protected $ontologyTermResultTotal = 0;
+    protected $apiCallTotal = 0;
+
+    /**
+     * Total number of recommendations.
+     *
+     * @var int
+     */
+    protected $recommendationTotal = 0;
 
     /**
      * Ontology constructor.
@@ -99,6 +106,30 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     {
         $this->finto = $finto;
         $this->urlHelper = $urlHelper;
+    }
+
+    /**
+     * Can another API call be made.
+     *
+     * @return bool
+     */
+    protected function canMakeApiCall()
+    {
+        return is_numeric($this->maxApiCalls)
+            ? $this->apiCallTotal < $this->maxApiCalls
+            : false === $this->maxApiCalls;
+    }
+
+    /**
+     * Can another recommendation be added.
+     *
+     * @return bool
+     */
+    protected function canAddRecommendation()
+    {
+        return is_numeric($this->maxRecommendations)
+            ? $this->recommendationTotal < $this->maxRecommendations
+            : false === $this->maxRecommendations;
     }
 
     /**
@@ -121,11 +152,15 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         // Get the resultTotal if not set in an AJAX request.
         $this->resultTotal = $this->resultTotal ?? $results->getResultTotal();
 
-        $terms = array_slice(explode(' ', $this->lookfor), 0, $this->maxApiCalls);
+        $terms = explode(' ', $this->lookfor);
         foreach ($terms as $term) {
+            if (!($this->canMakeApiCall() && $this->canAddRecommendation())) {
+                break;
+            }
             if ($fintoResults = $this->finto->search($term, $this->language)) {
                 $this->processFintoResults($fintoResults, $term);
             }
+            $this->apiCallTotal += 1;
         }
     }
 
@@ -141,33 +176,40 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     {
         foreach ($fintoResults['results'] as $fintoResult) {
             // Check for non-descriptor results.
-            if ($fintoResult['altLabel'] === $term
-                || ($fintoResult['hiddenLabel'] === $term
-                && count($fintoResults['results']) === 1)
+            if ((false === $this->maxSmallResultTotal
+                || $this->resultTotal <= $this->maxSmallResultTotal)
+                && ((isset($fintoResult['altLabel'])
+                && $fintoResult['altLabel'] === $term)
+                || (isset($fintoResult['hiddenLabel'])
+                && $fintoResult['hiddenLabel'] === $term
+                && count($fintoResults['results']) === 1))
             ) {
                 $this->addOntologyResult(
                     $fintoResult, $this->nonDescriptorResults, $term
                 );
-                continue;
             }
 
             // Check for specifier results.
-            if ($fintoResult['hiddenLabel'] === $term
+            if (isset($fintoResult['hiddenLabel'])
+                && $fintoResult['hiddenLabel'] === $term
                 && count($fintoResults['results']) > 1
             ) {
                 $this->addOntologyResult(
                     $fintoResult, $this->specifierResults, $term
                 );
-                continue;
             }
 
             // Check for hyponym results.
-            if ($this->resultTotal >= $this->largeResultTotalMin
-                && count($fintoResults['results'] === 1)
+            if ((false === $this->minLargeResultTotal
+                || $this->resultTotal >= $this->minLargeResultTotal)
+                && count($fintoResults['results']) === 1
             ) {
+                if (!$this->canMakeApiCall()) {
+                    continue;
+                }
                 if ($hyponymResults = $this->finto->narrower(
                     $fintoResult['vocab'], $fintoResult['uri'],
-                    $fintoResult['lang']
+                    $fintoResult['lang'], true
                 )
                 ) {
                     foreach ($hyponymResults['narrower'] as $hyponymResult) {
@@ -176,6 +218,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
                         );
                     }
                 }
+                $this->apiCallTotal += 1;
             }
         }
     }
@@ -197,7 +240,11 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         $replace = $uriField . ' ' . $fintoResult['prefLabel'];
         $recommend = str_replace($term, $replace, $this->lookfor);
         $query = http_build_query(
-            ['lookfor' => $recommend, 'lang' => $this->language]
+            [
+                'lookfor' => $recommend,
+                'lang' => $this->language,
+                'ontologyTerm' => $term
+            ]
         );
         $href = $base . '?' . $query;
 
@@ -211,7 +258,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         // Add result and increase counter if the result is for a new term.
         if (!isset($resultsArray[$term])) {
             $resultsArray[$term] = [];
-            $this->ontologyTermResultTotal += 1;
+            $this->recommendationTotal += 1;
         }
         $resultsArray[$term][] = $ontologyResult;
     }

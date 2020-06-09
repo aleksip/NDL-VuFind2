@@ -64,12 +64,14 @@ class OntologyDeferred implements RecommendInterface, TranslatorAwareInterface
      */
     public function getUrlParams()
     {
-        return 'mod=Ontology&params='
-            . urlencode(
-                implode(':', [$this->maxApiCalls, $this->maxRecommendations])
-            )
-            . '&lookfor=' . urlencode($this->lookfor)
-            . '&language=' . urldecode($this->language)
-            . '&resultTotal=' . urldecode($this->resultTotal);
+        return http_build_query(
+            [
+               'mod' => 'Ontology',
+               'params' => $this->rawParams,
+               'lookfor' => $this->lookfor,
+               'language' => $this->language,
+               'resultTotal' => $this->resultTotal
+            ]
+        );
     }
 }

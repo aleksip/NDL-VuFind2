@@ -64,18 +64,18 @@ trait OntologyTrait
     protected $maxRecommendations;
 
     /**
-     * Maximum limit for determining if the result set is small.
+     * Maximum total for determining if the result set is small.
      *
      * @var int
      */
-    protected $smallResultTotalMax;
+    protected $maxSmallResultTotal;
 
     /**
-     * Minimum limit for determining if the result set is large.
+     * Minimum total for determining if the result set is large.
      *
      * @var int
      */
-    protected $largeResultTotalMin;
+    protected $minLargeResultTotal;
 
     /**
      * Current search query.
@@ -126,10 +126,10 @@ trait OntologyTrait
     {
         // Parse out parameters:
         $settings = explode(':', $this->rawParams);
-        $this->maxApiCalls = $settings[0] ?? 10;
-        $this->maxRecommendations = $settings[1] ?? true;
-        $this->smallResultTotalMax = $settings[2] ?? true;
-        $this->largeResultTotalMin = $settings[3] ?? true;
+        $this->maxApiCalls = empty($settings[0]) ? false : $settings[0];
+        $this->maxRecommendations = empty($settings[1]) ? false : $settings[1];
+        $this->maxSmallResultTotal = empty($settings[2]) ? false : $settings[2];
+        $this->minLargeResultTotal = empty($settings[3]) ? false : $settings[3];
 
         // Collect the best possible search term(s):
         $this->lookfor = $request->get('lookfor', '');
