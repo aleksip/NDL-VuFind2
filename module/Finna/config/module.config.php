@@ -609,6 +609,7 @@ $config = [
                     'authorityrecommend' => 'Finna\Recommend\AuthorityRecommend',
                     'finnasuggestions' => 'Finna\Recommend\FinnaSuggestions',
                     'finnasuggestionsdeferred' => 'Finna\Recommend\FinnaSuggestionsDeferred',
+                    'feedback' => 'Finna\Recommend\Feedback',
                     'ontology' => 'Finna\Recommend\Ontology',
                     'ontologydeferred' => 'Finna\Recommend\OntologyDeferred',
                     'sidefacetsdeferred' => 'Finna\Recommend\SideFacetsDeferred',
