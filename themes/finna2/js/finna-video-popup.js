@@ -11,7 +11,7 @@ finna.videoPopup = (function finnaVideoPopup() {
     var player = videojs($videoElem.get(0), {
       html5: {
         hls: {
-          overrideNative: true
+          overrideNative: !videojs.browser.IS_SAFARI
         }
       }
     });
