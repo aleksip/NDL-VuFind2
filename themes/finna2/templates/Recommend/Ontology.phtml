@@ -1,19 +1,29 @@
 <!-- START of: finna - Recommend/Ontology.phtml -->
-<?php foreach ($this->recommend->getOntologyResults() as $type => $typeResults): ?>
-  <?php foreach ($typeResults as $term => $termResults): ?>
-    <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info">
-      <?= $this->transEsc('ontology_recommendation_' . $type,
-        [
-          '%%term%%' => $term,
-          '%%results_count%%' => count($termResults)
-        ]
-      ) ?>
-      <ul<?php if (count($termResults) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
-        <?php foreach ($termResults as $termResult): ?>
-          <li><a href="<?= $termResult['href'] ?>"><?= $termResult['label'] ?></a></li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
+<?php if (!empty($ontologyResults = $this->recommend->getOntologyResults())): ?>
+  <?php foreach ($ontologyResults as $type => $typeResults): ?>
+    <?php foreach ($typeResults as $term => $termResults): ?>
+      <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info">
+        <p><?= $this->transEsc(
+          'ontology_recommendation_' . $type,
+          ['%%term%%' => $term, '%%results_count%%' => count($termResults)]
+        ) ?></p>
+        <ul<?php if (count($termResults) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
+          <?php foreach ($termResults as $termResult): ?>
+            <li><a href="<?= $termResult['href'] ?>" data-key="<?= $termResult['key'] ?>" data-value="<?= $termResult['value'] ?>"><?= $termResult['label'] ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endforeach; ?>
   <?php endforeach; ?>
-<?php endforeach; ?>
+  <?php
+    $script = <<<EOT
+    $('.ontology-recommendation a').each(function() {
+      $(this).click(function() {
+        Cookies.setItem($(this).data('key'), $(this).data('value'));
+      });    
+    });
+EOT;
+    echo $this->inlineScript(\Laminas\View\Helper\HeadScript::SCRIPT, $script, 'SET');
+  ?>
+<?php endif; ?>
 <!-- END of: finna - Recommend/Ontology.phtml -->

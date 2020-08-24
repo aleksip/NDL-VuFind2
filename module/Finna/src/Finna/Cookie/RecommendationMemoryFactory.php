@@ -1,6 +1,6 @@
 <?php
 /**
- * Feedback recommendation module factory.
+ * Cookie memory factory.
  *
  * PHP version 7
  *
@@ -20,26 +20,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category VuFind
- * @package  Recommendations
+ * @package  Cookie
  * @author   Aleksi Peebles <aleksi.peebles@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     https://vufind.org/wiki/development Wiki
  */
-namespace Finna\Recommend;
+namespace Finna\Cookie;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
- * Feedback recommendation module factory.
+ * Cookie memory factory.
  *
  * @category VuFind
- * @package  Recommendations
+ * @package  Cookie
  * @author   Aleksi Peebles <aleksi.peebles@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     https://vufind.org/wiki/development Wiki
  */
-class FeedbackFactory implements FactoryInterface
+class RecommendationMemoryFactory implements FactoryInterface
 {
     /**
      * Create an object
@@ -54,17 +54,15 @@ class FeedbackFactory implements FactoryInterface
      * @throws ServiceNotCreatedException if an exception is raised when
      * creating a service.
      * @throws ContainerException if any other error occurs
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName,
         array $options = null
     ) {
         if (!empty($options)) {
-            throw new \Exception('Unexpected options passed to factory.');
+            throw new \Exception('Unexpected options sent to factory.');
         }
         return new $requestedName(
-            $container->get(\Finna\Cookie\RecommendationMemory::class)
+            $container->get(\VuFind\Cookie\CookieManager::class)
         );
     }
 }

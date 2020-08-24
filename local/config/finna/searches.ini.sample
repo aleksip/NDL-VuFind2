@@ -57,6 +57,7 @@ default_noresults_recommend[] = SwitchType
 default_noresults_recommend[] = SwitchQuery
 default_noresults_recommend[] = SpellingSuggestions
 ;default_noresults_recommend[] = "FinnaSuggestionsDeferred:api.finna.fi/api/v1/search?lookfor=%%lookfor%%:finna.fi/Search/Results?lookfor=%%lookfor%%&lng=%%lng%%"
+;default_results_top_recommend[] = Feedback
 ;default_results_top_recommend[] = OntologyDeferred:10:2:20:40
 
 ; Set this to true in order to highlight keywords from the search query when they
@@ -330,7 +331,7 @@ author = sort_author
 ;
 ; Available modules recommended for use in the "results top" area:
 ;
-; Ontology:[maxApiCalls]:[maxRecommendations]:[smallResultTotalMax]:[largeResultTotalMin]
+; Ontology:[maxApiCalls]:[maxRecommendations]:[smallResultTotalMax]:[largeResultTotalMin]:[maxShownPerSession]
 ;       Provides ontology based recommendations.
 ;
 ; You can build your own recommendations modules if you wish.  See the developer's

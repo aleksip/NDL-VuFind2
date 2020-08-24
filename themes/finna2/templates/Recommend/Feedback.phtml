@@ -1,0 +1,10 @@
+<!-- START of: finna - Recommend/Feedback.phtml -->
+<?php if (!empty($data = $this->recommend->getData())): ?>
+  <div class="recommendation-feedback alert alert-info">
+    <p><?= $this->transEsc(
+      'recommendation_feedback_question',
+      ['%%term%%' => $data[\Finna\Cookie\RecommendationMemory::RECOMMENDED_TERM]]
+    ) ?></p>
+  </div>
+<?php endif; ?>
+<!-- END of: finna - Recommend/Feedback.phtml -->

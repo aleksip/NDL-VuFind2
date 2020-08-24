@@ -28,7 +28,7 @@
 namespace Finna\Recommend;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Ontology recommendation module factory.
@@ -65,8 +65,9 @@ class OntologyFactory implements FactoryInterface
         }
         return new $requestedName(
             $container->get(\Finna\Connection\Finto::class),
+            $container->get(\VuFind\Cookie\CookieManager::class),
             $container->get('ViewHelperManager')->get('url'),
-            $container->get(\VuFind\Cookie\CookieManager::class)
+            $container->get(\Finna\Cookie\RecommendationMemory::class)
         );
     }
 }

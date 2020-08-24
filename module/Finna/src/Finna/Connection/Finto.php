@@ -28,9 +28,9 @@
 namespace Finna\Connection;
 
 use VuFind\Log\LoggerAwareTrait;
-use Zend\Config\Config;
-use Zend\Http\Client;
-use Zend\Log\LoggerAwareInterface;
+use Laminas\Config\Config;
+use Laminas\Http\Client;
+use Laminas\Log\LoggerAwareInterface;
 
 /**
  * Finto connection class.
@@ -48,14 +48,14 @@ class Finto implements LoggerAwareInterface
     /**
      * Finto configuration.
      *
-     * @var \Zend\Config\Config
+     * @var \Laminas\Config\Config
      */
     protected $config;
 
     /**
      * HTTP client.
      *
-     * @var \Zend\Http\Client
+     * @var \Laminas\Http\Client
      */
     protected $client;
 
@@ -121,7 +121,7 @@ class Finto implements LoggerAwareInterface
         if (is_array($other)) {
             $params = array_merge($params, $other);
         }
-        $params['query'] = urlencode(trim($query));
+        $params['query'] = trim($query);
         if ($lang) {
             $params['lang'] = $lang;
         }

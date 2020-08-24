@@ -28,7 +28,7 @@
 namespace Finna\Recommend;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * OntologyDeferred recommendation module factory.

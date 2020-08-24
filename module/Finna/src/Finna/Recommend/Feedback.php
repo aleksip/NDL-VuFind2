@@ -1,6 +1,6 @@
 <?php
 /**
- * OntologyDeferred Recommendations Module.
+ * Feedback Recommendations Module.
  *
  * PHP version 7
  *
@@ -27,10 +27,13 @@
  */
 namespace Finna\Recommend;
 
+use Finna\Cookie\RecommendationMemory;
 use VuFind\Recommend\RecommendInterface;
 
 /**
- * OntologyDeferred Recommendations Module.
+ * Feedback Recommendations Module.
+ *
+ * This class provides a way to give feedback on recommendations.
  *
  * @category VuFind
  * @package  Recommendations
@@ -38,28 +41,31 @@ use VuFind\Recommend\RecommendInterface;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     https://vufind.org/wiki/development:plugins:recommendation_modules Wiki
  */
-class OntologyDeferred implements RecommendInterface
+class Feedback implements RecommendInterface
 {
     /**
-     * Raw configuration parameters.
+     * Recommendation memory.
      *
-     * @var string
+     * @var RecommendationMemory
      */
-    protected $rawParams;
+    protected $recommendationMemory;
 
     /**
-     * Current search query.
+     * Parameter object representing user request.
      *
-     * @var string
+     * @var \Laminas\StdLib\Parameters
      */
-    protected $lookfor;
+    protected $request;
 
     /**
-     * Search results object.
+     * Feedback constructor.
      *
-     * @var \VuFind\Search\Base\Results
+     * @param RecommendationMemory $recommendationMemory Recommendation memory
      */
-    protected $results;
+    public function __construct(RecommendationMemory $recommendationMemory)
+    {
+        $this->recommendationMemory = $recommendationMemory;
+    }
 
     /**
      * Store the configuration of the recommendation module.
@@ -70,7 +76,6 @@ class OntologyDeferred implements RecommendInterface
      */
     public function setConfig($settings)
     {
-        $this->rawParams = $settings;
     }
 
     /**
@@ -87,12 +92,7 @@ class OntologyDeferred implements RecommendInterface
      */
     public function init($params, $request)
     {
-        // Collect the best possible search term(s):
-        $this->lookfor = $request->get('lookfor');
-        if (empty($this->lookfor) && is_object($params)) {
-            $this->lookfor = $params->getQuery()->getAllTerms();
-        }
-        $this->lookfor = trim($this->lookfor);
+        $this->request = $request;
     }
 
     /**
@@ -106,25 +106,16 @@ class OntologyDeferred implements RecommendInterface
      */
     public function process($results)
     {
-        $this->results = $results;
     }
 
     /**
-     * Get the URL parameters needed to make the AJAX recommendation request.
+     * Returns data for the feedback theme template.
      *
-     * @return string
+     * @return array|bool Array with data or false if the feedback form should
+     *                    not be shown.
      */
-    public function getUrlParams()
+    public function getData()
     {
-        // The search ID and result total are passed here because they are not
-        // accessible from the search results object created for the AJAX call.
-        $params = [
-            'mod' => 'Ontology',
-            'params' => $this->rawParams,
-            'lookfor' => $this->lookfor,
-            'searchId' => $this->results->getSearchId(),
-            'resultTotal' => $this->results->getResultTotal()
-        ];
-        return http_build_query($params);
+        return $this->recommendationMemory->get($this->request);
     }
 }
