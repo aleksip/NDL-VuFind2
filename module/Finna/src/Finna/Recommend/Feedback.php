@@ -51,11 +51,11 @@ class Feedback implements RecommendInterface
     protected $recommendationMemory;
 
     /**
-     * Parameter object representing user request.
+     * Possible recommendation data.
      *
-     * @var \Laminas\StdLib\Parameters
+     * @var array|false
      */
-    protected $request;
+    protected $data;
 
     /**
      * Feedback constructor.
@@ -92,7 +92,7 @@ class Feedback implements RecommendInterface
      */
     public function init($params, $request)
     {
-        $this->request = $request;
+        $this->data = $this->recommendationMemory->get($request);
     }
 
     /**
@@ -116,6 +116,6 @@ class Feedback implements RecommendInterface
      */
     public function getData()
     {
-        return $this->recommendationMemory->get($this->request);
+        return $this->data;
     }
 }

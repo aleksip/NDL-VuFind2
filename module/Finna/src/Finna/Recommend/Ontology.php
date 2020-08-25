@@ -453,7 +453,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         // Recommendation memory cookie key and value.
         $key = $this->ontologyResultTotal;
         if ($this->searchId) {
-            $key = $this->searchId . ':' . $key;
+            $key = $this->searchId . '-' . $key;
         }
         $value = $this->recommendationMemory->getDataString(
             'Ontology', $fintoResult['prefLabel'], $term

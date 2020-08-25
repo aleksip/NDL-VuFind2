@@ -42,7 +42,8 @@ use VuFind\Cookie\CookieManager;
 class RecommendationMemory
 {
     /**
-     * Query string parameter name for recommendation memory cookie key.
+     * Name of the query string parameter containing the recommendation memory
+     * cookie name.
      */
     public const PARAMETER_NAME = 'rmKey';
 

@@ -19,8 +19,8 @@
     $script = <<<EOT
     $('.ontology-recommendation a').each(function() {
       $(this).click(function() {
-        Cookies.setItem($(this).data('key'), $(this).data('value'));
-      });    
+        $.cookie($(this).data('key'), $(this).data('value'), {path: VuFind.path});
+      });
     });
 EOT;
     echo $this->inlineScript(\Laminas\View\Helper\HeadScript::SCRIPT, $script, 'SET');
