@@ -27,10 +27,10 @@
  */
 namespace Finna\Connection;
 
-use VuFind\Log\LoggerAwareTrait;
 use Laminas\Config\Config;
 use Laminas\Http\Client;
 use Laminas\Log\LoggerAwareInterface;
+use VuFind\Log\LoggerAwareTrait;
 
 /**
  * Finto connection class.
