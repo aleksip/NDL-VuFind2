@@ -404,8 +404,10 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             }
 
             // Check for specifier results.
-            if (isset($fintoResult['hiddenLabel'])
-                && $fintoResult['hiddenLabel'] === $term
+            if (((isset($fintoResult['hiddenLabel'])
+                && $fintoResult['hiddenLabel'] === $term)
+                || (isset($fintoResult['altLabel'])
+                && $fintoResult['altLabel'] === $term))
                 && count($fintoResults['results']) > 1
             ) {
                 $this->addOntologyResult(
