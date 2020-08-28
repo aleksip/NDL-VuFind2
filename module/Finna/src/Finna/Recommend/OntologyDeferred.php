@@ -48,6 +48,13 @@ class OntologyDeferred implements RecommendInterface
     protected $rawParams;
 
     /**
+     * Parameter object representing user request.
+     *
+     * @var \Laminas\StdLib\Parameters
+     */
+    protected $request;
+
+    /**
      * Current search query.
      *
      * @var string
@@ -87,11 +94,14 @@ class OntologyDeferred implements RecommendInterface
      */
     public function init($params, $request)
     {
+        $this->request = $request;
+
         // Collect the best possible search term(s):
-        $this->lookfor = $request->get('lookfor');
+        $lookfor = $request->get('lookfor');
         if (empty($this->lookfor) && is_object($params)) {
             $this->lookfor = $params->getQuery()->getAllTerms();
         }
+
         $this->lookfor = trim($this->lookfor);
     }
 
@@ -116,7 +126,7 @@ class OntologyDeferred implements RecommendInterface
      */
     public function getUrlParams()
     {
-        // The search ID and result total are passed here because they are not
+        // The search ID and result total are added here because they are not
         // accessible from the search results object created for the AJAX call.
         $params = [
             'mod' => 'Ontology',
@@ -125,6 +135,10 @@ class OntologyDeferred implements RecommendInterface
             'searchId' => $this->results->getSearchId(),
             'resultTotal' => $this->results->getResultTotal()
         ];
+
+        // Add other possible request parameters.
+        $params = array_merge($this->request->toArray(), $params);
+
         return http_build_query($params);
     }
 }

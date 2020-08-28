@@ -130,6 +130,13 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $maxTimesShownPerSession;
 
     /**
+     * Parameter object representing user request.
+     *
+     * @var \Laminas\StdLib\Parameters
+     */
+    protected $request;
+
+    /**
      * Current search query.
      *
      * @var string
@@ -251,16 +258,14 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         $this->minLargeResultTotal = empty($settings[3]) ? false : $settings[3];
         $this->maxTimesShownPerSession = empty($settings[4]) ? false : $settings[4];
 
+        $this->request = $request;
+
         // Collect the best possible search term(s):
         $this->lookfor = $request->get('lookfor');
         if (empty($this->lookfor) && is_object($params)) {
             $this->lookfor = $params->getQuery()->getAllTerms();
         }
         $this->lookfor = trim($this->lookfor);
-
-        // Get the searchId and resultTotal if set in an AJAX request.
-        $this->searchId = $request->get('searchId');
-        $this->resultTotal = $request->get('resultTotal');
     }
 
     /**
@@ -311,8 +316,11 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         }
 
         // Get the searchId and resultTotal if not set in an AJAX request.
-        $this->searchId = $this->searchId ?? $this->results->getSearchId() ?? null;
-        $this->resultTotal = $this->resultTotal ?? $this->results->getResultTotal();
+        $this->searchId = $this->request->get('searchId')
+            ?? $this->results->getSearchId()
+            ?? null;
+        $this->resultTotal = $this->request->get('resultTotal')
+            ?? $this->results->getResultTotal();
 
         // Create search terms array with quoted words as one search term.
         $terms = str_getcsv($this->lookfor, ' ');
@@ -474,6 +482,11 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             'lookfor' => $recommend,
             RecommendationMemory::PARAMETER_NAME => $key
         ];
+        $params = array_merge($this->request->toArray(), $params);
+        unset(
+            $params['mod'], $params['params'], $params['searchId'],
+            $params['resultTotal']
+        );
         $href = $base . '?' . http_build_query($params);
 
         // Create result array.
