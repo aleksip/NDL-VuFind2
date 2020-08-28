@@ -51,9 +51,9 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     use TranslatorAwareTrait;
 
     /**
-     * Cookie key for the times shown total value.
+     * Name of the cookie used to store the times shown total value.
      */
-    public const TIMES_SHOWN = 'ontologyRecommendTimesShown';
+    public const COOKIE_NAME = 'ontologyRecommend';
 
     /**
      * Finto connection class.
@@ -302,7 +302,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         // Check cookie to find out how many times ontology recommendations have
         // already been shown in the current browser session. Do nothing if a
         // maximum value is set in configuration and it has been reached.
-        $cookieValue = $this->cookieManager->get(self::TIMES_SHOWN);
+        $cookieValue = $this->cookieManager->get(self::COOKIE_NAME);
         $timesShownTotal = is_numeric($cookieValue) ? $cookieValue : 0;
         if (is_numeric($this->maxTimesShownPerSession)
             && $timesShownTotal > $this->maxTimesShownPerSession
@@ -332,7 +332,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
 
         if ($this->recommendationTotal > 0) {
             // There are recommendations, so set a new cookie value.
-            $this->cookieManager->set(self::TIMES_SHOWN, $timesShownTotal + 1);
+            $this->cookieManager->set(self::COOKIE_NAME, $timesShownTotal + 1);
         }
 
         return [
