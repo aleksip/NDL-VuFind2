@@ -6,12 +6,18 @@
         <p><?= $this->transEsc(
           'ontology_recommendation_' . $type,
           ['%%term%%' => $term, '%%results_count%%' => count($termResults)]
-        ) ?></p>
-        <ul<?php if (count($termResults) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
-          <?php foreach ($termResults as $termResult): ?>
-            <li><a href="<?= $termResult['href'] ?>" data-key="<?= $termResult['key'] ?>" data-value="<?= $termResult['value'] ?>"><?= $termResult['label'] ?></a></li>
-          <?php endforeach; ?>
-        </ul>
+        ) ?>
+        <?php if (1 === count($termResults)): ?>
+          <a href="<?= $termResults[0]['href'] ?>" data-key="<?= $termResults[0]['key'] ?>" data-value="<?= $termResults[0]['value'] ?>">'<?= $termResults[0]['label'] ?>'</a>
+          </p>
+        <?php else: ?>
+          </p>
+          <ul<?php if (count($termResults) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
+            <?php foreach ($termResults as $termResult): ?>
+              <li><a href="<?= $termResult['href'] ?>" data-key="<?= $termResult['key'] ?>" data-value="<?= $termResult['value'] ?>"><?= $termResult['label'] ?></a></li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endif; ?>
       </div>
     <?php endforeach; ?>
   <?php endforeach; ?>

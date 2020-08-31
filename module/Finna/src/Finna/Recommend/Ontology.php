@@ -398,9 +398,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     {
         foreach ($fintoResults['results'] as $fintoResult) {
             // Check for non-descriptor results.
-            if ((false === $this->maxSmallResultTotal
-                || $this->resultTotal <= $this->maxSmallResultTotal)
-                && ((isset($fintoResult['altLabel'])
+            if (((isset($fintoResult['altLabel'])
                 && $fintoResult['altLabel'] === $term)
                 || (isset($fintoResult['hiddenLabel'])
                 && $fintoResult['hiddenLabel'] === $term
@@ -409,6 +407,8 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
                 $this->addOntologyResult(
                     $fintoResult, $this->nonDescriptorResults, $term
                 );
+                // Only show non-descriptor results if any.
+                continue;
             }
 
             // Check for specifier results.
