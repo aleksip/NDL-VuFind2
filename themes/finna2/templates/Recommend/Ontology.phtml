@@ -1,5 +1,5 @@
-<!-- START of: finna - Recommend/Ontology.phtml -->
 <?php if (!empty($ontologyResults = $this->recommend->getOntologyResults())): ?>
+  <!-- START of: finna - Recommend/Ontology.phtml -->
   <?php foreach ($ontologyResults as $type => $typeResults): ?>
     <?php foreach ($typeResults as $term => $termResults): ?>
       <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info">
@@ -31,5 +31,5 @@
 EOT;
     echo $this->inlineScript(\Laminas\View\Helper\HeadScript::SCRIPT, $script, 'SET');
   ?>
+  <!-- END of: finna - Recommend/Ontology.phtml -->
 <?php endif; ?>
-<!-- END of: finna - Recommend/Ontology.phtml -->

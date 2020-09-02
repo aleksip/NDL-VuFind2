@@ -143,11 +143,11 @@ class Finto implements LoggerAwareInterface
      * @return array|bool Results or false if none
      * @throws \Exception
      */
-    public function narrower($vocid, $uri, $lang = null, $sort = false)
+    public function narrower($vocid, $uri, $lang = '', $sort = false)
     {
         // Set parameters.
         $params = ['vocid' => $vocid, 'uri' => $uri];
-        if ($lang) {
+        if (!empty($lang)) {
             $params['lang'] = $lang;
         }
 
