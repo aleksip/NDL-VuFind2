@@ -61,9 +61,14 @@ class RecommendationMemory
     public const RECOMMENDED_TERM = 'recTerm';
 
     /**
-     * Replaced search term.
+     * Original search term.
      */
-    public const REPLACED_TERM = 'repTerm';
+    public const ORIGINAL_TERM = 'origTerm';
+
+    /**
+     * Recommendation type.
+     */
+    public const RECOMMENDATION_TYPE = 'recType';
 
     /**
      * Cookie manager.
@@ -85,21 +90,21 @@ class RecommendationMemory
     /**
      * Returns a Base64 encoded string containing the provided recommendation data.
      *
-     * @param string $srcMod  Source recommendation module.
-     * @param string $recTerm Recommended search term.
-     * @param string $repTerm Replaced search term (optional).
+     * @param string $srcMod   Source recommendation module.
+     * @param string $recTerm  Recommended search term.
+     * @param string $origTerm Original search term (optional).
+     * @param string $recType  Recommendation type (optional).
      *
      * @return string
      */
-    public function getDataString($srcMod, $recTerm, $repTerm = '')
+    public function getDataString($srcMod, $recTerm, $origTerm = '', $recType = '')
     {
         $data = [
             self::SOURCE_MODULE => $srcMod,
-            self::RECOMMENDED_TERM => $recTerm
+            self::RECOMMENDED_TERM => $recTerm,
+            self::ORIGINAL_TERM => $origTerm,
+            self::RECOMMENDATION_TYPE => $recType
         ];
-        if (!empty($repTerm)) {
-            $data[self::REPLACED_TERM] = $repTerm;
-        }
         return base64_encode(serialize($data));
     }
 

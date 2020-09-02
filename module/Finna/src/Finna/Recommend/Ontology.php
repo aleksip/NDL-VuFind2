@@ -55,6 +55,12 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      */
     public const COOKIE_NAME = 'ontologyRecommend';
 
+    public const TYPE_NONDESCRIPTOR = 'nondescriptor';
+
+    public const TYPE_SPECIFIER = 'specifier';
+
+    public const TYPE_HYPONYM = 'hyponym';
+
     /**
      * Finto connection class.
      *
@@ -165,25 +171,11 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $resultTotal;
 
     /**
-     * Non-descriptor results.
+     * Ontology results.
      *
      * @var array
      */
-    protected $nonDescriptorResults = [];
-
-    /**
-     * Specifier results.
-     *
-     * @var array
-     */
-    protected $specifierResults = [];
-
-    /**
-     * Hyponym results.
-     *
-     * @var array
-     */
-    protected $hyponymResults = [];
+    protected $ontologyResults;
 
     /**
      * Total number of API calls made.
@@ -280,8 +272,8 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      */
     public function process($results)
     {
-        // Processing needs to be done at a later stage to get the search ID when
-        // not running as deferred.
+        // Processing is done at a later stage to get the search ID when not
+        // running as deferred.
         $this->results = $results;
     }
 
@@ -292,9 +284,14 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      */
     public function getOntologyResults()
     {
+        // Just return the results if we already have them.
+        if (isset($this->ontologyResults)) {
+            return $this->ontologyResults;
+        }
+
         // Do nothing if lookfor is empty.
         if (empty($this->lookfor)) {
-            return;
+            return false;
         }
 
         // Get language, do nothing if it is not supported.
@@ -315,7 +312,14 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             return false;
         }
 
-        // Get the searchId and resultTotal if not set in an AJAX request.
+        // Set up results array.
+        $this->ontologyResults = [
+            self::TYPE_NONDESCRIPTOR => [],
+            self::TYPE_SPECIFIER => [],
+            self::TYPE_HYPONYM => []
+        ];
+
+        // Get searchId and resultTotal.
         $this->searchId = $this->request->get('searchId')
             ?? $this->results->getSearchId()
             ?? null;
@@ -343,11 +347,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             $this->cookieManager->set(self::COOKIE_NAME, $timesShownTotal + 1);
         }
 
-        return [
-            'nondescriptor' => $this->nonDescriptorResults,
-            'specifier' => $this->specifierResults,
-            'hyponym' => $this->hyponymResults,
-        ];
+        return $this->ontologyResults;
     }
 
     /**
@@ -396,40 +396,38 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      */
     protected function processFintoSearchResults($fintoResults, $term)
     {
-        foreach ($fintoResults['results'] as $fintoResult) {
-            // Check for non-descriptor results.
+        if (count($fintoResults['results']) > 1) {
+            // If there are multiple Finto results they are considered to be
+            // specifier results.
+            foreach ($fintoResults['results'] as $fintoResult) {
+                $this->addOntologyResult(
+                    $fintoResult, self::TYPE_SPECIFIER, $term
+                );
+            }
+        } elseif (count($fintoResults['results']) === 1) {
+            // There is only one Finto result.
+            $fintoResult = reset($fintoResults['results']);
+
             if (((isset($fintoResult['altLabel'])
                 && $fintoResult['altLabel'] === $term)
                 || (isset($fintoResult['hiddenLabel'])
-                && $fintoResult['hiddenLabel'] === $term
-                && count($fintoResults['results']) === 1))
+                && $fintoResult['hiddenLabel'] === $term))
             ) {
+                // The Finto result has an altLabel or hiddenLabel so it is
+                // considered to be a non-descriptor result.
                 $this->addOntologyResult(
-                    $fintoResult, $this->nonDescriptorResults, $term
+                    $fintoResult, self::TYPE_NONDESCRIPTOR, $term
                 );
-                // Only show non-descriptor results if any.
-                continue;
-            }
 
-            // Check for specifier results.
-            if (((isset($fintoResult['hiddenLabel'])
-                && $fintoResult['hiddenLabel'] === $term)
-                || (isset($fintoResult['altLabel'])
-                && $fintoResult['altLabel'] === $term))
-                && count($fintoResults['results']) > 1
-            ) {
-                $this->addOntologyResult(
-                    $fintoResult, $this->specifierResults, $term
-                );
-            }
-
-            // Check for hyponym results.
-            if ((false === $this->minLargeResultTotal
+            } elseif ((false === $this->minLargeResultTotal
                 || $this->resultTotal >= $this->minLargeResultTotal)
-                && count($fintoResults['results']) === 1
             ) {
+                // The Finto result is not a non-descriptor and there is a
+                // large number of search results so we will try to make an
+                // additional Finto call to see if there are narrower
+                // concepts.
                 if (!$this->canMakeApiCall()) {
-                    continue;
+                    return;
                 }
                 if ($hyponymResults = $this->finto->narrower(
                     $fintoResult['vocab'], $fintoResult['uri'],
@@ -438,7 +436,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
                 ) {
                     foreach ($hyponymResults['narrower'] as $hyponymResult) {
                         $this->addOntologyResult(
-                            $hyponymResult, $this->hyponymResults, $term
+                            $hyponymResult, self::TYPE_HYPONYM, $term
                         );
                     }
                 }
@@ -450,13 +448,13 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     /**
      * Adds an ontology result to the specified array.
      *
-     * @param array  $fintoResult  Finto result
-     * @param array  $resultsArray Array to place result data into
-     * @param string $term         The term searched for
+     * @param array  $fintoResult Finto result
+     * @param string $resultType  Result type
+     * @param string $term        The term searched for
      *
      * @return void
      */
-    protected function addOntologyResult($fintoResult, &$resultsArray, $term)
+    protected function addOntologyResult($fintoResult, $resultType, $term)
     {
         $this->ontologyResultTotal += 1;
 
@@ -466,7 +464,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             $key = $this->searchId . '-' . $key;
         }
         $value = $this->recommendationMemory->getDataString(
-            'Ontology', $fintoResult['prefLabel'], $term
+            'Ontology', $fintoResult['prefLabel'], $term, $resultType
         );
 
         // Recommendation link.
@@ -499,10 +497,10 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         ];
 
         // Add result and increase counter if the result is for a new term.
-        if (!isset($resultsArray[$term])) {
-            $resultsArray[$term] = [];
+        if (!isset($this->ontologyResults[$resultType][$term])) {
+            $this->ontologyResults[$resultType][$term] = [];
             $this->recommendationTotal += 1;
         }
-        $resultsArray[$term][] = $ontologyResult;
+        $this->ontologyResults[$resultType][$term][] = $ontologyResult;
     }
 }
