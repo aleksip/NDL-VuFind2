@@ -434,9 +434,10 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
                     $fintoResult['lang'], true
                 )
                 ) {
+                    $termUri = $fintoResult['uri'] ?? null;
                     foreach ($hyponymResults['narrower'] as $hyponymResult) {
                         $this->addOntologyResult(
-                            $hyponymResult, self::TYPE_HYPONYM, $term
+                            $hyponymResult, self::TYPE_HYPONYM, $term, $termUri
                         );
                     }
                 }
@@ -448,14 +449,16 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     /**
      * Adds an ontology result to the specified array.
      *
-     * @param array  $fintoResult Finto result
-     * @param string $resultType  Result type
-     * @param string $term        The term searched for
+     * @param array       $fintoResult Finto result
+     * @param string      $resultType  Result type
+     * @param string      $term        The term searched for
+     * @param string|null $termUri     URI of the searched term if applicable
      *
      * @return void
      */
-    protected function addOntologyResult($fintoResult, $resultType, $term)
-    {
+    protected function addOntologyResult(
+        $fintoResult, $resultType, $term, $termUri = null
+    ) {
         $this->ontologyResultTotal += 1;
 
         // Recommendation memory cookie key and value.
@@ -476,6 +479,10 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         }
         $replace = $uriField . ' ' . $recommendedTerm;
         $recommend = str_replace($term, $replace, $this->lookfor);
+        if ($termUri) {
+            $recommend = str_replace('topic_uri_str_mv:' . $termUri, '', $recommend);
+            $recommend = preg_replace('/\s+/', ' ', $recommend);
+        }
         $params = [
             'lookfor' => $recommend,
             RecommendationMemory::PARAMETER_NAME => $key
