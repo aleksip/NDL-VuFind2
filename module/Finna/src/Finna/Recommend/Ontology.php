@@ -418,7 +418,6 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
                 $this->addOntologyResult(
                     $fintoResult, self::TYPE_NONDESCRIPTOR, $term
                 );
-
             } elseif ((false === $this->minLargeResultTotal
                 || $this->resultTotal >= $this->minLargeResultTotal)
             ) {
