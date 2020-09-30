@@ -1,4 +1,4 @@
-.nav.searchbox, .searchbox-flex {
+.searchbox, .searchbox-flex {
   .searchbox-home {
     .search-tooltip {
       width: 30%;
@@ -6,8 +6,6 @@
     .btn.btn-link {
       background: @background-color;
       border-radius: @border-radius-small;
-    }
-    .btn.btn-link {
       color:  mix(@background-color, contrast(@background-color), 5%);
       font-size: 1em;
       font-weight: normal;
@@ -74,7 +72,7 @@
 }
 
 // hidden navigation bar
-.nav.searchbox .fixedbar.attached {
+.searchbox .fixedbar.attached {
   background: rgba(0, 0, 0, 0.9);
   position: fixed;
   z-index: 1000;
@@ -83,7 +81,7 @@
   width: 100%;
   left: 0px;
 }
-.nav.searchbox .navbar-form {
+.searchbox .navbar-form {
 
   &.attached {
     z-index: 1000;
@@ -96,9 +94,6 @@
     .btn-link {
       display: none;
     }
-  }
-  .nav.searchbox {
-    margin: 0;
   }
 }
 
