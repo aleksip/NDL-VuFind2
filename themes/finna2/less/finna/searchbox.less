@@ -1,4 +1,6 @@
 .searchbox, .searchbox-flex {
+  margin-bottom: 12px;
+  margin-top: 12px;
   .searchbox-home {
     .search-tooltip {
       width: 30%;
@@ -35,7 +37,7 @@
     }
   }
   @media (max-width: @screen-sm) {
-    .dropdown.form-control {
+    .dropdown.form-control.type-dropdown {
       display: none;
     }
   }
@@ -193,6 +195,9 @@
   .pager {
     display: flex;
     align-items: center;
+    @media (max-width: @screen-lg) {
+      margin-left: 6px;
+    }
     .disabled {
       > a {
         background-color: transparent;
