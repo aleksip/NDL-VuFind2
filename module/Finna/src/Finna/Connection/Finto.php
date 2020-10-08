@@ -246,7 +246,6 @@ class Finto implements LoggerAwareInterface
                 // The result has an altLabel or hiddenLabel so it is considered
                 // to be a non-descriptor result.
                 $extendedResults[Finto::RESULT_TYPE] = Finto::TYPE_NONDESCRIPTOR;
-
             } elseif ($narrower) {
                 // The result is not a non-descriptor so we will make an additional
                 // API call to see if there are narrower concepts.
