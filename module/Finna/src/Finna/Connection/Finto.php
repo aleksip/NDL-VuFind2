@@ -46,6 +46,41 @@ class Finto implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
+     * Key for result type.
+     */
+    public const RESULT_TYPE = 'result_type';
+
+    /**
+     * Result type value for non-descriptor results.
+     */
+    public const TYPE_NONDESCRIPTOR = 'nondescriptor';
+
+    /**
+     * Result type value for specifier results.
+     */
+    public const TYPE_SPECIFIER = 'specifier';
+
+    /**
+     * Result type value for hyponym results.
+     */
+    public const TYPE_HYPONYM = 'hyponym';
+
+    /**
+     * Result type value for other results.
+     */
+    public const TYPE_OTHER = 'other';
+
+    /**
+     * Key for results.
+     */
+    public const RESULTS = 'results';
+
+    /**
+     * Key for narrower results.
+     */
+    public const NARROWER_RESULTS = 'narrower_results';
+
+    /**
      * Finto configuration.
      *
      * @var \Laminas\Config\Config
@@ -92,9 +127,9 @@ class Finto implements LoggerAwareInterface
      *
      * @param string $lang Language code, e.g. "en" or "fi"
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSupportedLanguage($lang)
+    public function isSupportedLanguage(string $lang): bool
     {
         return in_array($lang, ['fi', 'sv', 'en']);
     }
@@ -102,16 +137,17 @@ class Finto implements LoggerAwareInterface
     /**
      * Search concepts and collections by query term.
      *
-     * @param string $query The term to search for
-     * @param string $lang  Language of labels to match, e.g. "en" or "fi"
-     * @param array  $other Keyed array of other parameters accepted by Finto
-     *                      API's /search method
+     * @param string      $query The term to search for
+     * @param string|null $lang  Language of labels to match, e.g. "en" or "fi"
+     * @param array|null  $other Keyed array of other parameters accepted by Finto
+     *                           API's /search method
      *
-     * @return array|bool Results or false if none
+     * @return array Results
      * @throws \Exception
      */
-    public function search($query, $lang = null, $other = [])
-    {
+    public function search(
+        string $query, ?string $lang = null, ?array $other = null
+    ): array {
         // Set default values for parameters.
         $params = [
             'vocab' => 'yso',
@@ -122,29 +158,28 @@ class Finto implements LoggerAwareInterface
             $params = array_merge($params, $other);
         }
         $params['query'] = trim($query);
-        if ($lang) {
+        if (!empty($lang)) {
             $params['lang'] = $lang;
         }
 
-        // Make request
-        $response = $this->makeRequest(['search'], $params);
-
-        return !empty($response['results']) ? $response : false;
+        // Make request and return results.
+        return $this->makeRequest(['search'], $params);
     }
 
     /**
      * Narrower concepts of the requested concept.
      *
-     * @param string  $vocid A Skosmos vocabulary identifier e.g. "stw" or "yso"
-     * @param string  $uri   URI of the concept whose narrower concept to return
-     * @param string  $lang  Label language, e.g. "en" or "fi"
-     * @param boolean $sort  Whether to sort results alphabetically or not
+     * @param string      $vocid A Skosmos vocabulary identifier e.g. "stw" or "yso"
+     * @param string      $uri   URI of the concept whose narrower concept to return
+     * @param string|null $lang  Label language, e.g. "en" or "fi"
+     * @param boolean     $sort  Whether to sort results alphabetically or not
      *
-     * @return array|bool Results or false if none
+     * @return array Results
      * @throws \Exception
      */
-    public function narrower($vocid, $uri, $lang = '', $sort = false)
-    {
+    public function narrower(
+        string $vocid, string $uri, ?string $lang = null, bool $sort = false
+    ): array {
         // Set parameters.
         $params = ['vocid' => $vocid, 'uri' => $uri];
         if (!empty($lang)) {
@@ -160,7 +195,76 @@ class Finto implements LoggerAwareInterface
             array_multisort($label, SORT_ASC, $response['narrower']);
         }
 
-        return !empty($response['narrower']) ? $response : false;
+        return $response['narrower'];
+    }
+
+    /**
+     * Search concepts and collections by query term. Extend results with result type
+     * and results from possible further queries.
+     *
+     * @param string      $query    The term to search for
+     * @param string|null $lang     Language of labels to match, e.g. "en" or "fi"
+     * @param array|null  $other    Keyed array of other parameters accepted by
+     *                              Finto API's /search method
+     * @param bool        $narrower Look for narrower concepts if applicable
+     *
+     * @return array Extended results or empty array if none
+     * @throws \Exception
+     */
+    public function extendedSearch(
+        string $query, ?string $lang = null, ?array $other = null,
+        bool $narrower = true
+    ): array {
+        // Set up extended results array.
+        $extendedResults = [];
+
+        // Make search query.
+        $results = $this->search($query, $lang, $other);
+
+        // Early return if there is no results.
+        if (count($results['results']) === 0) {
+            return $extendedResults;
+        }
+
+        // Set results.
+        $extendedResults[Finto::RESULTS] = $results;
+
+        // Determine type and do further queries if applicable.
+        if (count($results['results']) > 1) {
+            // If there are multiple results they are considered to be
+            // specifier results.
+            $extendedResults[Finto::RESULT_TYPE] = Finto::TYPE_SPECIFIER;
+        } elseif (count($results['results']) === 1) {
+            // There is only one result.
+            $result = reset($results['results']);
+
+            if (((isset($result['altLabel'])
+                && $result['altLabel'] === $query)
+                || (isset($result['hiddenLabel'])
+                && $result['hiddenLabel'] === $query))
+            ) {
+                // The result has an altLabel or hiddenLabel so it is considered
+                // to be a non-descriptor result.
+                $extendedResults[Finto::RESULT_TYPE] = Finto::TYPE_NONDESCRIPTOR;
+
+            } elseif ($narrower) {
+                // The result is not a non-descriptor so we will make an additional
+                // API call to see if there are narrower concepts.
+                if ($narrowerResults = $this->narrower(
+                    $result['vocab'], $result['uri'], $result['lang'], true
+                )
+                ) {
+                    $extendedResults[Finto::RESULT_TYPE] = Finto::TYPE_HYPONYM;
+                    $extendedResults[Finto::NARROWER_RESULTS] = $narrowerResults;
+                }
+            }
+            // If no type has been determined set to "other".
+            if (!isset($extendedResults[Finto::RESULT_TYPE])) {
+                $extendedResults[Finto::RESULT_TYPE] = Finto::TYPE_OTHER;
+            }
+        }
+
+        return $extendedResults;
     }
 
     /**
@@ -168,19 +272,19 @@ class Finto implements LoggerAwareInterface
      *
      * Makes a request to the Finto REST API
      *
-     * @param array       $hierarchy Array of values to embed in the URL path of
-     *                               the request
-     * @param array|false $params    A keyed array of query data
-     * @param string      $method    The http request method to use (Default is
-     *                               GET)
+     * @param array      $hierarchy Array of values to embed in the URL path of
+     *                              the request
+     * @param array|null $params    A keyed array of query data
+     * @param string     $method    The http request method to use (Default is
+     *                              GET)
      *
-     * @return mixed JSON response decoded to an associative array or null on
-     *               authentication error.
+     * @return array JSON response decoded to an associative array.
      *
      * @throws \Exception
      */
-    protected function makeRequest($hierarchy, $params = false, $method = 'GET')
-    {
+    protected function makeRequest(
+        array $hierarchy, ?array $params = null, string $method = 'GET'
+    ): array {
         // Set up the request
         $apiUrl = $this->config->get('base_url', 'https://api.finto.fi/rest/v1');
 

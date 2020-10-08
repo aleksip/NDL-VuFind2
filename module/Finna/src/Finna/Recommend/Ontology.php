@@ -29,6 +29,7 @@ namespace Finna\Recommend;
 
 use Finna\Connection\Finto;
 use Finna\Cookie\RecommendationMemory;
+use VuFind\Config\PluginManager;
 use VuFind\Cookie\CookieManager;
 use VuFind\I18n\Translator\TranslatorAwareInterface;
 use VuFind\I18n\Translator\TranslatorAwareTrait;
@@ -54,12 +55,6 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      * Name of the cookie used to store the times shown total value.
      */
     public const COOKIE_NAME = 'ontologyRecommend';
-
-    public const TYPE_NONDESCRIPTOR = 'nondescriptor';
-
-    public const TYPE_SPECIFIER = 'specifier';
-
-    public const TYPE_HYPONYM = 'hyponym';
 
     /**
      * Finto connection class.
@@ -90,92 +85,101 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $recommendationMemory;
 
     /**
+     * Configuration loader
+     *
+     * @var PluginManager
+     */
+    protected $configLoader;
+
+    /**
      * Raw configuration parameters.
      *
      * @var string
      */
-    protected $rawParams;
+    protected $rawParams = null;
 
     /**
-     * Maximum API calls to make. A value of false indicates an unlimited number.
+     * Maximum number of API calls to make per search. Setting to null indicates
+     * an unlimited number of API calls.
      *
-     * @var int|bool
+     * @var int|null
      */
-    protected $maxApiCalls;
+    protected $maxApiCalls = null;
 
     /**
-     * Maximum recommendations to show. A value of false indicates an unlimited
-     * number.
+     * Maximum number of recommendations to show per search. Setting to null
+     * indicates an unlimited number of recommendations.
      *
-     * @var int|bool
+     * @var int|null
      */
-    protected $maxRecommendations;
+    protected $maxRecommendations = null;
 
     /**
-     * Maximum total for determining if the result set is small. A value of false
-     * indicates that all result sets should be considered small.
+     * Maximum total number for determining if the result set is small. Setting
+     * to null indicates that all result sets should be considered small.
      *
-     * @var int|bool
+     * @var int|null
      */
-    protected $maxSmallResultTotal;
+    protected $maxSmallResultTotal = null;
 
     /**
-     * Minimum total for determining if the result set is large. A value of false
-     * indicates that all result should be considered large.
+     * Minimum total number for determining if the result set is large. Setting
+     * to null indicates that all result sets should be considered large.
      *
-     * @var int|bool
+     * @var int|null
      */
-    protected $minLargeResultTotal;
+    protected $minLargeResultTotal = null;
 
     /**
-     * Maximum number of times ontology recommendations can be shown per
-     * browser session. A value of false indicates an unlimited number.
+     * Maximum number of times ontology recommendations can be shown per browser
+     * session. Setting to null indicates an unlimited number of ontology
+     * recommendations shown.
      *
-     * @var int|bool
+     * @var int|null
      */
-    protected $maxTimesShownPerSession;
+    protected $maxTimesShownPerSession = null;
 
     /**
      * Parameter object representing user request.
      *
      * @var \Laminas\StdLib\Parameters
      */
-    protected $request;
+    protected $request = null;
 
     /**
      * Current search query.
      *
      * @var string
      */
-    protected $lookfor;
+    protected $lookfor = null;
 
     /**
      * Search results object.
      *
      * @var \VuFind\Search\Base\Results
      */
-    protected $results;
+    protected $results = null;
 
     /**
      * Search ID.
      *
      * @var int
      */
-    protected $searchId;
+    protected $searchId = null;
 
     /**
      * Total count of records in the result set.
      *
      * @var int
      */
-    protected $resultTotal;
+    protected $resultTotal = null;
 
     /**
-     * Ontology results.
+     * Ontology recommendations.
      *
-     * @var array
+     * @var array|null
      */
-    protected $ontologyResults;
+    protected $recommendations = null;
 
     /**
      * Total number of API calls made.
@@ -205,19 +209,27 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      * @param CookieManager        $cookieManager        Cookie manager
      * @param Url                  $urlHelper            Url helper
      * @param RecommendationMemory $recommendationMemory Recommendation memory
+     * @param PluginManager        $configLoader         Configuration loader
      */
     public function __construct(
         Finto $finto, CookieManager $cookieManager, Url $urlHelper,
-        RecommendationMemory $recommendationMemory
+        RecommendationMemory $recommendationMemory, PluginManager $configLoader
     ) {
         $this->finto = $finto;
         $this->cookieManager = $cookieManager;
         $this->urlHelper = $urlHelper;
         $this->recommendationMemory = $recommendationMemory;
+        $this->configLoader = $configLoader;
     }
 
     /**
      * Store the configuration of the recommendation module.
+     *
+     * Ontology:[ini section]:[ini name]
+     *       Provides ontology based recommendations as configured in the specified
+     *       section of the specified ini file; if [ini name] is left out, it
+     *       defaults to "searches" and if [ini section] is left out, it defaults to
+     *       "OntologyModuleRecommendations".
      *
      * @param string $settings Settings from searches.ini.
      *
@@ -225,7 +237,18 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      */
     public function setConfig($settings)
     {
-        $this->rawParams = $settings;
+        $settings = explode(':', $settings);
+        $sectionName = empty($settings[0])
+            ? 'OntologyModuleRecommendations' : $settings[0];
+        $iniName = $settings[1] ?? 'searches';
+
+        $config = $this->configLoader->get($iniName)->get($sectionName);
+
+        $this->maxApiCalls = $config->get('maxApiCalls');
+        $this->maxRecommendations = $config->get('maxRecommendations');
+        $this->maxSmallResultTotal = $config->get('maxSmallResultTotal');
+        $this->minLargeResultTotal = $config->get('minLargeResultTotal');
+        $this->maxTimesShownPerSession = $config->get('maxTimesShownPerSession');
     }
 
     /**
@@ -242,14 +265,6 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      */
     public function init($params, $request)
     {
-        // Parse out parameters:
-        $settings = explode(':', $this->rawParams);
-        $this->maxApiCalls = empty($settings[0]) ? false : $settings[0];
-        $this->maxRecommendations = empty($settings[1]) ? false : $settings[1];
-        $this->maxSmallResultTotal = empty($settings[2]) ? false : $settings[2];
-        $this->minLargeResultTotal = empty($settings[3]) ? false : $settings[3];
-        $this->maxTimesShownPerSession = empty($settings[4]) ? false : $settings[4];
-
         $this->request = $request;
 
         // Collect the best possible search term(s):
@@ -278,27 +293,28 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     }
 
     /**
-     * Get all ontology results grouped by type.
+     * Get all ontology recommendations grouped by type.
      *
-     * @return array|false
+     * @return array|null
+     * @throws \Exception
      */
-    public function getOntologyResults()
+    public function getRecommendations(): ?array
     {
         // Just return the results if we already have them.
-        if (isset($this->ontologyResults)) {
-            return $this->ontologyResults;
+        if (isset($this->recommendations)) {
+            return $this->recommendations;
         }
 
         // Do nothing if lookfor is empty.
         if (empty($this->lookfor)) {
-            return false;
+            return null;
         }
 
         // Get language, do nothing if it is not supported.
         $language = $this->getTranslatorLocale();
         $language = (0 === strpos($language, 'en-')) ? 'en' : $language;
         if (!$this->finto->isSupportedLanguage($language)) {
-            return false;
+            return null;
         }
 
         // Check cookie to find out how many times ontology recommendations have
@@ -309,15 +325,8 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         if (is_numeric($this->maxTimesShownPerSession)
             && $timesShownTotal > $this->maxTimesShownPerSession
         ) {
-            return false;
+            return null;
         }
-
-        // Set up results array.
-        $this->ontologyResults = [
-            self::TYPE_NONDESCRIPTOR => [],
-            self::TYPE_SPECIFIER => [],
-            self::TYPE_HYPONYM => []
-        ];
 
         // Get searchId and resultTotal.
         $this->searchId = $this->request->get('searchId')
@@ -326,20 +335,63 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         $this->resultTotal = $this->request->get('resultTotal')
             ?? $this->results->getResultTotal();
 
-        // Create search terms array with quoted words as one search term.
+        // Set up recommendations array.
+        $this->recommendations = [
+            Finto::TYPE_NONDESCRIPTOR => [],
+            Finto::TYPE_SPECIFIER => [],
+            Finto::TYPE_HYPONYM => []
+        ];
+
+        // Set up search terms array with quoted words as one search term.
         $terms = str_getcsv($this->lookfor, ' ');
 
+        // Process each term and make API calls if applicable.
         foreach ($terms as $term) {
-            if (!($this->canMakeApiCall() && $this->canAddRecommendation())) {
+            // Determine if the term can or should be searched for.
+            if (!($this->canMakeApiCalls() && $this->canAddRecommendation())) {
                 break;
             }
             if ($this->skipFromFintoSearch($term)) {
                 continue;
             }
-            if ($fintoResults = $this->finto->search($term, $language)) {
-                $this->processFintoSearchResults($fintoResults, $term);
-            }
+
+            // Determine if narrower concepts should be looked for if applicable.
+            $narrower = ((null === $this->minLargeResultTotal
+                || $this->resultTotal >= $this->minLargeResultTotal))
+                && $this->canMakeApiCalls(2);
+
+            // Make the Finto API call(s).
+            $fintoResults
+                = $this->finto->extendedSearch($term, $language, [], $narrower);
             $this->apiCallTotal += 1;
+
+            // Continue to next term if no results or "other" results.
+            if (!$fintoResults
+                || Finto::TYPE_OTHER === $fintoResults[Finto::RESULT_TYPE]
+            ) {
+                continue;
+            }
+
+            // Process and add Finto results.
+            if (Finto::TYPE_HYPONYM === $fintoResults[Finto::RESULT_TYPE]) {
+                // Hyponym results have required an additional API call.
+                $this->apiCallTotal += 1;
+                // The term uri parameter is from the original results.
+                $termUri = $fintoResults[Finto::RESULTS]['results'][0]['uri'];
+                // Narrower results are used for hyponym recommendations.
+                foreach ($fintoResults[Finto::NARROWER_RESULTS] as $fintoResult) {
+                    $this->addOntologyResult(
+                        $term, $fintoResult, $fintoResults[Finto::RESULT_TYPE],
+                        $termUri
+                    );
+                }
+            } else {
+                foreach ($fintoResults[Finto::RESULTS]['results'] as $fintoResult) {
+                    $this->addOntologyResult(
+                        $term, $fintoResult, $fintoResults[Finto::RESULT_TYPE]
+                    );
+                }
+            }
         }
 
         if ($this->recommendationTotal > 0) {
@@ -347,19 +399,21 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             $this->cookieManager->set(self::COOKIE_NAME, $timesShownTotal + 1);
         }
 
-        return $this->ontologyResults;
+        return $this->recommendations;
     }
 
     /**
-     * Can another API call be made.
+     * Can more API calls be made.
+     *
+     * @param int $count Number of API calls needed, defaults to 1.
      *
      * @return bool
      */
-    protected function canMakeApiCall()
+    protected function canMakeApiCalls(int $count = 1): bool
     {
         return is_numeric($this->maxApiCalls)
-            ? $this->apiCallTotal < $this->maxApiCalls
-            : false === $this->maxApiCalls;
+            ? ($this->apiCallTotal + $count) <= $this->maxApiCalls
+            : true;
     }
 
     /**
@@ -367,11 +421,11 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      *
      * @return bool
      */
-    protected function canAddRecommendation()
+    protected function canAddRecommendation(): bool
     {
         return is_numeric($this->maxRecommendations)
             ? $this->recommendationTotal < $this->maxRecommendations
-            : false === $this->maxRecommendations;
+            : true;
     }
 
     /**
@@ -381,96 +435,36 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      *
      * @return bool
      */
-    protected function skipFromFintoSearch($term)
+    protected function skipFromFintoSearch(string $term): bool
     {
         return 0 === strpos($term, 'topic_uri_str_mv:');
     }
 
     /**
-     * Processes results of a single Finto search query.
+     * Adds an ontology result to the recommendations array.
      *
-     * @param array  $fintoResults Finto results
-     * @param string $term         The term searched for
-     *
-     * @return void
-     */
-    protected function processFintoSearchResults($fintoResults, $term)
-    {
-        if (count($fintoResults['results']) > 1) {
-            // If there are multiple Finto results they are considered to be
-            // specifier results.
-            foreach ($fintoResults['results'] as $fintoResult) {
-                $this->addOntologyResult(
-                    $fintoResult, self::TYPE_SPECIFIER, $term
-                );
-            }
-        } elseif (count($fintoResults['results']) === 1) {
-            // There is only one Finto result.
-            $fintoResult = reset($fintoResults['results']);
-
-            if (((isset($fintoResult['altLabel'])
-                && $fintoResult['altLabel'] === $term)
-                || (isset($fintoResult['hiddenLabel'])
-                && $fintoResult['hiddenLabel'] === $term))
-            ) {
-                // The Finto result has an altLabel or hiddenLabel so it is
-                // considered to be a non-descriptor result.
-                $this->addOntologyResult(
-                    $fintoResult, self::TYPE_NONDESCRIPTOR, $term
-                );
-            } elseif ((false === $this->minLargeResultTotal
-                || $this->resultTotal >= $this->minLargeResultTotal)
-            ) {
-                // The Finto result is not a non-descriptor and there is a
-                // large number of search results so we will try to make an
-                // additional Finto call to see if there are narrower
-                // concepts.
-                if (!$this->canMakeApiCall()) {
-                    return;
-                }
-                if ($hyponymResults = $this->finto->narrower(
-                    $fintoResult['vocab'], $fintoResult['uri'],
-                    $fintoResult['lang'], true
-                )
-                ) {
-                    $termUri = $fintoResult['uri'] ?? null;
-                    foreach ($hyponymResults['narrower'] as $hyponymResult) {
-                        $this->addOntologyResult(
-                            $hyponymResult, self::TYPE_HYPONYM, $term, $termUri
-                        );
-                    }
-                }
-                $this->apiCallTotal += 1;
-            }
-        }
-    }
-
-    /**
-     * Adds an ontology result to the specified array.
-     *
+     * @param string      $term        The term searched for
      * @param array       $fintoResult Finto result
      * @param string      $resultType  Result type
-     * @param string      $term        The term searched for
      * @param string|null $termUri     URI of the searched term if applicable
      *
      * @return void
      */
     protected function addOntologyResult(
-        $fintoResult, $resultType, $term, $termUri = null
-    ) {
+        string $term, array $fintoResult, string $resultType, ?string $termUri = null
+    ): void {
         $this->ontologyResultTotal += 1;
 
         // Recommendation memory cookie key and value.
-        $key = $this->ontologyResultTotal;
+        $cookieKey = $this->ontologyResultTotal;
         if ($this->searchId) {
-            $key = $this->searchId . '-' . $key;
+            $cookieKey = $this->searchId . '-' . $cookieKey;
         }
-        $value = $this->recommendationMemory->getDataString(
+        $cookieValue = $this->recommendationMemory->getDataString(
             'Ontology', $fintoResult['prefLabel'], $term, $resultType
         );
 
         // Recommendation link.
-        $base = $this->urlHelper->__invoke('search-results');
         $uriField = 'topic_uri_str_mv:' . $fintoResult['uri'];
         $recommendedTerm = $fintoResult['prefLabel'];
         if (preg_match('/\s/', $recommendedTerm)) {
@@ -484,29 +478,31 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         }
         $params = [
             'lookfor' => $recommend,
-            RecommendationMemory::PARAMETER_NAME => $key
+            RecommendationMemory::PARAMETER_NAME => $cookieKey
         ];
         $params = array_merge($this->request->toArray(), $params);
         unset(
             $params['mod'], $params['params'], $params['searchId'],
             $params['resultTotal']
         );
-        $href = $base . '?' . http_build_query($params);
+        $href = $this->urlHelper->__invoke(
+            'search-results', [], ['query' => $params]
+        );
 
         // Create result array.
         $ontologyResult = [
             'label' => $fintoResult['prefLabel'],
             'href' => $href,
-            'key' => $key,
-            'value' => $value,
+            'cookieKey' => $cookieKey,
+            'cookieValue' => $cookieValue,
             'result' => $fintoResult,
         ];
 
         // Add result and increase counter if the result is for a new term.
-        if (!isset($this->ontologyResults[$resultType][$term])) {
-            $this->ontologyResults[$resultType][$term] = [];
+        if (!isset($this->recommendations[$resultType][$term])) {
+            $this->recommendations[$resultType][$term] = [];
             $this->recommendationTotal += 1;
         }
-        $this->ontologyResults[$resultType][$term][] = $ontologyResult;
+        $this->recommendations[$resultType][$term][] = $ontologyResult;
     }
 }

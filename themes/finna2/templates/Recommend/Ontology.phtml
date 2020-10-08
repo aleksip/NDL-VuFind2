@@ -1,20 +1,20 @@
-<?php if (!empty($ontologyResults = $this->recommend->getOntologyResults())): ?>
+<?php if ($recs = $this->recommend->getRecommendations()): ?>
   <!-- START of: finna - Recommend/Ontology.phtml -->
-  <?php foreach ($ontologyResults as $type => $typeResults): ?>
-    <?php foreach ($typeResults as $term => $termResults): ?>
-      <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info">
+  <?php foreach ($recs as $type => $typeRecs): ?>
+    <?php foreach ($typeRecs as $term => $termRecs): ?>
+      <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info" data-result-type="<?= $type ?>" data-term="<?= $term ?>">
         <p><?= $this->transEsc(
           'ontology_recommendation_' . $type,
-          ['%%term%%' => $term, '%%results_count%%' => count($termResults)]
+          ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]
         ) ?>
-        <?php if (1 === count($termResults)): ?>
-          <a href="<?= $termResults[0]['href'] ?>" data-key="<?= $termResults[0]['key'] ?>" data-value="<?= $termResults[0]['value'] ?>">'<?= $termResults[0]['label'] ?>'</a>
+        <?php if (1 === count($termRecs)): ?>
+          <a href="<?= $termRecs[0]['href'] ?>" data-key="<?= $termRecs[0]['cookieKey'] ?>" data-value="<?= $termRecs[0]['cookieValue'] ?>">'<?= $termRecs[0]['label'] ?>'</a>
           </p>
         <?php else: ?>
           </p>
-          <ul<?php if (count($termResults) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
-            <?php foreach ($termResults as $termResult): ?>
-              <li><a href="<?= $termResult['href'] ?>" data-key="<?= $termResult['key'] ?>" data-value="<?= $termResult['value'] ?>"><?= $termResult['label'] ?></a></li>
+          <ul<?php if (count($termRecs) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
+            <?php foreach ($termRecs as $termRec): ?>
+              <li><a href="<?= $termRec['href'] ?>" data-key="<?= $termRec['cookieKey'] ?>" data-value="<?= $termRec['cookieValue'] ?>"><?= $termRec['label'] ?></a></li>
             <?php endforeach; ?>
           </ul>
         <?php endif; ?>
@@ -25,7 +25,7 @@
     $script = <<<EOT
     $('.ontology-recommendation a').each(function() {
       $(this).click(function() {
-        $.cookie($(this).data('key'), $(this).data('value'), {path: VuFind.path});
+        finna.common.setCookie($(this).data('key'), $(this).data('value'));
       });
     });
 EOT;

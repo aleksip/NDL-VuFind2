@@ -1,18 +1,11 @@
-<?php if (!empty($data = $this->recommend->getData())): ?>
+<?php if ($data = $this->recommend->getTemplateData()): ?>
   <!-- START of: finna - Recommend/Feedback.phtml -->
   <div class="recommendation-feedback alert alert-info">
     <p><?= $question = $this->transEsc(
-      'recommendation_feedback_question',
-      ['%%term%%' => $data[\Finna\Cookie\RecommendationMemory::RECOMMENDED_TERM]]
+      'recommendation_feedback_question', ['%%term%%' => $data['recommended_term']]
     ) ?></p>
-    <a href="<?= $this->url('feedback-form',
-      ['id' => 'FeedbackRecommendation'],
-      ['query' => ['data' => [
-          'source_module' => $data[\Finna\Cookie\RecommendationMemory::SOURCE_MODULE],
-          'recommended_term' => $data[\Finna\Cookie\RecommendationMemory::RECOMMENDED_TERM],
-          'original_term' => $data[\Finna\Cookie\RecommendationMemory::ORIGINAL_TERM],
-          'recommendation_type' => $data[\Finna\Cookie\RecommendationMemory::RECOMMENDATION_TYPE]
-      ]]]
+    <a href="<?= $this->url(
+      'feedback-form', ['id' => 'FeedbackRecommendation'], ['query' => ['data' => $data['formData']]]
     ) ?>" class="btn btn-primary" data-lightbox data-lightbox-title="<?= $question ?>" onclick="$(this).parent().hide()">Anna palautetta</a>
   </div>
   <!-- END of: finna - Recommend/Feedback.phtml -->

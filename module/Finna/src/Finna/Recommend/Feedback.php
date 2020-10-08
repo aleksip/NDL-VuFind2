@@ -48,23 +48,23 @@ class Feedback implements RecommendInterface
      *
      * @var RecommendationMemory
      */
-    protected $recommendationMemory;
+    protected $recMemory;
 
     /**
      * Possible recommendation data.
      *
-     * @var array|false
+     * @var array
      */
-    protected $data;
+    protected $recData = null;
 
     /**
      * Feedback constructor.
      *
-     * @param RecommendationMemory $recommendationMemory Recommendation memory
+     * @param RecommendationMemory $recMemory Recommendation memory
      */
-    public function __construct(RecommendationMemory $recommendationMemory)
+    public function __construct(RecommendationMemory $recMemory)
     {
-        $this->recommendationMemory = $recommendationMemory;
+        $this->recMemory = $recMemory;
     }
 
     /**
@@ -92,7 +92,7 @@ class Feedback implements RecommendInterface
      */
     public function init($params, $request)
     {
-        $this->data = $this->recommendationMemory->get($request);
+        $this->recData = $this->recMemory->get($request);
     }
 
     /**
@@ -111,11 +111,27 @@ class Feedback implements RecommendInterface
     /**
      * Returns data for the feedback theme template.
      *
-     * @return array|bool Array with data or false if the feedback form should
-     *                    not be shown.
+     * @return array Array with data or an empty array if the feedback form should
+     *               not be shown.
      */
-    public function getData()
+    public function getTemplateData(): array
     {
-        return $this->data;
+        if (empty($this->recData)) {
+            return [];
+        }
+        return [
+            'recommended_term'
+                => $this->recData[RecommendationMemory::RECOMMENDED_TERM],
+            'formData' => [
+                'source_module'
+                    => $this->recData[RecommendationMemory::SOURCE_MODULE],
+                'recommended_term'
+                    => $this->recData[RecommendationMemory::RECOMMENDED_TERM],
+                'original_term'
+                    => $this->recData[RecommendationMemory::ORIGINAL_TERM],
+                'recommendation_type'
+                    => $this->recData[RecommendationMemory::RECOMMENDATION_TYPE]
+            ]
+        ];
     }
 }

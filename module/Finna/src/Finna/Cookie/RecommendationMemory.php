@@ -48,7 +48,7 @@ class RecommendationMemory
     public const PARAMETER_NAME = 'rmKey';
 
     /**
-     * Source recommendation module.
+     * Key for the source recommendation module.
      *
      * This is different from the (target) recommendation module parameter used
      * in deferred AJAX requests.
@@ -56,17 +56,17 @@ class RecommendationMemory
     public const SOURCE_MODULE = 'srcMod';
 
     /**
-     * Recommended search term.
+     * Key for the recommended search term.
      */
     public const RECOMMENDED_TERM = 'recTerm';
 
     /**
-     * Original search term.
+     * Key for the original search term.
      */
     public const ORIGINAL_TERM = 'origTerm';
 
     /**
-     * Recommendation type.
+     * Key for the recommendation type.
      */
     public const RECOMMENDATION_TYPE = 'recType';
 
@@ -97,15 +97,16 @@ class RecommendationMemory
      *
      * @return string
      */
-    public function getDataString($srcMod, $recTerm, $origTerm = '', $recType = '')
-    {
+    public function getDataString(
+        string $srcMod, string $recTerm, string $origTerm = '', string $recType = ''
+    ): string {
         $data = [
             self::SOURCE_MODULE => $srcMod,
             self::RECOMMENDED_TERM => $recTerm,
             self::ORIGINAL_TERM => $origTerm,
             self::RECOMMENDATION_TYPE => $recType
         ];
-        return base64_encode(serialize($data));
+        return base64_encode(json_encode($data));
     }
 
     /**
@@ -115,21 +116,21 @@ class RecommendationMemory
      * @param boolean    $clear   Whether to clear the data cookie (optional,
      *                            defaults to true).
      *
-     * @return array|false
+     * @return array|null Recommendation data or null if there is none.
      */
-    public function get(Parameters $request, $clear = true)
+    public function get(Parameters $request, $clear = true): ?array
     {
         $rmValue = $request->get(self::PARAMETER_NAME);
         if (isset($rmValue)) {
             $dataString = $this->cookieManager->get($rmValue);
             if (isset($dataString)) {
-                $data = unserialize(base64_decode($dataString));
+                $data = json_decode(base64_decode($dataString), true);
                 if ($clear) {
                     $this->cookieManager->clear($rmValue);
                 }
                 return $data;
             }
         }
-        return false;
+        return null;
     }
 }
