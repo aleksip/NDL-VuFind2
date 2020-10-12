@@ -1,0 +1,5 @@
+<ul class="finna-nav nav <?= $additionalClasses ?>">
+  <?php foreach ($items as $item): ?>
+    <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $item); ?>
+  <?php endforeach; ?>
+</ul>

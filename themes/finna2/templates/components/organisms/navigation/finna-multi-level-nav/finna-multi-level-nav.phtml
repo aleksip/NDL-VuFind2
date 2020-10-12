@@ -1,0 +1,47 @@
+<?php
+  $tabsPrimary = [];
+  foreach ($items as $item) {
+    if (isset($item['active']) && boolval($item['active'])) {
+      $activeLabel = $item['label'];
+      if (!empty($item['children'])) {
+        $tabsSecondary = $item['children'];
+        foreach ($tabsSecondary as $secondaryItem) {
+          if (isset($secondaryItem['active']) && boolval($secondaryItem['active'])) {
+            $activeLabel = $secondaryItem['label'];
+          }
+        }
+      }
+    }
+    unset($item['children']);
+    $tabsPrimary[] = $item;
+  }
+?>
+<div class="finna-multi-level-nav <?= $additionalClasses ?? '' ?>">
+  <?= $this->render('components/molecules/navigation/finna-nav-tabs/finna-nav-tabs.phtml', [
+      'additionalClasses' => 'hidden-xs',
+      'ariaLabel' => (empty($tabsSecondary) ? $ariaLabel: $ariaLabelPrimary),
+      'tabs' => $tabsPrimary,
+    ]); ?>
+  <?php if (!empty($tabsSecondary)): ?>
+    <?= $this->render('components/molecules/navigation/finna-nav-tabs/finna-nav-tabs.phtml', [
+        'additionalClasses' => 'finna-nav-tabs-secondary hidden-xs',
+        'ariaLabel' => $ariaLabelSecondary,
+        'tabs' => $tabsSecondary,
+      ]); ?>
+  <?php endif; ?>
+  <?= $this->render('components/organisms/navigation/finna-navbar/finna-navbar.phtml', [
+      'additionalClasses' => 'visible-xs',
+      'ariaLabel' => $ariaLabel,
+      'brandContent' => $brandContent ?? $activeLabel ?? '',
+      'brandLink' => $brandLink ?? null,
+      'brandSrOnly' => $brandSrOnly ?? null,
+      'collapseContent' => $this->render('components/molecules/navigation/finna-nav/finna-nav.phtml', [
+          'additionalClasses' => 'navbar-nav',
+          'items' => $items
+        ]),
+      'collapseId' => $collapseId,
+      'toggleBtnIconClass' => $toggleBtnIconClass ?? 'fa-handle-open',
+      'toggleBtnLabel' => $toggleBtnLabel ?? null,
+      'toggleBtnSrOnly' => $toggleBtnSrOnly ?? null
+    ]); ?>
+</div>
