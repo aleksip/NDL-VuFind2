@@ -44,6 +44,8 @@ class RecommendationMemory
     /**
      * Name of the query string parameter containing the recommendation memory
      * cookie name.
+     *
+     * @var string
      */
     public const PARAMETER_NAME = 'rmKey';
 
@@ -52,21 +54,29 @@ class RecommendationMemory
      *
      * This is different from the (target) recommendation module parameter used
      * in deferred AJAX requests.
+     *
+     * @var string
      */
     public const SOURCE_MODULE = 'srcMod';
 
     /**
      * Key for the recommended search term.
+     *
+     * @var string
      */
     public const RECOMMENDED_TERM = 'recTerm';
 
     /**
      * Key for the original search term.
+     *
+     * @var string
      */
     public const ORIGINAL_TERM = 'origTerm';
 
     /**
      * Key for the recommendation type.
+     *
+     * @var string
      */
     public const RECOMMENDATION_TYPE = 'recType';
 

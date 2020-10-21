@@ -47,36 +47,50 @@ class Finto implements LoggerAwareInterface
 
     /**
      * Key for result type.
+     *
+     * @var string
      */
     public const RESULT_TYPE = 'result_type';
 
     /**
      * Result type value for non-descriptor results.
+     *
+     * @var string
      */
     public const TYPE_NONDESCRIPTOR = 'nondescriptor';
 
     /**
      * Result type value for specifier results.
+     *
+     * @var string
      */
     public const TYPE_SPECIFIER = 'specifier';
 
     /**
      * Result type value for hyponym results.
+     *
+     * @var string
      */
     public const TYPE_HYPONYM = 'hyponym';
 
     /**
      * Result type value for other results.
+     *
+     * @var string
      */
     public const TYPE_OTHER = 'other';
 
     /**
      * Key for results.
+     *
+     * @var string
      */
     public const RESULTS = 'results';
 
     /**
      * Key for narrower results.
+     *
+     * @var string
      */
     public const NARROWER_RESULTS = 'narrower_results';
 

@@ -53,6 +53,8 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
 
     /**
      * Name of the cookie used to store the times shown total value.
+     *
+     * @var string
      */
     public const COOKIE_NAME = 'ontologyRecommend';
 
