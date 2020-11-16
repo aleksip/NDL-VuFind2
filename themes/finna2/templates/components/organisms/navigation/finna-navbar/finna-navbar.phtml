@@ -1,9 +1,10 @@
-<nav class="finna-navbar-component navbar navbar-default <?= $additionalClasses ?? '' ?>" aria-label="<?= $ariaLabel ?>">
+<nav class="finna-navbar-component navbar <?= $additionalClasses ?? '' ?>" aria-label="<?= $ariaLabel ?>">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#<?= $collapseId ?>" aria-expanded="false">
         <?php if (!empty($toggleBtnSrOnly)): ?><span class="sr-only"><?= $toggleBtnSrOnly ?></span><?php endif; ?>
-        <?php if (!empty($toggleBtnIconClass)): ?><i class="fa <?= $toggleBtnIconClass ?? '' ?>"></i><?php endif; ?> <?= $toggleBtnLabel ?? '' ?>
+        <?php if (!empty($toggleBtnLabel)): ?><?= $toggleBtnLabel ?><?php endif; ?>
+        <?php if (!empty($toggleBtnIconClass)): ?><i class="fa <?= $toggleBtnIconClass ?? '' ?>"></i><?php endif; ?>
       </button>
       <span class="navbar-brand">
         <?php if (!empty($brandLink)): ?><a href="<?= $brandLink ?>"><?php endif; ?>

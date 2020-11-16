@@ -1,4 +1,8 @@
 <?php
+  $navbarVariant = 'navbar-default';
+  if (!empty($additionalClasses) && strpos($additionalClasses,'finna-multi-level-nav-content') !== false) {
+    $navbarVariant = 'finna-navbar-content';
+  }
   $tabsPrimary = [];
   foreach ($items as $item) {
     if (isset($item['active']) && boolval($item['active'])) {
@@ -30,7 +34,7 @@
       ]); ?>
   <?php endif; ?>
   <?= $this->render('components/organisms/navigation/finna-navbar/finna-navbar.phtml', [
-      'additionalClasses' => 'visible-xs',
+      'additionalClasses' => $navbarVariant . ' visible-xs',
       'ariaLabel' => $ariaLabel,
       'brandContent' => $brandContent ?? $activeLabel ?? '',
       'brandLink' => $brandLink ?? null,

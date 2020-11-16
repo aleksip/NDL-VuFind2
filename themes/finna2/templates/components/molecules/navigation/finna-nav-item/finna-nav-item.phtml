@@ -3,9 +3,6 @@
   $classes = [];
   if (!empty($children)) {
     $classes[] = 'dropdown';
-    if ($active == 'true') {
-      $classes[] = 'open';
-    }
   } elseif ($active == 'true') {
     $classes[] = 'active';
   }
@@ -20,10 +17,12 @@
     <?php endif; ?>
   <?php else: ?>
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-      aria-expanded="<?= $active ?>"><?= $label ?> <b class="caret"></b></a>
+      aria-expanded="false"><?= $label ?> <b class="caret"></b></a>
     <ul class="dropdown-menu">
       <?php foreach ($children as $child): ?>
-        <li><a href="<?= $child['link'] ?>"><?= $child['label'] ?></a></li>
+        <?php $hasDescription = !empty($child['description']); ?>
+        <li<?php if ($hasDescription): ?> class="nav-item-has-description"<?php endif; ?>><a href="<?= $child['link'] ?>"><span><?= $child['label'] ?></span>
+          <?php if ($hasDescription): ?><span role="note"><?= $child['description'] ?></span><?php endif; ?></a></li>
       <?php endforeach; ?>
     </ul>
   <?php endif; ?>

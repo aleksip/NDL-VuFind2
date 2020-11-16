@@ -1,4 +1,6 @@
-<ul class="finna-nav nav <?= $additionalClasses ?>">
+<ul class="finna-nav nav <?= $additionalClasses ?? '' ?>"
+  <?php if (!empty($role)): ?> role="<?= $role ?>"<?php endif; ?>
+  <?php if (!empty($ariaLabel)): ?> aria-label="<?= $ariaLabel ?>"<?php endif; ?>>
   <?php foreach ($items as $item): ?>
     <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $item); ?>
   <?php endforeach; ?>
