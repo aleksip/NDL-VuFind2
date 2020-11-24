@@ -1,13 +1,18 @@
-.nav.searchbox, .searchbox-flex {
-  .searchbox-home {
+.searcbox, .searchbox-columns {
+  &:extend(.clearfix all);
+}
+.searchbox, .searchbox-flex {
+  margin-bottom: 12px;
+  margin-top: 12px;
+  .searchbox-home,
+  .searchbox-authority-home,
+  .searchbox-authority-search {
     .search-tooltip {
       width: 30%;
     }
     .btn.btn-link {
       background: @background-color;
       border-radius: @border-radius-small;
-    }
-    .btn.btn-link {
       color:  mix(@background-color, contrast(@background-color), 5%);
       font-size: 1em;
       font-weight: normal;
@@ -37,7 +42,7 @@
     }
   }
   @media (max-width: @screen-sm) {
-    .dropdown.form-control {
+    .dropdown.form-control.type-dropdown {
       display: none;
     }
   }
@@ -74,7 +79,7 @@
 }
 
 // hidden navigation bar
-.nav.searchbox .fixedbar.attached {
+.searchbox .fixedbar.attached {
   background: rgba(0, 0, 0, 0.9);
   position: fixed;
   z-index: 1000;
@@ -83,7 +88,7 @@
   width: 100%;
   left: 0px;
 }
-.nav.searchbox .navbar-form {
+.searchbox .navbar-form {
 
   &.attached {
     z-index: 1000;
@@ -96,9 +101,6 @@
     .btn-link {
       display: none;
     }
-  }
-  .nav.searchbox {
-    margin: 0;
   }
 }
 
@@ -144,39 +146,17 @@
       &.tooltip-button {
         height: 50px;
       }
-      &.tooltip-image {
-        height: 30px;
-      }
     }
-    float: right;
-    padding-left: 5px;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
+    padding-left: 30px; 
     padding-right: 15px;
     @media (min-width: @screen-sm) {
-      width: 30%;
-      height: 48px;
-    }
-    @media (min-width: @screen-md) {
-      width: 40%;
+      height: 50px;
     }
   }
-  a {color: @finna-search-link-color;}
-
-  .search-links {
-    margin-top: 15px;
-    @media (max-width: @screen-xs-max) {
-      a {
-        margin-bottom: 5px;
-      }
-    }
+  a {
+    color: @finna-search-link-color;
   }
 }
 
@@ -198,6 +178,9 @@
   .pager {
     display: flex;
     align-items: center;
+    @media (max-width: @screen-lg) {
+      margin-left: 6px;
+    }
     .disabled {
       > a {
         background-color: transparent;

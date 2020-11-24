@@ -99,13 +99,6 @@ class Record extends \VuFind\View\Helper\Root\Record
     protected $cachedImages = [];
 
     /**
-     * Cached id of old record
-     *
-     * @var string
-     */
-    protected $cachedId = null;
-
-    /**
      * Tab Manager
      *
      * @var \VuFind\RecordTab\TabManager
@@ -346,16 +339,15 @@ class Record extends \VuFind\View\Helper\Root\Record
         $type, $lookfor, $data, $params = []
     ) {
         $id = $data['id'] ?? null;
+        $linkType = $this->getAuthorityLinkType();
 
         // Discard search tabs hiddenFilters when jumping to Authority page
-        $preserveSearchTabsFilters
-            = $this->getAuthorityLinkType() !== AuthorityHelper::LINK_TYPE_PAGE;
+        $preserveSearchTabsFilters = $linkType !== AuthorityHelper::LINK_TYPE_PAGE;
 
-        list($url, $urlType)
-            = $this->getLink(
-                $type, $lookfor, $params + ['id' => $id], true,
-                $preserveSearchTabsFilters
-            );
+        list($url, $urlType) = $this->getLink(
+            $type, $lookfor, $params + compact('id', 'linkType'), true,
+            $preserveSearchTabsFilters
+        );
 
         if (!$this->isAuthorityEnabled()
             || !in_array($urlType, ['authority-search', 'authority-page'])
@@ -363,7 +355,9 @@ class Record extends \VuFind\View\Helper\Root\Record
             $author = [
                'name' => $data['name'] ?? null,
                'date' => !empty($data['date']) ? $data['date'] : null,
-               'role' => !empty($data['role']) ? $data['role'] : null
+               'role' => !empty($data['role']) ? $data['role'] : null,
+               'affiliation' => !empty($data['affiliation'])
+                   ? $data['affiliation'] : null,
             ];
             // NOTE: currently this fallbacks always to a author-link
             // (extend to handle subject/topic fallbacks when needed).
@@ -603,11 +597,11 @@ class Record extends \VuFind\View\Helper\Root\Record
     {
         $recordId = $this->driver->getUniqueID();
 
-        if ($this->cachedId === $recordId) {
-            return $this->cachedImages;
+        $cacheKey = "$recordId\t" . ($thumbnails ? '1' : '0')
+            . ($includePdf ? '1' : '0');
+        if (isset($this->cachedImages[$cacheKey])) {
+            return $this->cachedImages[$cacheKey];
         }
-
-        $this->cachedId = $recordId;
 
         $sizes = ['small', 'medium', 'large', 'master'];
         $images = $this->driver->tryMethod('getAllImages', [$language, $includePdf]);
@@ -662,7 +656,7 @@ class Record extends \VuFind\View\Helper\Root\Record
                 }
             }
         }
-        return $this->cachedImages = $images;
+        return $this->cachedImages[$cacheKey] = $images;
     }
 
     /**
@@ -924,5 +918,65 @@ class Record extends \VuFind\View\Helper\Root\Record
             'record-summaries.phtml',
             ['summary' => $summary, 'driver' => $this->driver]
         );
+    }
+
+    /**
+     * Returns additional information related to external material links.
+     *
+     * @return string
+     */
+    public function getExternalLinkAdditionalInfo()
+    {
+        $translator = $this->getView()->plugin('translate');
+        $externalLinkText = $translator('external_link');
+        switch ($this->driver->getDataSource()) {
+        case 'aoe':
+            $source = ' aoe.fi';
+            break;
+        default:
+            $source = '';
+        }
+        return '(' . $externalLinkText . $source . ')';
+    }
+
+    /**
+     * Returns a data source specific material disclaimer.
+     *
+     * @return string
+     */
+    public function getMaterialDisclaimer()
+    {
+        try {
+            return $this->renderTemplate(
+                'material-disclaimer-' . $this->driver->getDataSource() . '.phtml',
+                ['externalLink' => $this->driver->tryMethod('getExternalLink')]
+            );
+        } catch (\Laminas\View\Exception\RuntimeException $e) {
+            // Template does not exist.
+            return '';
+        }
+    }
+
+    /**
+     * Returns a rendered external rating link or false if there is no link.
+     *
+     * @return string|false
+     */
+    public function getExternalRatingLink()
+    {
+        if (!$url = $this->driver->tryMethod('getExternalRatingLink')) {
+            return false;
+        }
+        try {
+            return $this->renderTemplate(
+                'external-rating-link-' . $this->driver->getDataSource() . '.phtml',
+                ['externalRatingLink' => $url]
+            );
+        } catch (\Laminas\View\Exception\RuntimeException $e) {
+            // Data source specific template does not exist.
+            return $this->renderTemplate(
+                'external-rating-link.phtml', ['externalRatingLink' => $url]
+            );
+        }
     }
 }

@@ -90,22 +90,26 @@ class Session extends \VuFind\Db\Table\Session
      */
     protected function tryWithRetry($method, $params)
     {
-        $try = 1;
-        while (true) {
+        $retry = 0;
+        $lastError = null;
+        do {
             try {
-                $result = call_user_func_array($method, $params);
-                return $result;
-            } catch (\Exception $e) {
-                if ($try <= 5) {
-                    usleep($try * 100000);
-                    ++$try;
+                if ($retry) {
                     // Reset connection before retrying
                     $this->getAdapter()->getDriver()->getConnection()->disconnect();
+                    usleep($retry * 100000);
                     $this->getAdapter()->getDriver()->getConnection()->connect();
-                    continue;
                 }
+                return call_user_func_array($method, $params);
+            } catch (\VuFind\Exception\SessionExpired $e) {
                 throw $e;
+            } catch (\Exception $e) {
+                $lastError = $e;
+            } catch (\TypeError $e) {
+                $lastError = $e;
             }
-        }
+        } while (++$retry < 5);
+
+        throw $lastError;
     }
 }

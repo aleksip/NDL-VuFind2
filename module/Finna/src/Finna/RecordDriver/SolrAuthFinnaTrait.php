@@ -230,11 +230,11 @@ trait SolrAuthFinnaTrait
     /**
      * Return summary
      *
-     * @return array|null
+     * @return array
      */
     public function getSummary()
     {
-        return null;
+        return [];
     }
 
     /**
@@ -370,5 +370,17 @@ trait SolrAuthFinnaTrait
     public function supportsOpenUrl()
     {
         return false;
+    }
+
+    /**
+     * Get online URLs
+     *
+     * @param bool $raw Whether to return raw data
+     *
+     * @return array
+     */
+    public function getOnlineURLs($raw = false)
+    {
+        return [];
     }
 }

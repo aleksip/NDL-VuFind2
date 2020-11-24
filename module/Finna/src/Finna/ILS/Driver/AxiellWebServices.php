@@ -272,6 +272,13 @@ class AxiellWebServices extends \VuFind\ILS\Driver\AbstractBase
     ];
 
     /**
+     * Titlelist cache time mappings in minutes
+     *
+     * @var array
+     */
+    protected $titleListCacheSettings = [];
+
+    /**
      * Constructor
      *
      * @param \VuFind\Date\Converter $dateConverter Date converter object
@@ -433,6 +440,14 @@ class AxiellWebServices extends \VuFind\ILS\Driver\AbstractBase
                 ?? $this->config['messagingBlackLists']['dueDateAlert']
                 ?? ''
             );
+        $this->titleListCacheSettings
+            = $this->config['titleListCacheSettings']['settings'] ??
+            [
+                'new' => 15,
+                'lastreturned' => 15,
+                'mostborrowed' => 480,
+                'mostrequested' => 240
+            ];
     }
 
     /**
@@ -1416,7 +1431,7 @@ class AxiellWebServices extends \VuFind\ILS\Driver\AbstractBase
             foreach ($validMethods as $methodKey) {
                 if (in_array(
                     $this->mapOldStatusToCode($methodKey),
-                    $this->messagingFilters[$service]
+                    $this->messagingFilters[$service] ?? []
                 )
                 ) {
                     continue;
@@ -1582,7 +1597,8 @@ class AxiellWebServices extends \VuFind\ILS\Driver\AbstractBase
         if ($function === 'getTitleList') {
             if (isset($this->config['Catalog']['catalogueaurora_wsdl'])) {
                 $functionConfig = [
-                    'enabled' => true
+                    'enabled' => true,
+                    'cacheSettings' => $this->titleListCacheSettings
                 ];
             }
         }
@@ -1987,7 +2003,7 @@ class AxiellWebServices extends \VuFind\ILS\Driver\AbstractBase
             $serviceType = $sendMethods->serviceType;
             foreach ($currentMethods as $key => $value) {
                 $method = is_object($value) ? $value->value : $value;
-                if (in_array($method, $this->messagingBlackLists[$serviceType])) {
+                if (in_array($method, $this->messagingFilters[$serviceType] ?? [])) {
                     continue;
                 }
                 $current[] = $method;
@@ -2186,9 +2202,6 @@ class AxiellWebServices extends \VuFind\ILS\Driver\AbstractBase
                 'payableOnline' => $payable,
                 'organization' => $debt->organisation ?? ''
             ];
-            if (!empty($debt->organisation)) {
-                $debt->organisation = $debt->organisation;
-            }
             $finesList[] = $fine;
         }
 
