@@ -1,44 +1,21 @@
 <?php
-  $navTabsClasses = ['hidden-xs'];
+  $tabsNavClasses = ['hidden-xs'];
   $navbarClasses = ['visible-xs'];
   if (!empty($additionalClasses)) {
     if (strpos($additionalClasses, 'finna-multi-level-nav-lg') !== false) {
-      $navTabsClasses[] = 'finna-nav-tabs-lg';
+      $tabsNavClasses[] = 'finna-tabs-nav-lg';
     }
     if (strpos($additionalClasses, 'finna-multi-level-nav-content') !== false) {
       $navbarClasses[] = 'finna-navbar-content';
     }
   }
-  $tabsPrimary = [];
-  foreach ($items as $item) {
-    if (isset($item['active']) && boolval($item['active'])) {
-      $activeLabel = $item['label'];
-      if (!empty($item['children'])) {
-        $tabsSecondary = $item['children'];
-        foreach ($tabsSecondary as $secondaryItem) {
-          if (isset($secondaryItem['active']) && boolval($secondaryItem['active'])) {
-            $activeLabel = $secondaryItem['label'];
-          }
-        }
-      }
-    }
-    unset($item['children']);
-    $tabsPrimary[] = $item;
-  }
 ?>
 <div class="finna-multi-level-nav <?= $additionalClasses ?? '' ?>">
-  <?= $this->render('components/molecules/navigation/finna-nav-tabs/finna-nav-tabs.phtml', [
-      'additionalClasses' => implode(' ', $navTabsClasses),
-      'ariaLabel' => (empty($tabsSecondary) ? $ariaLabel: $ariaLabelPrimary),
-      'tabs' => $tabsPrimary,
+  <?= $this->render('components/organisms/navigation/finna-tabs-nav/finna-tabs-nav.phtml', [
+      'additionalClasses' => implode(' ', $tabsNavClasses),
+      'ariaLabel' => $ariaLabel,
+      'items' => $items,
     ]); ?>
-  <?php if (!empty($tabsSecondary)): ?>
-    <?= $this->render('components/molecules/navigation/finna-nav-tabs/finna-nav-tabs.phtml', [
-        'additionalClasses' => 'finna-nav-tabs-secondary ' . implode(' ', $navTabsClasses),
-        'ariaLabel' => $ariaLabelSecondary,
-        'tabs' => $tabsSecondary,
-      ]); ?>
-  <?php endif; ?>
   <?= $this->render('components/organisms/navigation/finna-navbar/finna-navbar.phtml', [
       'additionalClasses' => implode(' ', $navbarClasses),
       'ariaLabel' => $ariaLabel,

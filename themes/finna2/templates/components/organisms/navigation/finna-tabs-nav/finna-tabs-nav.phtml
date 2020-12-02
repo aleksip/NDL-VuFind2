@@ -1,0 +1,17 @@
+<?php
+  $navClasses = [];
+  if (!empty($additionalClasses)) {
+    if (strpos($additionalClasses, 'finna-tabs-nav-lg') !== false) {
+        $navClasses[] = 'finna-nav-lg';
+    }
+  }
+  $this->headScript()->appendFile('components/organisms/navigation/finna-tabs-nav/finna-tabs-nav.js');
+?>
+<nav class="finna-tabs-nav <?= $additionalClasses ?? '' ?>"
+  <?php if (!empty($ariaLabel)): ?>aria-label="<?= $ariaLabel ?>"<?php endif; ?>>
+  <?= $this->render('components/molecules/navigation/finna-nav/finna-nav.phtml', [
+      'additionalClasses' => 'nav-tabs ' . implode(' ', $navClasses),
+      'items' => $items,
+      'renderChildren' => 'simple'
+    ]); ?>
+</nav>
