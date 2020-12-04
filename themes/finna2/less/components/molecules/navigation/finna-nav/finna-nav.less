@@ -1,0 +1,77 @@
+.finna-nav {
+  // Bootstrap tabs variation.
+  &.nav-tabs {
+    position: relative;
+    border-bottom: 1px solid @nav-tabs-border-color;
+    > li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: -1px;
+      border-top: 4px solid transparent;
+      border-right: 1px solid transparent;
+      border-bottom: 1px solid @nav-tabs-border-color;
+      border-left: 1px solid transparent;
+      background-color: #ededed;
+      &.active {
+        border-top: 4px solid @nav-tabs-active-color;
+        border-right: 1px solid @nav-tabs-border-color;
+        border-bottom: 1px solid @body-bg;
+        border-left: 1px solid @nav-tabs-border-color;
+        background-color: transparent;
+      }
+      > a,
+      > a:hover,
+      > a:focus {
+        margin: 0;
+        border: 0;
+        padding: .6em .5em;
+        line-height: 1.5;
+      }
+      > button {
+        padding-left: 0;
+        color: @nav-tabs-active-color;
+      }
+    }
+
+    // Active tab children when rendered in 'simple' mode.
+    > li:not(.dropdown) {
+      position: static;
+      > ul {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        display: none;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+        > li {
+          flex: 1 0 auto;
+          padding: 1em .6em;
+          font-size: 1.1em;
+          line-height: 1.5;
+        }
+        > li > a {
+          color: @text-color;
+        }
+        > li.active > a {
+          font-weight: bold;
+        }
+      }
+      &.active > ul {
+        display: flex;
+      }
+    }
+  }
+}
+
+// Large variation.
+.finna-nav-lg {
+  > li > a,
+  > li:not(.dropdown) > ul > li > a {
+    font-size: 16px;
+    @media (min-width: @screen-md-min) {
+      font-size: @font-size-large;
+    }
+  }
+}

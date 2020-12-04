@@ -2,6 +2,7 @@
   <?php if (!empty($role)): ?> role="<?= $role ?>"<?php endif; ?>
   <?php if (!empty($ariaLabel)): ?> aria-label="<?= $ariaLabel ?>"<?php endif; ?>>
   <?php foreach ($items as $item): ?>
+    <?php if (isset($renderChildren)) $item['renderChildren'] = $renderChildren; ?>
     <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $item); ?>
   <?php endforeach; ?>
 </ul>

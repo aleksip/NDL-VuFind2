@@ -3,8 +3,7 @@
   [
     'additionalClasses' => 'finna-multi-level-nav-content finna-multi-level-nav-lg',
     'ariaLabel' => 'Ohjenavigaatio',
-    'ariaLabelPrimary' => 'Ohjenavigaatio taso 1',
-    'ariaLabelSecondary' => 'Ohjenavigaatio taso 2',
+    'brandContent' => $this->translate('tabs_' . $activeTab),
     'collapseId' => 'nav-help-collapse',
     'items' => [
       [
@@ -41,6 +40,7 @@
           ],
         ],
         'label' => 'Kirjautuminen ja oma tili',
+        'link' => ''
       ],
       [
         'active' => 'help-favorites' === $activeTab,
@@ -58,7 +58,8 @@
             'label' => 'CC-lisenssit',
             'link' => '',
           ],
-        ]
+        ],
+        'link' => ''
       ],
       [
         'label' => 'Video-ohjeet',
@@ -79,10 +80,10 @@
             'label' => 'Kirjastokortin liittäminen Finna-tiliin',
             'link' => '',
           ],
-        ]
+        ],
+        'link' => ''
       ],
     ],
-    'toggleBtnLabel' => 'Lisää'
   ]);
 ?>
 <!-- END of: finna - Content/help-tabs.phtml -->

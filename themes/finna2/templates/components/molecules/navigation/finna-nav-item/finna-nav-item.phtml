@@ -1,28 +1,42 @@
 <?php
   $active = isset($active) ? (boolval($active) ? 'true' : 'false') : 'false';
+  $renderChildren = $renderChildren ?? 'dropdown';
   $classes = [];
-  if (!empty($children)) {
+  if (!empty($children) && 'dropdown' === $renderChildren) {
     $classes[] = 'dropdown';
-  } elseif ($active == 'true') {
+  }
+  elseif ($active == 'true') {
     $classes[] = 'active';
   }
 ?>
 <li<?php if (!empty($id)): ?> id="<?= $id ?>"<?php endif; ?>
   <?php if (!empty($classes)): ?> class="<?= implode(' ', $classes) ?>"<?php endif; ?>
-  <?php if (empty($children)): ?> aria-selected="<?= $active ?>"<?php endif; ?>>
-  <?php if (empty($children)): ?>
-    <a href="<?= $link ?? '#' ?>"><?= $label ?></a>
+  <?php if (!empty($ariaSelected)): ?> aria-selected="<?= $ariaSelected ?>"<?php endif; ?>>
+  <?php if (!empty($children) && 'dropdown' === $renderChildren): ?>
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+      aria-expanded="false"><?= $label ?> <b class="caret"></b></a>
+  <?php else: ?>
+    <a href="<?= $link ?>"><?= $label ?></a>
     <?php if (!empty($tooltipBtn)): ?>
       <?= $this->render('components/molecules/tooltips/finna-tooltip-btn/finna-tooltip-btn.phtml', $tooltipBtn) ?>
     <?php endif; ?>
-  <?php else: ?>
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-      aria-expanded="false"><?= $label ?> <b class="caret"></b></a>
-    <ul class="dropdown-menu">
+  <?php endif; ?>
+  <?php if (!empty($children) && 'false' !== $renderChildren): ?>
+    <ul<?php if ('simple' !== $renderChildren): ?> class="dropdown-menu"<?php endif; ?>>
       <?php foreach ($children as $child): ?>
-        <?php $hasDescription = !empty($child['description']); ?>
-        <li<?php if ($hasDescription): ?> class="nav-item-has-description"<?php endif; ?>><a href="<?= $child['link'] ?>"><span><?= $child['label'] ?></span>
-          <?php if ($hasDescription): ?><span role="note"><?= $child['description'] ?></span><?php endif; ?></a></li>
+        <?php
+          $childClasses = [];
+          if (isset($child['active']) ? boolval($child['active']) : false) {
+            $childClasses[] = 'active';
+          }
+          if ($hasDescription = !empty($child['description'])) {
+            $childClasses[] = 'nav-item-has-description';
+          }
+        ?>
+        <li<?php if (!empty($childClasses)): ?> class="<?= implode(' ', $childClasses) ?>"<?php endif; ?>>
+          <a href="<?= $child['link'] ?>"><span><?= $child['label'] ?></span>
+          <?php if ($hasDescription): ?><span role="note"><?= $child['description'] ?></span><?php endif; ?></a>
+        </li>
       <?php endforeach; ?>
     </ul>
   <?php endif; ?>
