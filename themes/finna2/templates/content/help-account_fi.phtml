@@ -1,0 +1,153 @@
+<!-- START of: finna - content/help-account_fi.phtml -->
+<?php $this->headTitle($this->translate('Kirjautuminen ja oma tili'))?>
+
+<?php if ($this->resolver('content/help-tabs.phtml')): ?>
+    <?=$this->render('content/help-tabs.phtml', ['activeTab' => 'help-account'])?>
+<?php endif; ?>
+<div>
+  <div class="sidebar left">
+    <div class="content-navigation-menu">
+    </div>
+  </div>
+  <div class="mainbody right">
+  <div id="login-instructions" class="content-section">
+    <h2>Kirjautuminen ja oma tili</h2>
+    <p>Finna.fi-palvelussa voit löytää ja käyttää aineistoja. Voit käyttää palvelua, vaikka et kirjautuisi sisään palveluun. Kirjautuminen tuo kuitenkin enemmän mahdollisuuksia Finnan käyttöön. Jos kirjaudut palveluun, voit tehdä seuraavia asioita:</p>
+    <ul class="list-bullets">
+      <li>tarkastella omia tietojasi</li>
+      <li>varata ja uusia lainojasi</li>
+      <li>luoda suosikkilistoja</li>
+      <li>tallentaa hakuja</li>
+      <li>asettaa hakuvahteja</li>
+      <li>kommentoida aineistoja</li>
+    </ul>
+  </div>
+  <div id="instructions-for-logging" class="content-section">
+    <h2>Neuvoja kirjautumiseen</h2>
+    <p>Voit käyttää Finnaa monipuolisemmin, jos luot palveluun oman käyttäjätunnuksen. Sinulla on kolme eri vaihtoehtoa kirjautua palveluun</p>
+    <ul class="list-bullets">
+      <li>Finna-tunnus, jonka voivat luoda kaikki käyttäjät</li>
+      <li>Korkeakoulun HAKA-tunnus, joka on tarkoitettu opiskelijoille ja henkilökunnalle</li>
+      <li>Kirjastokortti</li>
+    </ul>
+    <p>Huomioi, että eri kirjautumistavoilla luodut käyttäjätilit ovat erillisiä toisistaan. Esimerkiksi Finna-tunnuksella luodut suosikkilistat eivät ole käytettävissä toisessa tilissä. Voit kuitenkin siirtää suosikkilistoja ja tallennettuja hakuja tililtä toiselle. <a href="<?=$this->url('content-page', ['page' => 'help-favorites'])?>">Katso ohjeet suosikkilistojen talteenotosta</a>.</p>
+    <h3>Finna-tunnuksella kirjautuminen</h3>
+    <p>Finna-tunnuksen voivat luoda kaikki käyttäjät.</p>
+    <p>Näin luot uuden Finna-tunnuksen:</p>
+    <ul class="list-numbers">
+      <li>Kirjaudu omaan tiliin valitsemalla ylävalikosta <img src="<?=$this->imageLink('help-account-login_fi.png')?>" style="vertical-align:text-bottom" alt="Kirjaudu"/>.</li>
+      <li>Valitse kirjautumisikkunan alaosasta <strong>Luo uusi Finna-tunnus</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-create_fi.png')?>" alt=""/></p></li>
+      <li>Täytä lomakkeeseen sähköpostiosoite, toivottu käyttäjänimi ja salasana. Jos käyttäjänimi on jo käytössä, sinun täytyy valita toinen. Kun olet täyttänyt lomakkeen, klikkaa <strong>Lähetä</strong>.
+      <p class="text-muted"><small><strong>Vinkki!</strong> Voit laittaa käyttäjänimeksi esimerkiksi sähköpostiosoitteesi, jolloin se on helppo muistaa.</small></p></li>
+      <li>Uusi Finna-tunnuksesi on valmis ja pääset heti käyttämään palvelua kirjautuneena käyttäjänä. Löydät oman tilisi, kun klikkaat sivun yläpalkista käyttäjänimeäsi.</li>
+    </ul>
+    <h3>Onko sinulla jo Finna-tunnus?</h3>
+    <p>Jos sinulla on jo oma Finna-tunnus, voit kirjautua palveluun sen avulla.</p>
+    <ul class="list-numbers">
+      <li>Kirjaudu omaan tiliisi valitsemalla ylävalikosta <img src="<?=$this->imageLink('help-account-login_fi.png')?>" style="vertical-align:text-bottom" alt="Kirjaudu"/>.</li>
+      <li>Kirjoita Finna-tunnuksesi ja salasanasi. Valitse sitten <strong>Kirjaudu</strong>.</li>
+      <li>Nyt olet kirjautunut palveluun ja voit käyttää sitä. Löydät oman tilisi klikkaamalla sivun yläpalkista käyttäjänimeäsi.</li>
+    </ul>
+    <h3>Oletko unohtanut Finna-tunnuksesi salasanan?</h3>
+    <p>Jos olet unohtanut käyttäjätunnuksesi salasanan, voit vaihtaa sen tilalle uuden.</p>
+    <ul class="list-numbers">
+      <li>Avaa kirjautumisikkuna ja klikkaa <strong>Unohditko salasanasi?</strong>
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-password_fi.png')?>" alt=""/></p></li>
+      <li>Linkistä pääset lomakkeelle, jonne voit kirjoittaa Finna-tunnuksesi käyttäjätunnuksen tai sähköpostiosoitteen. Valitse sen jälkeen <strong>Palauta salasana</strong>.</li>
+      <li>Saat ohjeet salasanan palauttamiseen sähköpostiisi, jonka olet ilmoittanut käyttäjätunnuksellesi. Tarkistathan sähköpostisi roskapostikansion, jos viestin saapumisessa kestää.</li>
+    </ul>
+    <h3>Korkeakoulun HAKA-tunnuksella kirjautuminen</h3>
+    <p>Korkeakoulun HAKA-tunnus on tarkoitettu opiskelijoille ja korkeakoulun henkilökunnalle.</p>
+    <p>Näin kirjaudut palveluun HAKA-tunnuksella:</p>
+    <ul class="list-numbers">
+      <li>Kirjaudu omaan tiliin valitsemalla ylävalikosta <img src="<?=$this->imageLink('help-account-login_fi.png')?>" style="vertical-align:text-bottom" alt="Kirjaudu"/>. Valitse lomakkeen ylävalikosta <strong>Korkeakoulun HAKA-tunnuksella</strong>.</li>
+      <li>Klikkaa <img src="<?=$this->imageLink('haka_login_vaaka_md.png')?>" style="vertical-align:text-bottom" alt="[Haka Login]"/>. Kirjautumisikkuna vie sinut oman korkeakoulusi kirjautumissivulle. Täytä lomake, ja palaat takaisin Finna.fi-sivulle kirjautuneena käyttäjänä.</li>
+      <li>Joissakin korkeakouluissa on mahdollista liittää tunnukseen myös oman korkeakoulun kirjastokortti. <a href="#connect-library-card">Katso ohje kirjastokortin liittämiseen</a>.</li>
+    </ul>
+    <h3>Kirjastokortilla kirjautuminen</h3>
+    <p>Voit kirjautua omaan tiliisi kirjastokortilla, jos kirjastosi on mukana Finnassa.</p>
+    <p>Näin kirjaudut palveluun kirjastokortilla:</p>
+    <ul class="list-numbers">
+      <li>Kirjaudu omaan tiliin valitsemalla ylävalikosta <img src="<?=$this->imageLink('help-account-login_fi.png')?>" style="vertical-align:text-bottom" alt="Kirjaudu"/>. Valitse lomakkeen ylävalikosta <strong>Kirjastokortilla</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-login-library-card_fi.png')?>" alt=""/></p></li>
+      <li>Valitse kirjastosi valikosta. 
+      <p class="text-muted"><small><strong>Huomio!</strong> Jos et löydä kirjastoasi valikosta, et voi kirjautua sisään kirjastokortillasi. Valitse tällöin toinen kirjautumistapa.</small></p></li>
+      <li>Kirjoita seuraavaksi käyttäjätunnus tai viivakoodi. Viivakoodi on numero, jonka löydät kirjastokortistasi. Kirjoita kirjastokorttisi salasana tai PIN-koodi. Valitse sen jälkeen <strong>Kirjaudu</strong>.</li>
+      <li>Olet kirjautunut sisään ja voit alkaa etsiä kiinnostavia aineistoja.</li>
+      <li>Kirjautumisen yhteydessä tiliisi liitetään kyseinen kirjastokortti, jolloin saat käyttöösi kirjaston palveluja. <a href="#connect-library-card">Voit liittää tiliisi useita kirjastokortteja</a>, jos haluat.</li>
+    </ul>
+    <h4>Oletko unohtanut kirjastokorttisi salasanan tai PIN-koodin?</h4>
+    <p>Ota yhteyttä omaan kirjastoosi, jos et tiedä tai olet unohtanut käyttäjätunnuksesi tai salasanasi/PIN-koodisi. Korkeakoulujen kirjastoissa salasana on aina oma sukunimi, jos käyttäjä ei ole asettanut PIN-koodia aiemmin.</p>
+  </div>
+  <div id="account-management" class="content-section">
+    <h2>Oman tilin hallinta</h2>
+    <img class="pull-right hidden-xs" src="<?=$this->imageLink('help-account-menu_fi.png')?>" alt=""/>
+    <p>Kun olet kirjautunut palveluun, voit tarkastella oman tilisi tietoja. Klikkaa käyttäjänimeäsi sivun yläpalkista.</p>
+    <ul class="list-bullets">
+      <li>tarkastella ja muuttaa omia tietojasi</li>
+      <li>tutkia omia hakujasi ja suosikkilistoja</li>
+      <li>liittää tiliisi kirjastokortteja</li>
+      <li>varata ja uusia lainojasi</li>
+      <li>tarkastella maksuja.</li>
+    </ul>
+    <h3>Omat tiedot</h3>
+    <p>Omat tiedot -välilehdellä voit tarkastella ja muokata Finna-tilin asetuksia, sekä tiliin liitettyjen kirjastokorttien tietoja. Sivulla voit myös tallentaa suosikkilistasi omalle koneellesi ja poistaa Finna-tilisi.</p>
+    <h4 id="finna-account-settings">Finna-tilin asetukset</h4>
+    <p>Asetuksissa voit vaihtaa käyttäjätunnuksesi salasanaa ja sähköpostiosoitetta. Voit määrittää nimimerkin, joka näkyy, kun kommentoit aineistoja.</p>
+    <p>Saat sähköpostisoitteeseesi muistutuksia <a href="#alert-schedule">uutuusvahdilta</a>. Voit myös lähettää sähköpostiisi hakutuloslistan hauistasi. Jos unohdat käyttäjätunnuksesi tai salasanasi, voit palauttaa ne sähköpostin kautta.</p>
+    <h4>Käyttäjätilin poistaminen</h4>
+    <p>Jos haluat poistaa käyttäjätilisi, valitse <img src="<?=$this->imageLink('help-account-delete_fi.png')?>" style="vertical-align:text-bottom" alt="Poista tili"/> <strong>Omat tiedot</strong> -välilehden alalaidasta.</p>
+    <p>Kun olet poistanut tilin, et saa enää muistutuksia aineistojen eräpäivistä tai ilmoituksia uutuusvahdilta. Et pääse enää katsomaan tallennettuja hakuja tai suosikkilistojasi, koska myös ne poistetaan. Sinun on kuitenkin mahdollista ottaa <a href="#save-favourites">suosikkilistat talteen</a> ennen tilin poistoa.</p>
+    <p>Huomioi, että tilin poistamisen jälkeen kommenttisi ja arvostelusi jäävät palveluun anonyymeinä, eli ne näkyvät ilman nimeäsi. Sinun täytyy poistaa kommentit ennen tilin poistoa.</p>
+    <h4 id="save-favourites">Suosikkilistojen ja tallennettujen hakujen talteenotto</h4>
+    <p>Ennen tilin poistoa tai tilin vaihdon yhteydessä haluat ehkä ottaa talteen suosikkilistasi ja tallennetut haut. Tämä onnistuu Finna-tilin asetuksista kohdasta <strong>Omien tietojen tuonti ja lataus</strong>.</p>
+    <p>Näin otat talteen suosikkilistasi:</p>
+    <ul class="list-numbers">
+      <li>Mene kirjautuneena käyttäjänä kohtaan <strong>Omat tiedot</strong>.</li>
+      <li>Valitse <strong>Lataa suosikit ja haut tiedostona</strong>, kun haluat kopioida suosikkilistasi ja tallennetut haut omalle koneellesi. Tiedosto latautuu koneellesi .json-muodossa.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-download_fi.png')?>" alt=""/></p></li>
+      <li>Tiedosto on ladattu koneellesi.</li>
+    </ul>
+    <p>Näin tuot tiliisi toisen tilin suosikkilistoja ja hakuja:</p>
+    <ul class="list-numbers">
+      <li>Klikkaa <strong>Tuo suosikit ja haut tiedostosta</strong>, kun tuot käyttäjätilillesi toisen tilin suosikkilistoja ja hakuja.</li>
+      <li>Valitse koneeltasi aiemmin lataamasi .json-tiedosto ja paina <strong>Lisää suosikit ja haut</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-import_fi.png')?>" alt=""/></p></li>
+    </ul>    
+    <h3>Tallennetut haut, hakuhistoria ja uutuusvahti</h3>
+    <h4>Tallennetut haut ja hakuhistoria</h4>
+    <p>Kirjautuneena käyttäjänä näet hakuhistoriasi <strong>Tallennetut haut</strong> -välilehdellä. Voit tallentaa viimeisimmät hakusi muistiin <strong>Tallenna?</strong>-painikkeella, jolloin pääset hakuun helposti seuraavalla kerralla.</p>
+    <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-recent-search_fi.png')?>" alt=""/></p></li>
+    <p>Sinun on mahdollista tallentaa hakusi myös suoraan hakutulossivulla.</p>
+    <h4 id="alert-schedule">Uutuusvahti</h4>
+    <p>Uutuusvahti kertoo sinulle, kun tallentamaasi hakua vastaavaa aineistoa tulee löydettäväksi lisää. Voit asettaa uutuusvahdin tallentamillesi hauille viikoittain tai päivittäin. Ilmoitukset tulevat sähköpostiisi. Määritä uutuusvahdin sähköpostiosoite <a href="#finna-account-settings">Finna-tilin asetuksissa</a>.</p>
+    <h3>Suosikit</h3>
+    <p>Suosikit-välilehdellä näet kaikki suosikkilistasi ja voit muokata tai poistaa niitä. Katso tarkemmat ohjeet suosikkilistojen tekoon ja hallintaan Suosikkilistat-ohjeesta.</p>
+    <h3>Kirjastokortit</h3>
+    <p>Sinun on mahdollista liittää käyttäjätiliisi kirjastokortti, jos kirjastosi on mukana Finnassa ja mahdollistanut kirjastokortin liittämisen Finna-tiliin.</p>
+    <p>Kortin liittämisen jälkeen saat käyttöösi kirjaston palveluja, kuten mahdollisuuden varata ja uusia lainoja. Käyttäjätiliin voi lisätä useita kirjastokortteja, jos olet asiakkaana useammassa kirjastossa.</p>
+    <p>Huomioi, että kaikki kirjastot eivät ole mahdollistaneet kirjastokortin liittämistä Finna-tiliin.</p>
+    <h4 id="connect-library-card">Näin lisäät kirjastokortin:</h4>
+    <ul class="list-numbers">
+      <li>Mene kirjautuneena käyttäjänä <strong>Omaan tiliin</strong> klikkaamalla yläpalkista käyttäjänimeäsi. Valitse <strong>Kirjastokortit</strong>-välilehti ja <strong>Liitä kirjastokortti/rinnakkaiskortti</strong>.</li>
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-connect-card_fi.png')?>" alt=""/></p></li>
+      <li>Etsi ensin oma kirjastosi <strong>Kirjasto</strong>-valikosta.
+      <p class="text-muted"><small><strong>Huomio!</strong> Jos et löydä kirjaston nimeä valikosta, et voi liittää kirjastokorttia tilillesi.</small></p></li>
+      <li>Täytä lomakkeelle kirjastokorttisi <strong>Käyttäjätunnus/viivakoodi</strong>. Viivakoodi on numero, jonka löydät kirjastokortistasi. Kirjoita kirjastokorttisi salasana tai PIN-koodi.</li>
+      <p class="text-muted"><small><strong>Huomio!</strong> Ota yhteyttä omaan kirjastoosi, jos et tiedä tai olet unohtanut käyttäjätunnuksesi tai salasanasi/PIN-koodisi. Korkeakoulujen kirjastoissa salasana on aina oma sukunimi, jos käyttäjä ei ole asettanut PIN-koodia aiemmin.</small></p></li>
+      <li>Jos haluat, voit nimetä kirjastokorttisi, jotta erotat sen helpommin. Klikkaa lopuksi Tallenna. Voit lisätä toisen kirjastokortin samalla ohjeella.</li>
+    </ul>
+    <h4>Kirjastokortin asetukset</h4>
+    <p><strong>Omat tiedot</strong> -välilehdellä näet kirjaskortin asetukset. Voit esimerkiksi tarkastella kirjaston ylläpitämiä henkilötietoja.</p>
+    <h4>PIN-koodin vaihtaminen</h4>
+    <p>Pääset vaihtamaan PIN-koodisi <strong>Omat tiedot</strong> -välilehdellä. Jos muutat PIN-koodin, sinulle tulee uusi PIN-koodi sekä Finna-tilillesi että kirjastosi lainausautomaatille.</p>
+    <h3>Lainat ja varaukset</h3>
+    <p>Välilehdellä voit tarkastella lainojasi ja uusia lainojasi, kun olet ensin <a href="#connect-library-card">liittänyt kirjastokortin tiliisi</a>.</p>
+    <p>Lisäksi näet aineiston, jonka olet varannut. Voit myös peruuttaa varauksiasi.</p>
+    <h3>Maksut</h3>
+    <p>Näet, onko sinulla maksamattomia maksuja tililläsi ja mistä ne ovat kertyneet.</p>
+    <p>Välilehdellä voit maksaa kertyneitä maksuja, jos kirjastosi on mahdollistanut verkkomaksamisen Finna.fi-sivustolla.</p>
+  </div>
+</div>
+<!-- END of: finna - content/help-account_fi.phtml -->
