@@ -40,11 +40,11 @@
       <li>Tiedosto on ladattu koneellesi.</li>
     </ol>
     <p>Näin tuot tiliisi toisen tilin suosikkilistoja ja hakuja:</p>
-    <ul class="list-numbers">
-      <li>Klikkaa <strong>Tuo suosikit ja haut tiedostosta</strong>, kun tuot käyttäjätilillesi toisen tilin suosikkilistoja ja hakuja.</li>
-      <li>Valitse koneeltasi aiemmin lataamasi .json-tiedosto ja paina <strong>Lisää suosikit ja haut</strong>.
+    <ol class="list-numbers">
+      <li>Klikkaa <strong>Tuo suosikit ja haut tiedostosta</strong>, kun tuot käyttäjätilillesi toisen tilin suosikkilistoja ja hakuja.
       <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-import_fi.png')?>" alt=""/></p></li>
-    </ul>    
+      <li>Valitse koneeltasi aiemmin lataamasi .json-tiedosto ja paina <strong>Lisää suosikit ja haut</strong>.</li>
+    </ol>    
   </div>
   <div id="saved-searches" class="content-section">
     <h2>Tallennetut haut, hakuhistoria ja uutuusvahti</h2>
@@ -54,8 +54,10 @@
     <p><a href="<?=$this->url('content-page', ['page' => 'help-basic'])?>#saving-search">Sinun on mahdollista tallentaa hakusi myös suoraan hakutulossivulla</a>.</p>
     <h3 id="alert-schedule">Uutuusvahti</h3>
     <p>Uutuusvahti kertoo sinulle, kun tallentamaasi hakua vastaavaa aineistoa tulee löydettäväksi lisää. Voit asettaa uutuusvahdin tallentamillesi hauille viikoittain tai päivittäin. Ilmoitukset tulevat sähköpostiisi. Määritä uutuusvahdin sähköpostiosoite <a href="#finna-account-settings">Finna-tilin asetuksissa</a>.</p>
-    <h3>Suosikit</h3>
-    <p>Suosikit-sivulla näet kaikki suosikkilistasi ja voit muokata tai poistaa niitä. Katso tarkemmat ohjeet suosikkilistojen tekoon ja hallintaan <a href="<?=$this->url('content-page', ['page' => 'help-favorites'])?>">Suosikkilistat-ohjeesta</a>.</p>
+  </div>
+  <div id="favorites" class="content-section">
+    <h2>Suosikit</h2>
+    <p><strong>Suosikit</strong>-sivulla näet kaikki suosikkilistasi ja voit muokata tai poistaa niitä. Katso tarkemmat ohjeet suosikkilistojen tekoon ja hallintaan <a href="<?=$this->url('content-page', ['page' => 'help-favorites'])?>">Suosikkilistat-ohjeesta</a>.</p>
   </div>
   <div id="library-cards" class="content-section">
     <h2>Kirjastokortit</h2>
@@ -70,7 +72,7 @@
       <p class="text-muted"><small><strong>Huomio!</strong> Jos et löydä kirjaston nimeä valikosta, et voi liittää kirjastokorttia tilillesi.</small></p></li>
       <li>Täytä lomakkeelle kirjastokorttisi <strong>Käyttäjätunnus/viivakoodi</strong>. Viivakoodi on numero, jonka löydät kirjastokortistasi. Kirjoita kirjastokorttisi salasana tai PIN-koodi.
       <p class="text-muted"><small><strong>Huomio!</strong> Ota yhteyttä omaan kirjastoosi, jos et tiedä tai olet unohtanut käyttäjätunnuksesi tai salasanasi/PIN-koodisi. Korkeakoulujen kirjastoissa salasana on aina oma sukunimi, jos käyttäjä ei ole asettanut PIN-koodia aiemmin.</small></p></li>
-      <li>Jos haluat, voit nimetä kirjastokorttisi, jotta erotat sen helpommin. Klikkaa lopuksi Tallenna. Voit lisätä toisen kirjastokortin samalla ohjeella.</li>
+      <li>Jos haluat, voit nimetä kirjastokorttisi, jotta erotat sen helpommin. Klikkaa lopuksi <strong>Tallenna</strong>. Voit lisätä toisen kirjastokortin samalla ohjeella.</li>
     </ol>
     <h3>Kirjastokortin asetukset</h3>
     <p><strong>Omat tiedot</strong> -sivulla näet kirjaskortin asetukset. Voit esimerkiksi tarkastella kirjaston ylläpitämiä henkilötietoja.</p>
