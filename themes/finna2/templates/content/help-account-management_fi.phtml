@@ -1,0 +1,94 @@
+<!-- START of: finna - content/help-account-management_fi.phtml -->
+<?php $this->headTitle($this->translate('tabs_help-account-management'))?>
+
+<?php if ($this->resolver('content/help-tabs.phtml')): ?>
+    <?=$this->render('content/help-tabs.phtml', ['activeTab' => 'help-account-management'])?>
+<?php endif; ?>
+<div class="sidebar left">
+  <div class="content-navigation-menu">
+  </div>
+</div>
+<div class="mainbody right"> 
+  <h1>Oman tilin hallinta</h1>
+  <img class="pull-right hidden-xs" src="<?=$this->imageLink('help-account-menu_fi.png')?>" alt=""/>
+  <p>Kun olet kirjautunut palveluun, voit tarkastella oman tilisi tietoja. Klikkaa käyttäjänimeäsi sivun yläpalkista.</p>
+  <p><strong>Oma tili</strong> -näkymässä voit</p>
+  <ul class="list-bullets">
+    <li>tarkastella ja muuttaa omia tietojasi</li>
+    <li>tutkia omia hakujasi ja suosikkilistoja</li>
+    <li>liittää tiliisi kirjastokortteja</li>
+    <li>varata ja uusia lainojasi</li>
+    <li>tarkastella maksuja.</li>
+  </ul>
+  <div id="account-management" class="content-section">
+    <h2>Omat tiedot</h2>
+    <p><strong>Omat tiedot</strong> -sivulla voit tarkastella ja muokata Finna-tilin asetuksia, sekä tiliin liitettyjen kirjastokorttien tietoja. Sivulla voit myös tallentaa suosikkilistasi omalle koneellesi ja poistaa Finna-tilisi.</p>
+    <h3 id="finna-account-settings">Finna-tilin asetukset</h3>
+    <p>Asetuksissa voit vaihtaa käyttäjätunnuksesi salasanaa ja sähköpostiosoitetta. Voit määrittää nimimerkin, joka näkyy, kun kommentoit aineistoja.</p>
+    <p>Saat sähköpostisoitteeseesi muistutuksia <a href="#alert-schedule">uutuusvahdilta</a>. Voit myös lähettää sähköpostiisi hakutuloslistan hauistasi. Jos unohdat käyttäjätunnuksesi tai salasanasi, voit palauttaa ne sähköpostin kautta.</p>
+    <h3>Käyttäjätilin poistaminen</h3>
+    <p>Jos haluat poistaa käyttäjätilisi, valitse <strong>Poista tili</strong> Omat tiedot -sivun alalaidasta.</p>
+    <p>Kun olet poistanut tilin, et saa enää muistutuksia aineistojen eräpäivistä tai ilmoituksia uutuusvahdilta. Et pääse enää katsomaan tallennettuja hakuja tai suosikkilistojasi, koska myös ne poistetaan. Sinun on kuitenkin mahdollista ottaa <a href="#save-favourites">suosikkilistat talteen</a> ennen tilin poistoa.</p>
+    <p>Huomioi, että tilin poistamisen jälkeen kommenttisi ja arvostelusi jäävät palveluun anonyymeinä, eli ne näkyvät ilman nimeäsi. Sinun täytyy poistaa kommentit ennen tilin poistoa.</p>
+    <h3 id="save-favourites">Suosikkilistojen ja tallennettujen hakujen talteenotto</h3>
+    <p>Ennen tilin poistoa tai tilin vaihdon yhteydessä haluat ehkä ottaa talteen suosikkilistasi ja tallennetut haut. Tämä onnistuu Finna-tilin asetuksista kohdasta <strong>Omien tietojen tuonti ja lataus</strong>.</p>
+    <p>Näin otat talteen suosikkilistasi:</p>
+    <ol class="list-numbers">
+      <li>Mene kirjautuneena käyttäjänä kohtaan <strong>Omat tiedot</strong>.</li>
+      <li>Valitse <strong>Lataa suosikit ja haut tiedostona</strong>, kun haluat kopioida suosikkilistasi ja tallennetut haut omalle koneellesi. Tiedosto latautuu koneellesi .json-muodossa.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-download_fi.png')?>" alt=""/></p></li>
+      <li>Tiedosto on ladattu koneellesi.</li>
+    </ol>
+    <p>Näin tuot tiliisi toisen tilin suosikkilistoja ja hakuja:</p>
+    <ul class="list-numbers">
+      <li>Klikkaa <strong>Tuo suosikit ja haut tiedostosta</strong>, kun tuot käyttäjätilillesi toisen tilin suosikkilistoja ja hakuja.</li>
+      <li>Valitse koneeltasi aiemmin lataamasi .json-tiedosto ja paina <strong>Lisää suosikit ja haut</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-import_fi.png')?>" alt=""/></p></li>
+    </ul>    
+  </div>
+  <div id="saved-searches" class="content-section">
+    <h2>Tallennetut haut, hakuhistoria ja uutuusvahti</h2>
+    <h3>Tallennetut haut ja hakuhistoria</h3>
+    <p>Kirjautuneena käyttäjänä näet hakuhistoriasi <strong>Tallennetut haut</strong> -sivulla. Voit tallentaa viimeisimmät hakusi muistiin <strong>Tallenna?</strong>-painikkeella, jolloin pääset hakuun helposti seuraavalla kerralla.</p>
+    <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-recent-search_fi.png')?>" alt=""/></p>
+    <p><a href="<?=$this->url('content-page', ['page' => 'help-basic'])?>#saving-search">Sinun on mahdollista tallentaa hakusi myös suoraan hakutulossivulla</a>.</p>
+    <h3 id="alert-schedule">Uutuusvahti</h3>
+    <p>Uutuusvahti kertoo sinulle, kun tallentamaasi hakua vastaavaa aineistoa tulee löydettäväksi lisää. Voit asettaa uutuusvahdin tallentamillesi hauille viikoittain tai päivittäin. Ilmoitukset tulevat sähköpostiisi. Määritä uutuusvahdin sähköpostiosoite <a href="#finna-account-settings">Finna-tilin asetuksissa</a>.</p>
+    <h3>Suosikit</h3>
+    <p>Suosikit-sivulla näet kaikki suosikkilistasi ja voit muokata tai poistaa niitä. Katso tarkemmat ohjeet suosikkilistojen tekoon ja hallintaan <a href="<?=$this->url('content-page', ['page' => 'help-favorites'])?>">Suosikkilistat-ohjeesta</a>.</p>
+  </div>
+  <div id="library-cards" class="content-section">
+    <h2>Kirjastokortit</h2>
+    <p>Sinun on mahdollista liittää käyttäjätiliisi kirjastokortti, jos kirjastosi on mukana Finnassa ja mahdollistanut kirjastokortin liittämisen Finna-tiliin.</p>
+    <p>Kortin liittämisen jälkeen saat käyttöösi kirjaston palveluja, kuten mahdollisuuden varata ja uusia lainoja. Käyttäjätiliin voi lisätä useita kirjastokortteja, jos olet asiakkaana useammassa kirjastossa.</p>
+    <p>Huomioi, että kaikki kirjastot eivät ole mahdollistaneet kirjastokortin liittämistä Finna-tiliin.</p>
+    <h3 id="connect-library-card">Näin lisäät kirjastokortin:</h3>
+    <ol class="list-numbers">
+      <li>Mene kirjautuneena käyttäjänä <strong>Omaan tiliin</strong> klikkaamalla yläpalkista käyttäjänimeäsi. Valitse <strong>Kirjastokortit</strong> ja <strong>Liitä kirjastokortti/rinnakkaiskortti</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-connect-card_fi.png')?>" alt=""/></p></li>
+      <li>Etsi ensin oma kirjastosi <strong>Kirjasto</strong>-valikosta.
+      <p class="text-muted"><small><strong>Huomio!</strong> Jos et löydä kirjaston nimeä valikosta, et voi liittää kirjastokorttia tilillesi.</small></p></li>
+      <li>Täytä lomakkeelle kirjastokorttisi <strong>Käyttäjätunnus/viivakoodi</strong>. Viivakoodi on numero, jonka löydät kirjastokortistasi. Kirjoita kirjastokorttisi salasana tai PIN-koodi.
+      <p class="text-muted"><small><strong>Huomio!</strong> Ota yhteyttä omaan kirjastoosi, jos et tiedä tai olet unohtanut käyttäjätunnuksesi tai salasanasi/PIN-koodisi. Korkeakoulujen kirjastoissa salasana on aina oma sukunimi, jos käyttäjä ei ole asettanut PIN-koodia aiemmin.</small></p></li>
+      <li>Jos haluat, voit nimetä kirjastokorttisi, jotta erotat sen helpommin. Klikkaa lopuksi Tallenna. Voit lisätä toisen kirjastokortin samalla ohjeella.</li>
+    </ol>
+    <h3>Kirjastokortin asetukset</h3>
+    <p><strong>Omat tiedot</strong> -sivulla näet kirjaskortin asetukset. Voit esimerkiksi tarkastella kirjaston ylläpitämiä henkilötietoja.</p>
+    <h3>PIN-koodin vaihtaminen</h3>
+    <p>Pääset vaihtamaan PIN-koodisi <strong>Omat tiedot</strong> -sivulla. Jos muutat PIN-koodin, sinulle tulee uusi PIN-koodi sekä Finna-tilillesi että kirjastosi lainausautomaatille.</p>
+  </div>
+  <div id="loans" class="content-section">
+    <h2>Lainat</h2>
+    <p>Sivulla voit tarkastella lainojasi ja uusia lainojasi, kun olet ensin <a href="#connect-library-card">liittänyt kirjastokortin tiliisi</a>.</p>
+  </div>
+  <div id="reservations" class="content-section">
+    <h2>Varaukset</h2>
+    <p>Sivulla näet aineiston, jonka olet varannut. Voit myös peruuttaa varauksiasi.</p>
+  </div>
+  <div id="fines" class="content-section">
+    <h2>Maksut</h2>
+    <p>Näet, onko sinulla maksamattomia maksuja tililläsi ja mistä ne ovat kertyneet.</p>
+    <p>Sivulla voit maksaa kertyneitä maksuja, jos kirjastosi on mahdollistanut verkkomaksamisen Finna.fi-sivustolla.</p>
+  </div>
+</div>
+<!-- END of: finna - content/help-account-management_fi.phtml -->

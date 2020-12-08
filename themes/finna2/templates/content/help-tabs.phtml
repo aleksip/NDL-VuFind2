@@ -25,63 +25,30 @@
             'link' => $this->url('content-page', ['page' => 'help-advanced']),
           ],
         ],
-        'label' => 'Hakuohjeet',
+        'label' => $this->translate('tabs_help-search'),
         'link' => $this->url('content-page', ['page' => 'help'])
       ],
       [
+        'active' => in_array($activeTab, ['help-account', 'help-account-management']),
         'children' => [
           [
-            'label' => 'Neuvoja kirjautumiseen',
-            'link' => '',
+            'active' => 'help-account' === $activeTab,
+            'label' => $this->translate('tabs_help-account-instructions'),
+            'link' => $this->url('content-page', ['page' => 'help-account']),
           ],
           [
-            'label' => 'Oman tilin hallinta',
-            'link' => '',
+            'active' => 'help-account-management' === $activeTab,
+            'label' => $this->translate('tabs_help-account-management'),
+            'link' => $this->url('content-page', ['page' => 'help-account-management']),
           ],
         ],
-        'label' => 'Kirjautuminen ja oma tili',
-        'link' => ''
+        'label' => $this->translate('tabs_help-account'),
+        'link' => $this->url('content-page', ['page' => 'help-account']),
       ],
       [
         'active' => 'help-favorites' === $activeTab,
         'label' => $this->translate('tabs_help-favorites'),
         'link' => $this->url('content-page', ['page' => 'help-favorites']),
-      ],
-      [
-        'label' => 'Aineistojen käyttö',
-        'children' => [
-          [
-            'label' => 'Aineistojen käyttö',
-            'link' => '',
-          ],
-          [
-            'label' => 'CC-lisenssit',
-            'link' => '',
-          ],
-        ],
-        'link' => ''
-      ],
-      [
-        'label' => 'Video-ohjeet',
-        'children' => [
-          [
-            'label' => 'Haun tekeminen Finna.fi:ssä',
-            'link' => '',
-          ],
-          [
-            'label' => 'Suosikkilistojen luonti',
-            'link' => '',
-          ],
-          [
-            'label' => 'Kirjautuminen ja oma tilin hallinta',
-            'link' => '',
-          ],
-          [
-            'label' => 'Kirjastokortin liittäminen Finna-tiliin',
-            'link' => '',
-          ],
-        ],
-        'link' => ''
       ],
     ],
   ]);
