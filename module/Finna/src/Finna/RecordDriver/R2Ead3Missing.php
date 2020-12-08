@@ -1,10 +1,10 @@
 <?php
 /**
- * SolrEad3 locations tab.
+ * Model for missing R2 records
  *
  * PHP version 7
  *
- * Copyright (C) The National Library of Finland 2018-2019.
+ * Copyright (C) The National Library of Finland 2020.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
@@ -20,61 +20,52 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category VuFind
- * @package  RecordTabs
+ * @package  RecordDrivers
  * @author   Samuli Sillanpää <samuli.sillanpaa@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org/wiki/vufind2:record_tabs Wiki
+ * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
  */
-namespace Finna\RecordTab;
+namespace Finna\RecordDriver;
 
 /**
- * SolrEad3 locations tab.
+ * Model for missing R2 records
  *
  * @category VuFind
- * @package  RecordTabs
+ * @package  RecordDrivers
  * @author   Samuli Sillanpää <samuli.sillanpaa@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org/wiki/vufind2:record_tabs Wiki
+ * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
  */
-class LocationsEad3 extends \VuFind\RecordTab\AbstractBase
+class R2Ead3Missing extends R2Ead3
 {
     /**
-     * Is this tab enabled?
-     *
-     * @var bool
-     */
-    protected $enabled;
-
-    /**
-     * Constructor
-     *
-     * @param bool $enabled is this tab enabled?
-     */
-    public function __construct($enabled = true)
-    {
-        $this->enabled = $enabled;
-    }
-
-    /**
-     * Is this tab active?
+     * Does this record contain restricted metadata?
      *
      * @return bool
      */
-    public function isActive()
+    public function hasRestrictedMetadata()
     {
-        if (empty($this->driver->tryMethod('getLocations'))) {
-            $this->enabled = false;
-        }
-        return $this->enabled;
+        return true;
     }
 
     /**
-     * Get the on-screen description for this tab.
+     * Is restricted metadata included with the record, i.e. does the user
+     * have permissions to access restricted metadata.
      *
-     * @return string
+     * @return bool
      */
-    public function getDescription()
+    public function isRestrictedMetadataIncluded()
     {
-        return 'Holdings';
+        return false;
+    }
+
+    /**
+     * Show organisation menu on record page?
+     *
+     * @return boolean
+     */
+    public function showOrganisationMenu()
+    {
+        return false;
     }
 }

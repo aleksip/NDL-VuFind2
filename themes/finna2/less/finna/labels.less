@@ -16,6 +16,9 @@
     font-size: 0.8em;
     font-weight: 600;
     text-transform: uppercase;
+    &.with-tooltip {
+      cursor: pointer;
+    }
   }
   .iconlabel::before {
     font-size: 1.2em;
@@ -28,5 +31,11 @@
   }
   .iconlabel.open-access::before {
     color: @open-access-icon-color;
+  }
+  .iconlabel.R2-restricted-metadata-available::before {
+    color: @R2-restricted-metadata-available-icon-color;
+  }
+  .iconlabel.R2-restricted-metadata-included::before {
+    color: @R2-restricted-metadata-included-icon-color;
   }
 }

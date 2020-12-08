@@ -6,6 +6,7 @@
     $capabilityParams = $patron ? ['patron' => $patron] : [];
     $showLibraryTabs = $this->ils()->loginAvailable();
     $ilsOffline = 'ils-none' === $this->ils()->getOfflineMode();
+    $r2SearchEnabled = $this->R2()->isAvailable();
     $listOpen = $this->active == 'favorites' || substr($this->active, 0, 4) == 'list';
     $activeToLower = strtolower($this->active ?? '');
     //Get the data for vertical menu to show lists on correct site
@@ -62,7 +63,14 @@
       ];
     }
 
-    $nonLibraryItems = [
+    $nonLibraryItems = [];
+    if ($r2SearchEnabled) {
+        $nonLibraryItems['r2-accessrights'] = [
+            'url' => 'myresearch-r2accessrights',
+            'translation' => 'R2_accessrights_menu_heading'
+        ];
+    }
+    $nonLibraryItems += [
       'profile' => [
         'url' => 'myresearch-profile',
         'translation' => 'Profile',
@@ -86,9 +94,11 @@
         'desktopOnly' => true
       ]
     ];
+
     $menuListItems = array_merge($menuListItems, $nonLibraryItems);
 
     $desktopList = [
+      'r2-accessrights',
       'checkedout',
       'historicloans',
       'holds',
@@ -142,7 +152,7 @@
   </div>
 </div>
 
-<ul class="<?=$this->layoutClass('sidebar-myresearch')?> <?= $listOpen ? '' : 'move-list' ?> nav-tabs-personal list-group useraccount-nav nav-tabs" role="menu">
+<ul class="<?=$this->layoutClass('sidebar-myresearch')?> <?= $listOpen ? '' : 'move-list' ?> nav-tabs-personal list-group useraccount-nav nav-tabs finna-movement" role="menu">
   <li class="menu-header hidden-xs hidden-sm">
     <h1>
       <?= $this->transEsc('Your Account') ?>
@@ -164,7 +174,7 @@
   ?>
     <?php if ($hasPartial): ?>
       <li role="menuitem" class="dropdown <?= $listItem['active'] ? ' active' : ''?>">
-        <a href="<?=$this->escapeHtmlAttr($this->url($listItem['url']) . ($listItem['query'] ?? ''))?>" id="<?=$id?>" class="hidden-xs hidden-sm list-group-item <?= !$listItem['active'] ? 'collapsed' : '' ?>" >
+        <a href="<?=$this->escapeHtmlAttr($this->url($listItem['url']) . ($listItem['query'] ?? ''))?>" id="<?=$id?>" class="menu-parent sticky-menu hidden-xs hidden-sm list-group-item <?= !$listItem['active'] ? 'collapsed' : '' ?>" aria-haspopup="true" aria-expanded="<?=$listItem['active'] ? "true" : "false"?>">
           <?=$this->transEsc($listItem['translation'])?>
           <?php if ($showSpinner) : ?>
             <i class="hidden fa fa-spinner fa-spin"></i><span class="ajax-error hidden"><small> <?=$this->translate('An error has occurred'); ?></small></span>

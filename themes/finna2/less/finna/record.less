@@ -221,9 +221,13 @@ a.authority {
   display: flex;
   align-items: center;
   font-size: 1em;
+  position: relative;
   .fa.fa-download {
     margin-right: 4px;
     color: @brand-primary;
+  }
+  .dropdown {
+    position: initial;
   }
   .image-dimensions, .image-size {
     font-size: 0.8em;
@@ -236,8 +240,8 @@ a.authority {
     color: @gray-light;
   }
   .dropdown-menu.download {
-    @media(max-width: @screen-xs) {
-      left: -20%;
+    @media(max-width:@screen-xs) {
+      left: -4%;
     }
     border-radius: 5px;
     padding: 2px 6px;
@@ -246,6 +250,7 @@ a.authority {
       > a {
         border-radius: 0;
         padding: 2px 6px;
+        white-space: initial;
       }
     }
   }
@@ -624,15 +629,6 @@ a.authority {
   }
 }
 
-.sidebar .recordProvidedBy .record-organisation {
-  & img.consortium-logo {
-    margin: 8px 0 12px;
-  }
-  & li.organisation-page-link {
-    padding-top: 5px;
-  }
-}
-
 .nav-pills {
   padding: 0px;
   margin: 0px;
@@ -713,4 +709,91 @@ a.authority {
     width: 100%;
     min-height: 400px;
   }
+}
+
+// Learning material record
+.date-created.date-modified {
+  color: @gray-light;
+  font-size: 0.9em;
+  margin-top: 5px;
+  margin-bottom: 21px;
+}
+.learning-material {
+  margin-top: 12px;
+  h3 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 1em;
+  }
+  .recordURLs {
+    margin-top: 0;
+    margin-bottom: 21px;
+    padding: 0;
+  }
+  .fa-download,
+  .fa-external-link,
+  .fa-info3 {
+    margin-right: 5px;
+  }
+}
+.alert-aoe {
+  background-color: @aoe-brand-primary;
+}
+.material-description {
+  margin-bottom: 21px;
+}
+
+// Copyright field value, also used in search result lists
+.rights-icons {
+  margin-right: 10px;
+  .iconlabel {
+    margin-right: 0;
+  }
+}
+.rights-text {
+  color: @brand-primary;
+}
+
+// Material provided by
+
+.recordProvidedBy {
+  .record-organisation {
+    img.consortium-logo {
+      margin: 8px 0 12px;
+    }
+    li.organisation-page-link {
+      padding-top: 5px;
+    }
+    li.material-questions-feedback {
+      font-weight: bold;
+      padding-top: 10px
+    }
+  }
+}
+
+.sidebar .recordProvidedBy {
+  border-top: none;
+  margin-top: 0px;
+  .record-type.organisations {
+    padding: 15px;
+    font-size: 1em;
+    margin-bottom: 0;
+  }
+  .record-organisation-box {
+    border: @sidebar-border;
+    margin-bottom: 1em;
+  }
+}
+
+.record-main .recordProvidedBy {
+  &:extend(.sidebar .recordProvidedBy all);
+  h2:extend(.sidebar > h2) {};
+  @media (min-width: @screen-sm-min) {
+    max-width: 300px;
+  }
+}  
+
+// Record feedback
+.feedback-record {
+  margin-top: 1em;
 }
