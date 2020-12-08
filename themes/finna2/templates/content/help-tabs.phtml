@@ -9,7 +9,6 @@
     'collapseId' => 'nav-help-collapse',
     'items' => [
       [
-        'active' => in_array($activeTab, ['help', 'help-basic', 'help-advanced']),
         'children' => [
           [
             'active' => 'help' === $activeTab,
@@ -31,7 +30,6 @@
         'link' => $this->url('content-page', ['page' => 'help'])
       ],
       [
-        'active' => in_array($activeTab, ['help-account', 'help-account-management']),
         'children' => [
           [
             'active' => 'help-account' === $activeTab,
