@@ -1,6 +1,10 @@
-<ul class="finna-nav nav <?= $additionalClasses ?? '' ?>"
-  <?php if (!empty($role)): ?> role="<?= $role ?>"<?php endif; ?>
-  <?php if (!empty($ariaLabel)): ?> aria-label="<?= $ariaLabel ?>"<?php endif; ?>>
+<?php
+  $attributes = $attributes ?? [];
+  $attributes['class'] = (array)($attributes['class'] ?? []);
+  $attributes['class'][] = 'finna-nav';
+  $attributes['class'][] = 'nav';
+?>
+<ul<?= $this->attributes($attributes) ?>>
   <?php foreach ($items as $item): ?>
     <?php if (isset($renderChildren)) $item['renderChildren'] = $renderChildren; ?>
     <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $item); ?>
