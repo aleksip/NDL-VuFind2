@@ -7,7 +7,7 @@
   $attributes['data-html'] = 'true';
   $attributes['data-placement'] = $placement ?? 'bottom';
   $attributes['data-original-title'] = $content;
-  if (!$label) {
+  if (empty($label)) {
     $attributes['aria-label'] = $ariaLabel;
   }
 ?>
