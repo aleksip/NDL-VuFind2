@@ -1,44 +1,35 @@
 <?php
-  $attributes = $attributes ?? [];
+  $attributes = $this->attributes($attributes ?? []);
   $renderChildren = $renderChildren ?? 'dropdown';
-  $classes = [];
   if (!empty($children) && 'dropdown' === $renderChildren) {
-    $classes[] = 'dropdown';
+    $attributes->add('class', 'dropdown');
   }
   elseif (isset($active) ? boolval($active) : false) {
-    $classes[] = 'active';
+    $attributes->add('class', 'active');
     $attributes['aria-current'] = 'page';
-  }
-  if (!empty($classes)) {
-    $attributes['class'] = (array)($attributes['class'] ?? []);
-    $attributes['class'] = array_merge($attributes['class'], $classes);
   }
 
   // Process child attributes if necessary.
   if (!empty($children) && 'false' !== $renderChildren) {
     foreach ($children as $i => $child) {
-      $child['attributes'] = $child['attributes'] ?? [];
-      $childClasses = [];
+      $childAttributes = $this->attributes($child['attributes'] ?? []);
       if (isset($child['active']) ? boolval($child['active']) : false) {
-        $attributes['class'] = (array)($attributes['class'] ?? []);
-        $attributes['class'][] = 'active-trail';
-        $childClasses[] = 'active';
-        $child['attributes']['aria-current'] = 'page';
+        $attributes->add('class', 'active-trail');
+        $childAttributes->add('class', 'active');
+        $childAttributes['aria-current'] = 'page';
       }
       if ($hasDescription = !empty($child['description'])) {
-        $childClasses[] = 'nav-item-has-description';
+        $childAttributes->add('class', 'nav-item-has-description');
       }
-      if (!empty($childClasses)) {
-        $child['attributes']['class'] = (array)($child['attributes']['class'] ?? []);
-        $child['attributes']['class'] = array_merge($child['attributes']['class'], $childClasses);
-      }
-      $child['linkAttributes'] = $child['linkAttributes'] ?? [];
-      $child['linkAttributes']['href'] = $child['link'];
+      $child['attributes'] = $childAttributes;
+      $linkAttributes = $this->attributes($child['linkAttributes'] ?? []);
+      $linkAttributes['href'] = $child['link'];
+      $child['linkAttributes'] = $linkAttributes;
       $children[$i] = $child;
     }
   }
 ?>
-<li<?= $this->attributes($attributes) ?>>
+<li<?= $attributes ?>>
   <?php if (!empty($children) && 'dropdown' === $renderChildren): ?>
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
       aria-expanded="false"><?= $label ?> <b class="caret"></b></a>
@@ -51,8 +42,8 @@
   <?php if (!empty($children) && 'false' !== $renderChildren): ?>
     <ul<?php if ('simple' !== $renderChildren): ?> class="dropdown-menu"<?php endif; ?>>
       <?php foreach ($children as $child): ?>
-        <li<?= $this->attributes($child['attributes']) ?>>
-          <a<?= $this->attributes($child['linkAttributes']) ?>><span><?= $child['label'] ?></span>
+        <li<?= $child['attributes'] ?>>
+          <a<?= $child['linkAttributes'] ?>><span><?= $child['label'] ?></span>
           <?php if ($hasDescription): ?><span role="note"><?= $child['description'] ?></span><?php endif; ?></a>
         </li>
       <?php endforeach; ?>

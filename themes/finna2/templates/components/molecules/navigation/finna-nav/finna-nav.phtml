@@ -1,10 +1,8 @@
 <?php
-  $attributes = $attributes ?? [];
-  $attributes['class'] = (array)($attributes['class'] ?? []);
-  $attributes['class'][] = 'finna-nav';
-  $attributes['class'][] = 'nav';
+  $attributes = $this->attributes($attributes ?? []);
+  $attributes->add('class', ['finna-nav', 'nav']);
 ?>
-<ul<?= $this->attributes($attributes) ?>>
+<ul<?= $attributes ?>>
   <?php foreach ($items as $item): ?>
     <?php if (isset($renderChildren)) $item['renderChildren'] = $renderChildren; ?>
     <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $item); ?>

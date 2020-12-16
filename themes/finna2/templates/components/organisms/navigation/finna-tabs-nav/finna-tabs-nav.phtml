@@ -1,15 +1,14 @@
 <?php
-  $attributes = $attributes ?? [];
-  $attributes['class'] = (array)($attributes['class'] ?? []);
-  $attributes['class'][] = 'finna-tabs-nav';
+  $attributes = $this->attributes($attributes ?? []);
+  $attributes->add('class', 'finna-tabs-nav');
   $attributes['aria-label'] = $ariaLabel;
-  $navAttributes = ['class' => ['nav-tabs']];
-  if (in_array('finna-tabs-nav-lg', $attributes['class'])) {
-    $navAttributes['class'][] = 'finna-nav-lg';
+  $navAttributes = $this->attributes(['class' => 'nav-tabs']);
+  if ($attributes->hasValue('class', 'finna-tabs-nav-lg')) {
+    $navAttributes->add('class', 'finna-nav-lg');
   }
   $this->headScript()->appendFile('components/organisms/navigation/finna-tabs-nav/finna-tabs-nav.js');
 ?>
-<nav<?= $this->attributes($attributes) ?>>
+<nav<?= $attributes ?>>
   <?= $this->render('components/molecules/navigation/finna-nav/finna-nav.phtml', [
       'attributes' => $navAttributes,
       'items' => $items,

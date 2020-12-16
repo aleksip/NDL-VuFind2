@@ -1,17 +1,16 @@
 <?php
-  $attributes = $attributes ?? [];
-  $attributes['class'] = (array)($attributes['class'] ?? []);
-  $attributes['class'][] = 'finna-multi-level-nav';
-  $tabsNavAttributes = ['class' => ['hidden-xs']];
-  $navbarAttributes = ['class' => ['visible-xs']];
-  if (in_array('finna-multi-level-nav-lg', $attributes['class'])) {
-    $tabsNavAttributes['class'][] = 'finna-tabs-nav-lg';
+  $attributes = $this->attributes($attributes ?? []);
+  $attributes->add('class', 'finna-multi-level-nav');
+  $tabsNavAttributes = $this->attributes(['class' => 'hidden-xs']);
+  if ($attributes->hasValue('class', 'finna-multi-level-nav-lg')) {
+    $tabsNavAttributes->add('class', 'finna-tabs-nav-lg');
   }
-  if (in_array('finna-multi-level-nav-content', $attributes['class'])) {
-    $navbarAttributes['class'][] = 'finna-navbar-content';
+  $navbarAttributes = $this->attributes(['class' => 'visible-xs']);
+  if ($attributes->hasValue('class', 'finna-multi-level-nav-content')) {
+    $navbarAttributes->add('class', 'finna-navbar-content');
   }
 ?>
-<div<?= $this->attributes($attributes) ?>>
+<div<?= $attributes ?>>
   <?= $this->render('components/organisms/navigation/finna-tabs-nav/finna-tabs-nav.phtml', [
       'ariaLabel' => $ariaLabel,
       'attributes' => $tabsNavAttributes,

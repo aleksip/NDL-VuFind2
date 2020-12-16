@@ -1,7 +1,6 @@
 <?php
-  $attributes = $attributes ?? [];
-  $attributes['class'] = (array)($attributes['class'] ?? []);
-  $attributes['class'][] = 'finna-tooltip-btn';
+  $attributes = $this->attributes($attributes ?? []);
+  $attributes->add('class', 'finna-tooltip-btn');
   $attributes['type'] = 'button';
   $attributes['data-toggle'] = 'tooltip';
   $attributes['data-html'] = 'true';
@@ -11,6 +10,6 @@
     $attributes['aria-label'] = $ariaLabel;
   }
 ?>
-<button<?= $this->attributes($attributes) ?>>
+<button<?= $attributes ?>>
   <?php if ($iconClass): ?><i class="fa <?= $iconClass ?>"></i> <?php endif; ?><?= $label ?? '' ?>
 </button>
