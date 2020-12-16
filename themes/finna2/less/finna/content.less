@@ -54,7 +54,7 @@
         color: @link-color;
         margin-bottom: 25px;
     }
-    & ul:not(.finna-nav) li {
+    & ul:not(.nav-tabs.help-tabs) li {
         margin-bottom: 3px;
     }
     .organisation-list-item {
@@ -80,8 +80,17 @@
     border-bottom: 1px solid @gray-lighter;
 }
 
-.template-name-content .finna-multi-level-nav.finna-multi-level-nav-content {
+ul.nav-tabs.help-tabs {
     margin-top: 3em;
+    & li {
+        color: @header-text-color;
+        font-size: 24px;
+        font-weight: 500;
+        padding: 10px 15px;
+        @media(max-width: @screen-lg){
+            font-size: 20px;
+        }
+    }
 }
 
 .example-image-area {
@@ -116,7 +125,7 @@
         > a {
             color: @brand-primary;
             border: 1px solid @brand-primary;
-            padding: 0.5em;
+            padding: 0.5em;        
             &:hover,
             &:focus {
                 color: #fff;

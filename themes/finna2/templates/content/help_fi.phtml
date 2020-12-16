@@ -1,6 +1,4 @@
 <!-- START of: finna - content/help_fi.phtml -->
-<?php $this->headTitle($this->translate('tabs_help'))?>
-
 <?php if ($this->resolver('content/help-tabs.phtml')): ?>
   <?=$this->render('content/help-tabs.phtml', ['activeTab' => 'help'])?>
 <?php endif; ?>
@@ -13,7 +11,6 @@
     <?php if ($this->resolver('content/Additions/helpBegin.phtml')): ?>
       <?=$this->render('content/Additions/helpBegin.phtml')?>
     <?php endif; ?>
-    <h1>Haun pikaohje</h1>
     <div id="begin1" class="content-section">
       <h2>Miten aloitan haun Finnassa?</h2>
       <p>Hakuvaihtoehdot Finnassa:</p>
