@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper for processing HTML tag attributes
+ * Helper for creating Attributes objects.
  *
  * PHP version 7
  *
@@ -31,7 +31,7 @@ use Finna\View\Attributes;
 use Laminas\View\Helper\AbstractHelper;
 
 /**
- * Helper for creating Attributes objects
+ * Helper for creating Attributes objects.
  *
  * @category VuFind
  * @package  View_Helpers

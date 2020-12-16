@@ -31,7 +31,7 @@ use ArrayObject;
 use Laminas\Escaper\Escaper;
 
 /**
- * Helper for creating Attributes objects
+ * Class for storing and processing HTML tag attributes.
  *
  * @category VuFind
  * @package  View
