@@ -1,0 +1,96 @@
+<!-- START of: finna - content/help-account-management_sv.phtml -->
+<?php $this->headTitle($this->translate('tabs_help-account-management'))?>
+
+<?php if ($this->resolver('content/help-tabs.phtml')): ?>
+    <?=$this->render('content/help-tabs.phtml', ['activeTab' => 'help-account-management'])?>
+<?php endif; ?>
+<div class="sidebar left">
+  <div class="content-navigation-menu">
+  </div>
+</div>
+<div class="mainbody right"> 
+  <h1>Hantera ditt konto</h1>
+  <img class="pull-right hidden-xs" src="<?=$this->imageLink('help-account-menu_sv.png')?>" alt=""/>
+  <p>Efter att du loggat in kan du se uppgifterna på ditt eget konto genom att klicka på ditt användarnamn uppe på sidan.</p>
+  <p>I vyn <strong>Mitt konto</strong> kan du</p>
+  <ul class="list-bullets">
+    <li>kontrollera och ändra dina egna uppgifter</li>
+    <li>se dina egna sökningar och listor med favoriter</li>
+    <li>ansluta bibliotekskort till ditt konto</li>
+    <li>reservera och förnya dina lån</li>
+    <li>se avgifter.</li>
+  </ul>
+  <div id="account-management" class="content-section">
+    <h2>Min profil</h2>
+    <p>I fliken <strong>Min profil</strong> kan du kontrollera och anpassa inställningarna för ditt Finna-konto. Du kan även spara dina favoritlistor på din egen dator och radera ditt Finna-konto.</p>
+    <h3 id="finna-account-settings">Inställningar för Finna-kontot</h3>
+    <p>I inställningarna kan du byta lösenordet för ditt konto eller din e-postadress och skapa en signatur som är synlig för andra då du kommenterar material.</p>
+    <p>Till din e-postadress får du påminnelser från <a href="#alert-schedule">nyhetsbevakningen</a>. Du kan skicka listor med sökresultat till din e-postadress och adressen används för att återställa lösenordet för ditt konto vid behov.</p>
+    <h3>Radera användarkonto</h3>
+    <p>Du kan radera ditt användarkonto genom att välja <strong>Radera kontot</strong> nere i fliken <strong>Min profil</strong>.</p>
+    <p>Efter valet raderas sparade sökningar och favoritlistor samt eventuella förfallodagspåminnelser och nyhetsbevakningen stängs av.</p>
+    <p>Observera att dina kommentarer och recensioner sparas i tjänsten som anonyma efter att du raderat kontot. Om du även vill radera dessa måste du göra det manuellt före du raderar kontot.</p>
+    <h3 id="save-favourites">Spara listor med favoriter och sparade sökningar</h3>
+    <p>Före du raderar kontot eller byter konto vill du kanske ta till vara dina listor med favoriter och sparade sökningar. Det här kan du göra i inställningarna för Finna-kontot genom att klicka på <strong>Importera och exportera min data</strong>.</p>
+    <p>Så här sparar du dina favoritlistor:</p>
+    <ol class="list-numbers">
+      <li>Logga in och klicka på <strong>Min profil</strong>.</li>
+      <li>Välj <strong>Ladda ner favoriter och sparade sökningar</strong> om du vill kopiera dina listor med favoriter och sparade sökningar på din egen dator. Filen sparas på din dator som en .json-fil.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-download_sv.png')?>" alt=""/></p></li>
+      <li>Filen har sparats på din dator.</li>
+    </ol>
+    <p>Så här importerar du sökningar och listor med favoriter från ett annat konto till ditt konto:</p>
+    <ol class="list-numbers">
+      <li>När du importerar favoritlistor och sökningar till ditt användarkonto från ett annat konto ska du klicka på <strong>Importera favoriter och sökningar från fil</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-import_sv.png')?>" alt=""/></p></li>
+      <li>Välj efter detta .json-filen som sparats på din dator och klicka på <strong>Importera favoriter och sökningar</strong>.</li>
+    </ol>    
+  </div>
+  <div id="saved-searches" class="content-section">
+    <h2>Sparade sökningar, sökhistorik och nyhetsbevakning</h2>
+    <h3>Sparade sökningar och sökhistorik</h3>
+    <p>Som inloggad användare ser du din sökhistorik i fliken <strong>Sparade sökningar</strong>. Du kan spara dina senaste sökningar genom att klicka på <strong>Spara</strong> och lätt fortsätta söka nästa gång du använder tjänsten.</p>
+    <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-recent-search_sv.png')?>" alt=""/></p>
+    <p><a href="<?=$this->url('content-page', ['page' => 'help-basic'])?>#saving-search">Du kan även spara dina sökningar direkt på sidan med sökresultat</a>.</p>
+    <h3 id="alert-schedule">Nyhetsbevakning</h3>
+    <p>Nyhetsbevakningen informerar dig när mer material blir tillgängligt som motsvarar en sparad sökning. Du kan beställa nyhetsbevakning för sparade sökningar och få meddelanden om nyheter antingen varje vecka eller varje dag. Meddelandena skickas till din e-post. <a href="#finna-account-settings">Ange e-postadressen för nyhetsbevakningen i inställningarna för Finna-konto</a>.</p>
+    </div>
+  <div id="favourites" class="content-section">
+    <h2>Favoriter</h2>
+    <p>I fliken <strong>Favoriter</strong> ser du alla dina listor med favoriter och kan redigera eller radera dem. <a href="<?=$this->url('content-page', ['page' => 'help-favorites'])?>">Närmare anvisningar för att skapa och hantera listor med favoriter finns i anvisningen Favoritlistor</a>.</p>
+  </div>
+  <div id="library-cards" class="content-section">
+    <h2>Bibliotekskort</h2>
+    <p>Du kan ansluta ett bibliotekskort till ditt användarkonto om ditt bibliotek är medlem i Finna och har gjort det möjligt att ansluta bibliotekskortet till Finna-kontot.</p>
+    <p>Efter att du lagt till kortet får du tillgång till bibliotekets tjänster, såsom möjligheten att reservera och förnya lån. Det är möjligt att lägga till flera bibliotekskort till användarkontot om du är kund hos flera bibliotek.</p>
+    <p>Notera att alla bibliotek som deltar i Finna-samarbetet inte har gjort det möjligt att ansluta bibliotekskort till Finna-kontot.</p>
+    <h3 id="connect-library-card">Så här lägger du till ett bibliotekskort:</h3>
+    <ol class="list-numbers">
+      <li>Logga in på ditt eget konto genom att klicka på ditt användarnamn uppe på sidan. Välj fliken <strong>Bibliotekskort</strong> och <strong>Anslut bibliotekskort/parallellkort</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-connect-card_sv.png')?>" alt=""/></p></li>
+      <li>Börja med att hitta ditt eget bibliotek i rullgardinsmenyn <strong>Bibliotek</strong>.
+      <p class="text-muted"><small><strong>Obs!</strong> Om du inte hittar bibliotekets namn i rullgardinsmenyn har biblioteket inte möjliggjort kundfunktioner i Finna.fi. I detta fall är det inte möjligt att ansluta bibliotekskortet till kontot.</small></p></li>
+      <li>Fyll i <strong>användarnamnet för ditt bibliotekskort/streckkoden (bibliotekskortets nummer)</strong> och <strong>ditt lösenord/din pinkod</strong>.
+      <p class="text-muted"><small><strong>Obs!</strong> Om du inte vet eller har glömt ditt användarnamn eller ditt lösenord/din pinkod ska du ta kontakt med ditt eget bibliotek. Vid högskolebiblioteken är ditt lösenord ditt eget efternamn, om du inte tidigare har skapat en egen pinkod.</small></p></li>
+      <li>Om du vill kan du namnge ditt bibliotekskort för att hitta det lättare. Avsluta med att klicka på <strong>Spara</strong>. Du kan lägga till flera bibliotekskort på samma sätt.</li>
+    </ol>
+    <h3>Bibliotekskortets inställningar</h3>
+    <p>I fliken <strong>Min profil</strong> ser du inställningarna för bibliotekskortet. Du kan exempelvis kontrollera personuppgifter som administreras av biblioteket.</p>
+    <h3>Byte av pinkod</h3>
+    <p>Du kan byta din pinkod i fliken <strong>Min profil</strong>. Notera att bytet av pinkod även innebär att koden som används för att logga in i Finna byts ut samt pinkoden som används vid låneautomaten i ditt eget bibliotek.</p>
+  </div>
+  <div id="loans" class="content-section">
+    <h2>Lån</h2>
+    <p>I fliken kan du se dina lån och förnya lånat material efter att <a href="#connect-library-card">du har anslutit bibliotekskortet till ditt konto</a>.</p>
+  </div>
+  <div id="reservations" class="content-section">
+    <h2>Reservationer</h2>
+    <p>Du ser reserverat material. Du kan även ångra dina reservationer.</p>
+  </div>
+  <div id="fines" class="content-section">
+    <h2>Avgifter</h2>
+    <p>Du ser obetalda avgifter på ditt konto och vilket material avgifterna gäller.</p>
+    <p>I fliken kan du betala avgifterna om ditt bibliotek har möjliggjort online-betalning på Finna.fi.</p>
+  </div>
+</div>
+<!-- END of: finna - content/help-account-management_sv.phtml -->

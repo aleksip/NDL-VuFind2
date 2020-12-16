@@ -1,0 +1,96 @@
+<!-- START of: finna - content/help-account-management_en-gb.phtml -->
+<?php $this->headTitle($this->translate('tabs_help-account-management'))?>
+
+<?php if ($this->resolver('content/help-tabs.phtml')): ?>
+    <?=$this->render('content/help-tabs.phtml', ['activeTab' => 'help-account-management'])?>
+<?php endif; ?>
+<div class="sidebar left">
+  <div class="content-navigation-menu">
+  </div>
+</div>
+<div class="mainbody right"> 
+  <h1>Account management</h1>
+  <img class="pull-right hidden-xs" src="<?=$this->imageLink('help-account-menu_en-gb.png')?>" alt=""/>
+  <p>After logging in, you can browse your account details by clicking on your username in the menu at the top of the page. </p>
+  <p>In the <strong>Your Account</strong> view, you can</p>
+  <ul class="list-bullets">
+    <li>Examine and edit your information</li>
+    <li>Browse your searches and lists of favourites</li>
+    <li>Add library cards to your account</li>
+    <li>Reserve library material and renew your loans</li>
+    <li>See your fines and payments.</li>
+  </ul>
+  <div id="account-management" class="content-section">
+    <h2>Profile</h2>
+    <p>In the <strong>Profile</strong> page, you can examine and change the settings for your Finna account. You can also save your list of favourites onto your computer or remove your Finna account from this page.</p>
+    <h3 id="finna-account-settings">Finna account settings</h3>
+    <p>In the account settings, you can change your password and email address or set the name that will be shown when you comment on resources.</p>
+    <p>Your email is needed to deliver notifications from any <a href="#alert-schedule">alert schedules</a>. You can also send your search results to your email, which will additionally serve as the retrieval address if you forget your password.</p>
+    <h3>Deleting an account</h3>
+    <p>You can delete your account from the Profile tab by selecting <strong>Delete Account</strong>.</p>
+    <p>After this, any saved searches and lists of favourites will be removed and any return date and alert schedule notifications will be disabled.</p>
+    <p>Please note that your comments and reviews will be stored in the service in anonymous form, meaning that they can still be read but they will not be associated with your name. If you want to remove your comments and reviews, you will have to do so manually before deleting your account.</p>
+    <h3 id="save-favourites">Downloading lists of favourites and saved searches</h3>
+    <p>Before deleting or switching accounts, you may want to download your lists of favourites or saved searches. This can be done in the settings of your Finna account under <strong>Import and export my data</strong>.</p>
+    <p>Downloading your list of favourites:</p>
+    <ol class="list-numbers">
+      <li>Log in and select <strong>Profile</strong>.</li>
+      <li>Select <strong>Download favourites and saved searches</strong> if you want to copy your favourites and saved searches to your computer. The file will be downloaded in the .json format.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-download_en-gb.png')?>" alt=""/></p></li>
+      <li>The file has been downloaded.</li>
+    </ol>
+    <p>How to import favourites and searches from another account:</p>
+    <ol class="list-numbers">
+      <li>If you wish to import favourites and searches from another account, click on <strong>Import favourites and searches from a file.</strong>
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-import_en-gb.png')?>" alt=""/></p></li>
+      <li>After this, select the previously downloaded .json file on your computer and click <strong>Import favourites and searches</strong>.</li>
+    </ol>    
+  </div>
+  <div id="saved-searches" class="content-section">
+    <h2>Saved searches, search history and alert schedule</h2>
+    <h3>Saved searches and search history</h3>
+    <p>As a logged-in user, you will be able to view your search history in the <strong>Saved searches</strong> page. You can save your latest searches by clicking the icon under <strong>Save?</strong>. This will help you get started faster next time.</p>
+    <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-recent-search_en-gb.png')?>" alt=""/></p>
+    <p><a href="<?=$this->url('content-page', ['page' => 'help-basic'])?>#saving-search">It is also possible to save your searches directly on the search result page</a>.</p>
+    <h3 id="alert-schedule">Alert schedule</h3>
+    <p>You can receive alerts when resources corresponding to a saved search become available. The alerts for your saved searches can be sent either on a weekly or daily basis. <a href="#finna-account-settings">The alerts will be sent to your email</a>.</p>
+    </div>
+  <div id="favourites" class="content-section">
+    <h2>Favourites</h2>
+    <p>On the <strong>Favourites</strong> page, you can browse your lists of favourites as well as edit or delete them. For more detailed instructions on creating and managing lists of favourites, <a href="<?=$this->url('content-page', ['page' => 'help-favorites'])?>">see the instructions for Favourites</a>.</p>
+  </div>
+  <div id="library-cards" class="content-section">
+    <h2>Library cards</h2>
+    <p>You can add a library card to your account if your library is a Finna partner organisation and has enabled their library cards to be added to Finna accounts.</p>
+    <p>After adding the card, you will be able to access the services of your library, including the possibility to reserve resources and renew loans. You can add several library cards to your account, if you are a client of several libraries.</p>
+    <p>Please note that not all participating libraries have enabled their library cards to be added to Finna accounts.</p>
+    <h3 id="connect-library-card">Adding a library card:</h3>
+    <ol class="list-numbers">
+      <li>Log in and click on your username in the top menu to view <strong>Your account</strong>. Select <strong>Library Cards</strong> and click on <strong>Connect library/parallel card</strong>.
+      <p class="hidden-xs"><img src="<?=$this->imageLink('help-account-connect-card_en-gb.png')?>" alt=""/></p></li>
+      <li>Find your library in the the <strong>Library</strong> drop-down menu.
+      <p class="text-muted"><small><strong>NB!</strong> If the name of your library is not in the drop-down menu, your library has not enabled customer functions for Finna.fi. This means that you cannot add your library card to your Finna account.</small></p></li>
+      <li>Enter the <strong>Username/barcode</strong> (library card number) for your card as well as the <strong>password/PIN code</strong>.
+      <p class="text-muted"><small><strong>NB!</strong> If you do not know or have forgotten your username or password/PIN code, please contact your library. For libraries of institutions of higher education, the password is your last name, unless you have previously set your own PIN code.</small></p></li>
+      <li>You can name your card for easier identification. Once you are ready, click on <strong>Save</strong>. You can add another library card by repeating this process.</li>
+    </ol>
+    <h3>Library card settings</h3>
+    <p>The <strong>Profile</strong> page features the settings for your library card. For example, you can see the personal information maintained by your library.</p>
+    <h3>Changing your PIN code</h3>
+    <p>You can change your PIN code from the <strong>Profile</strong> page. Please note that changing your PIN code will change both the code used to log in to your Finna account and the PIN code for the self-service checkout desks in your library.</p>
+  </div>
+  <div id="loans" class="content-section">
+    <h2>Loans</h2>
+    <p>From this page, you can browse and renew your loans, once you have <a href="#connect-library-card">added a library card to your account</a>.</p>
+  </div>
+  <div id="reservations" class="content-section">
+    <h2>Reservations</h2>
+    <p>From this page, you can see any resources you have reserved. You can also cancel your reservations.</p>
+  </div>
+  <div id="fines" class="content-section">
+    <h2>Fines</h2>
+    <p>Here you can see any unpaid fines on your account, as well as the reason they have been set.</p>
+    <p>You can pay the fines from this tab if your library has enabled online payments through Finna.fi.</p>
+  </div>
+</div>
+<!-- END of: finna - content/help-account-management_en-gb.phtml -->
