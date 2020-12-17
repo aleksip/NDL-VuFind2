@@ -52,6 +52,7 @@ class AttributesHelper extends AbstractHelper
     public function __invoke($attribs = [])
     {
         return new Attributes(
+            $this->getView()->plugin('escapehtml')->getEscaper(),
             $this->getView()->plugin('escapehtmlattr')->getEscaper(),
             $attribs
         );
