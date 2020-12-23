@@ -7,16 +7,16 @@
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#<?= $collapseId ?>" aria-expanded="false">
-        <?php if (!empty($toggleBtnSrOnly)): ?><span class="sr-only"><?= $toggleBtnSrOnly ?></span><?php endif; ?>
-        <?php if (!empty($toggleBtnLabel)): ?><?= $toggleBtnLabel ?><?php endif; ?>
-        <?php if (!empty($toggleBtnIconClass)): ?><i class="fa <?= $toggleBtnIconClass ?? '' ?>"></i><?php endif; ?>
+        <?php if (isset($toggleBtnSrOnly)): ?><span class="sr-only"><?= $toggleBtnSrOnly ?></span><?php endif; ?>
+        <?php if (isset($toggleBtnLabel)): ?><?= $toggleBtnLabel ?><?php endif; ?>
+        <?php if (isset($toggleBtnIconClass)): ?><i class="<?= $toggleBtnIconClass ?>"></i><?php endif; ?>
       </button>
-      <?php if (!empty($brandContent)): ?>
+      <?php if (isset($brandContent)): ?>
         <span class="navbar-brand">
-          <?php if (!empty($brandLink)): ?><a href="<?= $brandLink ?>"><?php endif; ?>
-          <?php if (!empty($brandSrOnly)): ?><span class="sr-only"><?= $brandSrOnly ?></span><?php endif; ?>
+          <?php if (isset($brandLink)): ?><a href="<?= $brandLink ?>"><?php endif; ?>
+          <?php if (isset($brandSrOnly)): ?><span class="sr-only"><?= $brandSrOnly ?></span><?php endif; ?>
           <?= $brandContent ?>
-          <?php if (!empty($brandLink)): ?></a><?php endif; ?>
+          <?php if (isset($brandLink)): ?></a><?php endif; ?>
         </span>
       <?php endif; ?>
     </div>
