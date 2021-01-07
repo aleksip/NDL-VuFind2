@@ -449,6 +449,13 @@ class RecordDataFormatterFactory
             ]
         );
         $setTemplateLine(
+            'Publications',
+            'getRelatedPublications', 'data-relatedPublications.phtml',
+            [
+                'context' => ['class' => 'record-related-publications']
+            ]
+        );
+        $setTemplateLine(
             'Classification',
             'getOtherClassifications', 'data-keywords.phtml',
             [
@@ -831,12 +838,6 @@ class RecordDataFormatterFactory
         );
         $setTemplateLine(
             'Date', 'getUnitDates', 'data-lines-with-detail.phtml'
-        );
-        $setTemplateLine(
-            'Photo Info', 'getPhotoInfo', 'data-escapeHtml.phtml',
-            [
-                'context' => ['class' => 'record-photoinfo']
-            ]
         );
         $setTemplateLine(
             'Source of Acquisition', 'getAcquisitionSource', 'data-escapeHtml.phtml',
