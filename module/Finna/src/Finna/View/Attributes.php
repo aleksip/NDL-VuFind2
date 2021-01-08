@@ -90,6 +90,7 @@ class Attributes extends ArrayObject
                 ? array_merge((array)$this->offsetGet($name), (array)$value)
                 : $value
         );
+        return $this;
     }
 
     /**
