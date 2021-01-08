@@ -94,13 +94,6 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $configLoader;
 
     /**
-     * Raw configuration parameters.
-     *
-     * @var string
-     */
-    protected $rawParams = null;
-
-    /**
      * Maximum number of API calls to make per search. Setting to null indicates
      * an unlimited number of API calls.
      *
