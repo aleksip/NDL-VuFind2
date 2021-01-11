@@ -25,10 +25,7 @@
             <span class="gauge-label"><?=$this->translate('organisation_info_coverage')?></span>
           </span>
         </div>
-        <h4 class="panel-title organisation-info-panel">
-          <a data-toggle="collapse" href="#collapse-usage" class="collapse-usage collapsed"><?=$this->translate('organisation_info_navi_usage')?></a>
-        </h4>
-        <div id="collapse-usage" class="panel-collapse collapse">
+        <?php ob_start(); ?>
           <div class="organisation-info-page loading organisation-page-information-wrapper">
             <div class="consortium-usage-rights hide navi-section" id="consortium-usage-rights-section">
               <div class="usage-rights-text">
@@ -37,11 +34,17 @@
               </div>
             </div>
           </div>
-        </div>
-        <h4 class="panel-title organisation-info-panel links-panel hide">
-          <a data-toggle="collapse" href="#collapse-links" class="collapse-links collapsed"><?= $this->transEsc('Links') ?></a>
-        </h4>
-        <div id="collapse-links" class="panel-collapse collapse">
+        <?php $content = ob_get_clean(); ?>
+        <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
+            'attributes' => ['class' => ['finna-panel-default', 'organisation-info-panel']],
+            'heading' => $this->translate('organisation_info_navi_usage'),
+            'titleHeadingLevel' => 4,
+            'content' => $content,
+            'headingId' => 'heading-usage',
+            'collapseId' => 'collapse-usage',
+            'collapsed' => true
+          ]); ?>
+        <?php ob_start(); ?>
           <div class="links hide">
             <h4><?=$this->translate('organisation_info_page_finna_link')?></h4>
             <ul class="list-group">
@@ -54,7 +57,16 @@
               <li class="list-group-item template"><a href="#" target="_blank">Template text</a></li>
             </ul>
           </div>
-        </div>
+        <?php $content = ob_get_clean(); ?>
+        <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
+            'attributes' => ['class' => ['finna-panel-default', 'organisation-info-panel', 'links-panel', 'hide']],
+            'heading' => $this->transEsc('Links'),
+            'titleHeadingLevel' => 4,
+            'content' => $content,
+            'headingId' => 'heading-links',
+            'collapseId' => 'collapse-links',
+            'collapsed' => true
+          ]); ?>
       </div>
     </div>
     <div class="organisation-list" data-rows="1"><ul></ul></div>
