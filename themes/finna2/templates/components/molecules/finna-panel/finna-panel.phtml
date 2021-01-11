@@ -1,9 +1,21 @@
-<?php $collapsed = $collapsed ?? true; ?>
+<?php
+  $collapsed = $collapsed ?? true;
+  $headingTag = $headingTag ?? true;
+?>
 <div<?= $this->attributes($attributes ?? [])->add('class', ['finna-panel', 'panel']) ?>>
   <?php if (isset($heading)): ?>
-    <div<?= $this->attributes(isset($headingId) ? ['id' => $headingId] : [])->add('class', 'panel-heading') ?>>
-      <?php if (isset($titleHeadingLevel)): ?>
-        <h<?= $titleHeadingLevel ?> class="panel-title">
+    <?php
+      $__headingAttributes = $this->attributes(isset($headingId) ? ['id' => $headingId] : []);
+      if (!$headingTag && isset($headingLevel)) {
+        $__headingAttributes->set([
+          'role' => 'heading',
+          'aria-level' => $headingLevel
+        ]);
+      }
+    ?>
+    <div<?= $__headingAttributes->add('class', 'panel-heading') ?>>
+      <?php if ($headingTag): ?>
+        <h<?= $headingLevel ?> class="panel-title">
       <?php endif; ?>
           <?php
             if (isset($collapseId)) {
@@ -27,8 +39,8 @@
           <<?= $__headingInnerElement ?><?= $__headingInnerAttributes->add('class', 'finna-panel-heading-inner') ?>>
             <?= $heading ?>
           </<?= $__headingInnerElement ?>>
-      <?php if (isset($titleHeadingLevel)): ?>
-        </h<?= $titleHeadingLevel ?>>
+      <?php if ($headingTag): ?>
+        </h<?= $headingLevel ?>>
       <?php endif; ?>
     </div>
   <?php endif; ?>

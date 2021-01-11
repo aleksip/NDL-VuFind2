@@ -38,11 +38,10 @@
         <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
             'attributes' => ['class' => ['finna-panel-default', 'organisation-info-panel']],
             'heading' => $this->translate('organisation_info_navi_usage'),
-            'titleHeadingLevel' => 4,
+            'headingLevel' => 4,
             'content' => $content,
             'headingId' => 'heading-usage',
-            'collapseId' => 'collapse-usage',
-            'collapsed' => true
+            'collapseId' => 'collapse-usage'
           ]); ?>
         <?php ob_start(); ?>
           <div class="links hide">
@@ -61,11 +60,10 @@
         <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
             'attributes' => ['class' => ['finna-panel-default', 'organisation-info-panel', 'links-panel', 'hide']],
             'heading' => $this->transEsc('Links'),
-            'titleHeadingLevel' => 4,
+            'headingLevel' => 4,
             'content' => $content,
             'headingId' => 'heading-links',
-            'collapseId' => 'collapse-links',
-            'collapsed' => true
+            'collapseId' => 'collapse-links'
           ]); ?>
       </div>
     </div>
