@@ -7,8 +7,8 @@
       <?php endif; ?>
           <?php
             if (isset($collapseId)) {
-              $headingInnerElement = 'a';
-              $headingInnerAttributes = $this->attributes([
+              $__headingInnerElement = 'a';
+              $__headingInnerAttributes = $this->attributes([
                 'role' => 'button',
                 'data-toggle' => 'collapse',
                 'href' => '#' . $collapseId,
@@ -16,41 +16,43 @@
                 'aria-controls' => $collapseId
               ]);
               if ($collapsed) {
-                $headingInnerAttributes->add('class', 'collapsed');
+                $__headingInnerAttributes->add('class', 'collapsed');
               }
             }
             else {
-              $headingInnerElement = 'span';
-              $headingInnerAttributes = $this->attributes();
+              $__headingInnerElement = 'span';
+              $__headingInnerAttributes = $this->attributes();
             }
           ?>
-          <<?= $headingInnerElement ?><?= $headingInnerAttributes->add('class', 'finna-panel-heading-inner') ?>>
+          <<?= $__headingInnerElement ?><?= $__headingInnerAttributes->add('class', 'finna-panel-heading-inner') ?>>
             <?= $heading ?>
-          </<?= $headingInnerElement ?>>
+          </<?= $__headingInnerElement ?>>
       <?php if (isset($titleHeadingLevel)): ?>
         </h<?= $titleHeadingLevel ?>>
       <?php endif; ?>
     </div>
   <?php endif; ?>
-  <?php if (isset($collapseId)): ?>
+
+  <?php if (($__collapsible = isset($collapseId) && isset($heading) && isset($headingId))): ?>
     <?php
-      $collapseAttributes = $this->attributes([
+      $__collapseAttributes = $this->attributes([
         'id' => $collapseId,
         'class' => ['panel-collapse', 'collapse'],
         'aria-labelledby' => $headingId,
       ]);
       if (!$collapsed) {
-        $collapseAttributes->add('class', 'in');
+        $__collapseAttributes->add('class', 'in');
       }
     ?>
-    <div<?= $collapseAttributes ?>>
+    <div<?= $__collapseAttributes ?>>
   <?php endif; ?>
       <div class="panel-body">
         <?= $content ?>
       </div>
-  <?php if (isset($collapseId)): ?>
+  <?php if ($__collapsible): ?>
     </div>
   <?php endif; ?>
+
   <?php if (isset($footer)): ?>
     <div class="panel-footer">
       <?= $footer ?>
