@@ -164,15 +164,9 @@ class RecordDataFormatterFactory
             ]
         );
         $setTemplateLine(
-            'Actors', 'getAllPresenters', 'data-actors.phtml',
+            'Actors', 'getPresenters', 'data-actors.phtml',
             [
                 'context' => ['class' => 'recordPresenters']
-            ]
-        );
-        $setTemplateLine(
-            'Assistants', 'getAssistants', 'data-assistants.phtml',
-            [
-                'context' => ['class' => 'record-assistants']
             ]
         );
         $setTemplateLine(
@@ -838,12 +832,6 @@ class RecordDataFormatterFactory
         );
         $setTemplateLine(
             'Date', 'getUnitDates', 'data-lines-with-detail.phtml'
-        );
-        $setTemplateLine(
-            'Photo Info', 'getPhotoInfo', 'data-escapeHtml.phtml',
-            [
-                'context' => ['class' => 'record-photoinfo']
-            ]
         );
         $setTemplateLine(
             'Source of Acquisition', 'getAcquisitionSource', 'data-escapeHtml.phtml',
