@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper for creating Attributes objects.
+ * Helper for creating HtmlAttributesSet objects.
  *
  * PHP version 7
  *
@@ -27,11 +27,11 @@
  */
 namespace Finna\View\Helper\Root;
 
-use Finna\View\Attributes;
+use Finna\View\HtmlAttributesSet;
 use Laminas\View\Helper\AbstractHelper;
 
 /**
- * Helper for creating Attributes objects.
+ * Helper for creating HtmlAttributesSet objects.
  *
  * @category VuFind
  * @package  View_Helpers
@@ -39,22 +39,18 @@ use Laminas\View\Helper\AbstractHelper;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-class AttributesHelper extends AbstractHelper
+class HtmlAttributes extends AbstractHelper
 {
     /**
-     * Returns a new Attributes object, optionally initializing it with the
-     * provided value.
-     *
-     * @param array|Traversable $attribs Attributes
-     *
-     * @return Attributes
+     * Returns a new HtmlAttributesSet object, optionally initializing it with
+     * the provided value.
      */
-    public function __invoke($attribs = [])
+    public function __invoke(iterable $attributes = []): HtmlAttributesSet
     {
-        return new Attributes(
+        return new HtmlAttributesSet(
             $this->getView()->plugin('escapehtml')->getEscaper(),
             $this->getView()->plugin('escapehtmlattr')->getEscaper(),
-            $attribs
+            $attributes
         );
     }
 }
