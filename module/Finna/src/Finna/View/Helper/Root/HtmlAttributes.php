@@ -47,7 +47,7 @@ class HtmlAttributes extends AbstractHelper
      *
      * @param iterable $attributes Attributes
      *
-     * @return Attributes
+     * @return HtmlAttributesSet
      */
     public function __invoke($attributes = [])
     {
