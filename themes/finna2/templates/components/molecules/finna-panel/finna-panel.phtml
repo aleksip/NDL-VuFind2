@@ -2,10 +2,10 @@
   $collapsed = $collapsed ?? true;
   $headingTag = $headingTag ?? true;
 ?>
-<div<?= $this->attributes($attributes ?? [])->add('class', ['finna-panel', 'panel']) ?>>
+<div<?= $this->htmlAttributes($attributes ?? [])->add('class', ['finna-panel', 'panel']) ?>>
   <?php if (isset($heading)): ?>
     <?php
-      $__headingAttributes = $this->attributes(isset($headingId) ? ['id' => $headingId] : []);
+      $__headingAttributes = $this->htmlAttributes(isset($headingId) ? ['id' => $headingId] : []);
       if (!$headingTag && isset($headingLevel)) {
         $__headingAttributes->set([
           'role' => 'heading',
@@ -20,7 +20,7 @@
           <?php
             if (isset($collapseId)) {
               $__headingInnerElement = 'a';
-              $__headingInnerAttributes = $this->attributes([
+              $__headingInnerAttributes = $this->htmlAttributes([
                 'role' => 'button',
                 'data-toggle' => 'collapse',
                 'href' => '#' . $collapseId,
@@ -33,7 +33,7 @@
             }
             else {
               $__headingInnerElement = 'span';
-              $__headingInnerAttributes = $this->attributes();
+              $__headingInnerAttributes = $this->htmlAttributes();
             }
           ?>
           <<?= $__headingInnerElement ?><?= $__headingInnerAttributes->add('class', 'finna-panel-heading-inner') ?>>
@@ -47,7 +47,7 @@
 
   <?php if (($__collapsible = isset($collapseId) && isset($heading) && isset($headingId))): ?>
     <?php
-      $__collapseAttributes = $this->attributes([
+      $__collapseAttributes = $this->htmlAttributes([
         'id' => $collapseId,
         'class' => ['panel-collapse', 'collapse'],
         'aria-labelledby' => $headingId,
