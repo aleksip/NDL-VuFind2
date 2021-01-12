@@ -62,8 +62,9 @@ class HtmlAttributesSet extends ArrayObject
      * @param Escaper  $htmlAttributeEscaper Escaper for use with HTML attributes
      * @param iterable $attributes           Attributes to manage
      */
-    public function __construct($htmlEscaper, $htmlAttributeEscaper, $attributes = [])
-    {
+    public function __construct(
+        $htmlEscaper, $htmlAttributeEscaper, $attributes = []
+    ) {
         parent::__construct();
         $this->htmlEscaper = $htmlEscaper;
         $this->htmlAttributeEscaper = $htmlAttributeEscaper;
