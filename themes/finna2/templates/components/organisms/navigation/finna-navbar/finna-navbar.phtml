@@ -1,9 +1,8 @@
 <?php
-  $attributes = $this->attributes($attributes ?? []);
-  $attributes->add('class', ['finna-navbar-component', 'navbar']);
+  $attributes = $this->htmlAttributes($attributes ?? []);
   $attributes['aria-label'] = $ariaLabel;
 ?>
-<nav<?= $attributes ?>>
+<nav<?= $attributes->add('class', ['finna-navbar-component', 'navbar']) ?>>
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#<?= $collapseId ?>" aria-expanded="false">

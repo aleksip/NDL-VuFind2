@@ -1,50 +1,63 @@
 <?php
-  $attributes = $this->attributes($attributes ?? []);
+  $attributes = $this->htmlAttributes($attributes ?? []);
   $renderChildren = $renderChildren ?? 'dropdown';
   if (!empty($children) && 'dropdown' === $renderChildren) {
     $attributes->add('class', 'dropdown');
   }
-  elseif (isset($active) ? boolval($active) : false) {
+  elseif (!empty($active)) {
     $attributes->add('class', 'active');
     $attributes['aria-current'] = 'page';
   }
 
-  // Process child attributes if necessary.
+  // Possible child attributes are processed already at this point so that the
+  // active-trail class can be added to the parent's attributes.
   if (!empty($children) && 'false' !== $renderChildren) {
-    foreach ($children as $i => $child) {
-      $childAttributes = $this->attributes($child['attributes'] ?? []);
-      if (isset($child['active']) ? boolval($child['active']) : false) {
+    foreach ($children as $__i => $__child) {
+      $__childAttributes = $this->htmlAttributes($__child['attributes'] ?? []);
+      if (!empty($__child['active'])) {
         $attributes->add('class', 'active-trail');
-        $childAttributes->add('class', 'active');
-        $childAttributes['aria-current'] = 'page';
+        $__childAttributes->add('class', 'active');
+        $__childAttributes['aria-current'] = 'page';
       }
-      if ($hasDescription = !empty($child['description'])) {
-        $childAttributes->add('class', 'nav-item-has-description');
+      if (isset($__child['description'])) {
+        $__childAttributes->add('class', 'nav-item-has-description');
       }
-      $child['attributes'] = $childAttributes;
-      $linkAttributes = $this->attributes($child['linkAttributes'] ?? []);
-      $linkAttributes['href'] = $child['link'];
-      $child['linkAttributes'] = $linkAttributes;
-      $children[$i] = $child;
+      $__child['attributes'] = $__childAttributes;
+      $__childLinkAttributes = $this->htmlAttributes($__child['linkAttributes'] ?? []);
+      $__childLinkAttributes['href'] = $__child['link'];
+      $__child['linkAttributes'] = $__childLinkAttributes;
+      $children[$__i] = $__child;
     }
   }
 ?>
 <li<?= $attributes ?>>
-  <?php if (!empty($children) && 'dropdown' === $renderChildren): ?>
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-      aria-expanded="false"><?= $label ?> <b class="caret"></b></a>
-  <?php else: ?>
-    <a href="<?= $link ?>"<?php if (!empty($target)): ?> target="<?= $target ?>"<?php endif; ?>><?= $label ?></a>
-    <?php if (!empty($tooltipBtn)): ?>
-      <?= $this->render('components/molecules/tooltips/finna-tooltip-btn/finna-tooltip-btn.phtml', $tooltipBtn) ?>
-    <?php endif; ?>
+  <?php
+    $linkAttributes = $this->htmlAttributes($linkAttributes ?? []);
+    if ($__hasDropdown = (!empty($children) && 'dropdown' === $renderChildren)) {
+      $linkAttributes->set([
+        'href' => '#',
+        'class' => 'dropdown-toggle',
+        'data-toggle' => 'dropdown',
+        'role' => 'button',
+        'aria-haspopup' => 'true',
+        'aria-expanded' => 'false'
+      ]);
+    }
+    else {
+      $linkAttributes['href'] = $link;
+    }
+  ?>
+  <a<?= $linkAttributes ?>><?= $label ?><?php if ($__hasDropdown): ?> <b class="caret"></b><?php endif; ?></a>
+  <?php if (!$__hasDropdown && !empty($tooltipBtn)): ?>
+    <?= $this->render('components/molecules/tooltips/finna-tooltip-btn/finna-tooltip-btn.phtml', $tooltipBtn) ?>
   <?php endif; ?>
+
   <?php if (!empty($children) && 'false' !== $renderChildren): ?>
     <ul<?php if ('simple' !== $renderChildren): ?> class="dropdown-menu"<?php endif; ?>>
-      <?php foreach ($children as $child): ?>
-        <li<?= $child['attributes'] ?>>
-          <a<?= $child['linkAttributes'] ?>><span><?= $child['label'] ?></span>
-          <?php if ($hasDescription): ?><span role="note"><?= $child['description'] ?></span><?php endif; ?></a>
+      <?php foreach ($children as $__child): ?>
+        <li<?= $__child['attributes'] ?>>
+          <a<?= $__child['linkAttributes'] ?>><span><?= $__child['label'] ?></span>
+          <?php if (isset($__child['description'])): ?><span role="note"><?= $__child['description'] ?></span><?php endif; ?></a>
         </li>
       <?php endforeach; ?>
     </ul>

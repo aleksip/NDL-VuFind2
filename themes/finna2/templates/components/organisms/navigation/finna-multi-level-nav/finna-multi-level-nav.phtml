@@ -1,25 +1,26 @@
-<?php
-  $attributes = $this->attributes($attributes ?? []);
-  $attributes->add('class', 'finna-multi-level-nav');
-  $tabsNavAttributes = $this->attributes(['class' => 'hidden-xs']);
-  if ($attributes->hasValue('class', 'finna-multi-level-nav-lg')) {
-    $tabsNavAttributes->add('class', 'finna-tabs-nav-lg');
-  }
-  $navbarAttributes = $this->attributes(['class' => 'visible-xs']);
-  if ($attributes->hasValue('class', 'finna-multi-level-nav-content')) {
-    $navbarAttributes->add('class', 'finna-navbar-content');
-  }
-?>
-<div<?= $attributes ?>>
+<?php $attributes = $this->htmlAttributes($attributes ?? []); ?>
+<div<?= $attributes->add('class', 'finna-multi-level-nav') ?>>
+  <?php
+    $__tabsNavAttributes = $this->htmlAttributes(['class' => 'hidden-xs']);
+    if ($attributes->hasValue('class', 'finna-multi-level-nav-lg')) {
+      $__tabsNavAttributes->add('class', 'finna-tabs-nav-lg');
+    }
+  ?>
   <?= $this->render('components/organisms/navigation/finna-tabs-nav/finna-tabs-nav.phtml', [
       'ariaLabel' => $ariaLabel,
-      'attributes' => $tabsNavAttributes,
+      'attributes' => $__tabsNavAttributes,
       'items' => $items,
     ]); ?>
+  <?php
+    $__navbarAttributes = $this->htmlAttributes(['class' => 'visible-xs']);
+    if ($attributes->hasValue('class', 'finna-multi-level-nav-content')) {
+      $__navbarAttributes->add('class', 'finna-navbar-content');
+    }
+  ?>
   <?= $this->render('components/organisms/navigation/finna-navbar/finna-navbar.phtml', [
       'ariaLabel' => $ariaLabel,
-      'attributes' => $navbarAttributes,
-      'brandContent' => $brandContent ?? $activeLabel ?? '',
+      'attributes' => $__navbarAttributes,
+      'brandContent' => $brandContent ?? '',
       'brandLink' => $brandLink ?? null,
       'brandSrOnly' => $brandSrOnly ?? null,
       'collapseContent' => $this->render('components/molecules/navigation/finna-nav/finna-nav.phtml', [
