@@ -12,5 +12,5 @@
   }
 ?>
 <button<?= $attributes->add('class', 'finna-tooltip-btn') ?>>
-  <?php if ($iconClass): ?><i class="<?= $iconClass ?>"></i> <?php endif; ?><?= $label ?? '' ?>
+  <?php if (isset($iconClass)): ?><i class="<?= $iconClass ?>"></i> <?php endif; ?><?= $label ?? '' ?>
 </button>

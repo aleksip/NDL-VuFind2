@@ -48,7 +48,7 @@
     }
   ?>
   <a<?= $linkAttributes ?>><?= $label ?><?php if ($__hasDropdown): ?> <b class="caret"></b><?php endif; ?></a>
-  <?php if (!$__hasDropdown && !empty($tooltipBtn)): ?>
+  <?php if (!$__hasDropdown && isset($tooltipBtn)): ?>
     <?= $this->render('components/molecules/tooltips/finna-tooltip-btn/finna-tooltip-btn.phtml', $tooltipBtn) ?>
   <?php endif; ?>
 
