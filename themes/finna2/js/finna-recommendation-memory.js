@@ -2,8 +2,8 @@
 finna.recommendationMemory = (function finnaRecommendationMemory() {
   function b64EncodeUnicode(str) {
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function replacer(match, p1) {
-      return String.fromCharCode(parseInt(p1, 16))
-    }))
+      return String.fromCharCode(parseInt(p1, 16));
+    }));
   }
 
   function getDataString(srcMod, recTerm, origTerm, recType) {
