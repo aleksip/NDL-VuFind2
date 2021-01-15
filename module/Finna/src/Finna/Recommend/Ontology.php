@@ -28,7 +28,6 @@
 namespace Finna\Recommend;
 
 use Finna\Connection\Finto;
-use Finna\Cookie\RecommendationMemory;
 use VuFind\Config\PluginManager;
 use VuFind\Cookie\CookieManager;
 use VuFind\I18n\Translator\TranslatorAwareInterface;
@@ -78,13 +77,6 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      * @var Url
      */
     protected $urlHelper;
-
-    /**
-     * Recommendation memory.
-     *
-     * @var RecommendationMemory
-     */
-    protected $recommendationMemory;
 
     /**
      * Configuration loader
@@ -156,25 +148,18 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $results = null;
 
     /**
-     * Search ID.
-     *
-     * @var int
-     */
-    protected $searchId = null;
-
-    /**
-     * Total count of records in the result set.
-     *
-     * @var int
-     */
-    protected $resultTotal = null;
-
-    /**
      * Ontology recommendations.
      *
      * @var array|null
      */
     protected $recommendations = null;
+
+    /**
+     * Current search query as separate terms.
+     *
+     * @var array
+     */
+    protected $lookforTerms = null;
 
     /**
      * Total number of API calls made.
@@ -191,29 +176,20 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $recommendationTotal = 0;
 
     /**
-     * Total number of ontology results.
-     *
-     * @var int
-     */
-    protected $ontologyResultTotal = 0;
-
-    /**
      * Ontology constructor.
      *
-     * @param Finto                $finto                Finto connection class
-     * @param CookieManager        $cookieManager        Cookie manager
-     * @param Url                  $urlHelper            Url helper
-     * @param RecommendationMemory $recommendationMemory Recommendation memory
-     * @param PluginManager        $configLoader         Configuration loader
+     * @param Finto         $finto         Finto connection class
+     * @param CookieManager $cookieManager Cookie manager
+     * @param Url           $urlHelper     Url helper
+     * @param PluginManager $configLoader  Configuration loader
      */
     public function __construct(
         Finto $finto, CookieManager $cookieManager, Url $urlHelper,
-        RecommendationMemory $recommendationMemory, PluginManager $configLoader
+        PluginManager $configLoader
     ) {
         $this->finto = $finto;
         $this->cookieManager = $cookieManager;
         $this->urlHelper = $urlHelper;
-        $this->recommendationMemory = $recommendationMemory;
         $this->configLoader = $configLoader;
     }
 
@@ -288,6 +264,18 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     }
 
     /**
+     * Get ID of saved search.
+     *
+     * @return mixed|null
+     */
+    public function getSearchId()
+    {
+        return $this->request->get('searchId')
+            ?? $this->results->getSearchId()
+            ?? null;
+    }
+
+    /**
      * Get all ontology recommendations grouped by type.
      *
      * @return array|null
@@ -323,25 +311,18 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             return null;
         }
 
-        // Get searchId and resultTotal.
-        $this->searchId = $this->request->get('searchId')
-            ?? $this->results->getSearchId()
-            ?? null;
-        $this->resultTotal = $this->request->get('resultTotal')
+        // Get resultTotal.
+        $resultTotal = $this->request->get('resultTotal')
             ?? $this->results->getResultTotal();
 
         // Set up recommendations array.
-        $this->recommendations = [
-            Finto::TYPE_NONDESCRIPTOR => [],
-            Finto::TYPE_SPECIFIER => [],
-            Finto::TYPE_HYPONYM => []
-        ];
+        $this->recommendations = [];
 
         // Set up search terms array with quoted words as one search term.
-        $terms = str_getcsv($this->lookfor, ' ');
+        $this->lookforTerms = str_getcsv($this->lookfor, ' ');
 
         // Process each term and make API calls if applicable.
-        foreach ($terms as $term) {
+        foreach ($this->lookforTerms as $term) {
             // Determine if the term can or should be searched for.
             if (!($this->canMakeApiCalls() && $this->canAddRecommendation())) {
                 break;
@@ -352,7 +333,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
 
             // Determine if narrower concepts should be looked for if applicable.
             $narrower = ((null === $this->minLargeResultTotal
-                || $this->resultTotal >= $this->minLargeResultTotal))
+                || $resultTotal >= $this->minLargeResultTotal))
                 && $this->canMakeApiCalls(2);
 
             // Make the Finto API call(s).
@@ -371,7 +352,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             if (Finto::TYPE_HYPONYM === $fintoResults[Finto::RESULT_TYPE]) {
                 // Hyponym results have required an additional API call.
                 $this->apiCallTotal += 1;
-                // The term uri parameter is from the original results.
+                // Get the URI of the searched term from the original results.
                 $termUri = $fintoResults[Finto::RESULTS]['results'][0]['uri'];
                 // Narrower results are used for hyponym recommendations.
                 foreach ($fintoResults[Finto::NARROWER_RESULTS] as $fintoResult) {
@@ -448,56 +429,49 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected function addOntologyResult(
         string $term, array $fintoResult, string $resultType, ?string $termUri = null
     ): void {
-        $this->ontologyResultTotal += 1;
-
-        // Recommendation memory cookie key and value.
-        $cookieKey = $this->ontologyResultTotal;
-        if ($this->searchId) {
-            $cookieKey = $this->searchId . '-' . $cookieKey;
+        // Create the recommendation search link.
+        // Create a copy of the original search terms.
+        $recommendedLookforTerms = $this->lookforTerms;
+        // Replace original term with recommended term.
+        while (false !== ($key = array_search($term, $recommendedLookforTerms))) {
+            $recommendedLookforTerms[$key] = $fintoResult['prefLabel'];
         }
-        $cookieValue = $this->recommendationMemory->getDataString(
-            'Ontology', $fintoResult['prefLabel'], $term, $resultType
-        );
-
-        // Recommendation link.
-        $uriField = 'topic_uri_str_mv:' . $fintoResult['uri'];
-        $recommendedTerm = $fintoResult['prefLabel'];
-        if (preg_match('/\s/', $recommendedTerm)) {
-            $recommendedTerm = '"' . $recommendedTerm . '"';
-        }
-        $replace = $uriField . ' ' . $recommendedTerm;
-        $recommend = str_replace($term, $replace, $this->lookfor);
+        // Remove possible URI of original term.
         if ($termUri) {
-            $recommend = str_replace('topic_uri_str_mv:' . $termUri, '', $recommend);
-            $recommend = preg_replace('/\s+/', ' ', $recommend);
+            $termUri = 'topic_uri_str_mv:' . $termUri;
+            if ($key = array_search($termUri, $recommendedLookforTerms)) {
+                unset($recommendedLookforTerms[$key]);
+            }
         }
-        $params = [
-            'lookfor' => $recommend,
-            RecommendationMemory::PARAMETER_NAME => $cookieKey
-        ];
-        $params = array_merge($this->request->toArray(), $params);
-        unset(
-            $params['mod'], $params['params'], $params['searchId'],
-            $params['resultTotal']
-        );
+        // Add the URI of the recommended term.
+        $recommendedLookforTerms[] = 'topic_uri_str_mv:' . $fintoResult['uri'];
+        // Create lookfor string.
+        foreach ($recommendedLookforTerms as $i => $recommendedLookforTerm) {
+            if (preg_match('/\s/', $recommendedLookforTerm)) {
+                $recommendedLookforTerms[$i] = '"' . $recommendedLookforTerm . '"';
+            }
+        }
+        $recommendedLookfor = implode(' ', $recommendedLookforTerms);
+
+        // Set up all link parameters.
+        $params = $this->request->toArray();
+        $params['lookfor'] = $recommendedLookfor;
+        unset($params['mod'], $params['searchId'], $params['resultTotal']);
         $href = $this->urlHelper->__invoke(
             'search-results', [], ['query' => $params]
         );
 
-        // Create result array.
-        $ontologyResult = [
-            'label' => $fintoResult['prefLabel'],
-            'href' => $href,
-            'cookieKey' => $cookieKey,
-            'cookieValue' => $cookieValue,
-            'result' => $fintoResult,
-        ];
-
         // Add result and increase counter if the result is for a new term.
+        if (!isset($this->recommendations[$resultType])) {
+            $this->recommendations[$resultType] = [];
+        }
         if (!isset($this->recommendations[$resultType][$term])) {
             $this->recommendations[$resultType][$term] = [];
             $this->recommendationTotal += 1;
         }
-        $this->recommendations[$resultType][$term][] = $ontologyResult;
+        $this->recommendations[$resultType][$term][] = [
+            'label' => $fintoResult['prefLabel'],
+            'href' => $href
+        ];
     }
 }

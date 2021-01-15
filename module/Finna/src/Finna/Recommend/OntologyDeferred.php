@@ -77,7 +77,6 @@ class OntologyDeferred implements RecommendInterface
      */
     public function setConfig($settings)
     {
-        $this->rawParams = $settings;
     }
 
     /**
@@ -97,11 +96,10 @@ class OntologyDeferred implements RecommendInterface
         $this->request = $request;
 
         // Collect the best possible search term(s):
-        $lookfor = $request->get('lookfor');
+        $this->lookfor = $request->get('lookfor');
         if (empty($this->lookfor) && is_object($params)) {
             $this->lookfor = $params->getQuery()->getAllTerms();
         }
-
         $this->lookfor = trim($this->lookfor);
     }
 
@@ -130,7 +128,6 @@ class OntologyDeferred implements RecommendInterface
         // accessible from the search results object created for the AJAX call.
         $params = [
             'mod' => 'Ontology',
-            'params' => $this->rawParams,
             'lookfor' => $this->lookfor,
             'searchId' => $this->results->getSearchId(),
             'resultTotal' => $this->results->getResultTotal()

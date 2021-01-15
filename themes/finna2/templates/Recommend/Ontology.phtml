@@ -1,31 +1,48 @@
 <?php if ($recs = $this->recommend->getRecommendations()): ?>
   <!-- START of: finna - Recommend/Ontology.phtml -->
-  <?php foreach ($recs as $type => $typeRecs): ?>
-    <?php foreach ($typeRecs as $term => $termRecs): ?>
-      <div class="ontology-recommendation ontology-<?= $type ?> alert alert-info" data-result-type="<?= $type ?>" data-term="<?= $term ?>">
-        <p><?= $this->transEsc(
-          'ontology_recommendation_' . $type,
-          ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]
-        ) ?>
-        <?php if (1 === count($termRecs)): ?>
-          <a href="<?= $termRecs[0]['href'] ?>" data-key="<?= $termRecs[0]['cookieKey'] ?>" data-value="<?= $termRecs[0]['cookieValue'] ?>">'<?= $termRecs[0]['label'] ?>'</a>
-          </p>
-        <?php else: ?>
-          </p>
-          <ul<?php if (count($termRecs) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
-            <?php foreach ($termRecs as $termRec): ?>
-              <li><a href="<?= $termRec['href'] ?>" data-key="<?= $termRec['cookieKey'] ?>" data-value="<?= $termRec['cookieValue'] ?>"><?= $termRec['label'] ?></a></li>
-            <?php endforeach; ?>
-          </ul>
-        <?php endif; ?>
+  <div id="ontology-recommendations" data-search-id="<?= $this->recommend->getSearchId() ?>">
+    <?php $index = 0; ?>
+    <?php foreach ($recs as $type => $typeRecs): ?>
+      <div class="result-type result-type-<?= $type ?>" data-result-type="<?= $type ?>">
+      <?php foreach ($typeRecs as $term => $termRecs): ?>
+        <div class="ontology-recommendation alert alert-info" data-term="<?= $this->escapeHtmlAttr($term) ?>">
+          <p><?= $this->transEsc(
+            'ontology_recommendation_' . $type,
+            ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]
+          ) ?>
+          <?php if (1 === count($termRecs)): ?>
+              <?php $index += 1; ?>
+              <a href="<?= $termRecs[0]['href'] ?>" data-index="<?= $index ?>">'<?= $termRecs[0]['label'] ?>'</a>
+            </p>
+          <?php else: ?>
+            </p>
+            <ul<?php if (count($termRecs) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
+              <?php foreach ($termRecs as $termRec): ?>
+                <?php $index += 1; ?>
+                <li><a href="<?= $termRec['href'] ?>" data-index="<?= $index ?>"><?= $termRec['label'] ?></a></li>
+              <?php endforeach; ?>
+            </ul>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
       </div>
     <?php endforeach; ?>
-  <?php endforeach; ?>
+  </div>
   <?php
+    $this->headScript()->appendFile('finna-recommendation-memory.js');
     $script = <<<EOT
     $('.ontology-recommendation a').each(function() {
       $(this).click(function() {
-        finna.common.setCookie($(this).data('key'), $(this).data('value'));
+        var key = $(this).parents('#ontology-recommendations').data('search-id') + '-' + $(this).data('index');
+        var recTerm = $(this).text();
+        var origTerm = $(this).parents('.ontology-recommendation').data('term');
+        var recType = $(this).parents('.result-type').data('result-type');
+        var value = finna.recommendationMemory.getDataString('Ontology', recTerm, origTerm, recType); 
+        finna.common.setCookie(key, value);
+        $(this).attr(
+          'href', 
+          $(this).attr('href') + '&' + finna.recommendationMemory.PARAMETER_NAME + '=' + key
+        );
       });
     });
 EOT;
