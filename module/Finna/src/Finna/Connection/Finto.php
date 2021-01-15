@@ -204,9 +204,14 @@ class Finto implements LoggerAwareInterface
         $response = $this->makeRequest([$vocid, 'narrower'], $params);
 
         // Sort values alphabetically if required.
-        if ($sort && !empty($response['narrower'])) {
-            $label = array_column($response['narrower'], 'prefLabel');
-            array_multisort($label, SORT_ASC, $response['narrower']);
+        if ($sort && $lang && !empty($response['narrower'])) {
+            $collator = collator_create($lang);
+            usort(
+                $response['narrower'],
+                function ($a, $b) use ($collator) {
+                    return $collator->compare($a['prefLabel'], $b['prefLabel']);
+                }
+            );
         }
 
         return $response['narrower'];
