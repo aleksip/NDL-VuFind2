@@ -14,7 +14,7 @@
       }
     ?>
     <div<?= $__headingAttributes->add('class', 'panel-heading') ?>>
-      <?php if ($headingTag): ?>
+      <?php if ($headingTag && isset($headingLevel)): ?>
         <h<?= $headingLevel ?> class="panel-title">
       <?php endif; ?>
           <?php
@@ -39,7 +39,7 @@
           <<?= $__headingInnerElement ?><?= $__headingInnerAttributes->add('class', 'finna-panel-heading-inner') ?>>
             <?= $heading ?>
           </<?= $__headingInnerElement ?>>
-      <?php if ($headingTag): ?>
+      <?php if ($headingTag && isset($headingLevel)): ?>
         </h<?= $headingLevel ?>>
       <?php endif; ?>
     </div>
