@@ -4,9 +4,11 @@
     <p><?= $question = $this->transEsc(
       'recommendation_feedback_question', ['%%term%%' => $data['recommended_term']]
     ) ?></p>
-    <a href="<?= $this->url(
+    <p><a href="<?= $this->url(
       'feedback-form', ['id' => 'FeedbackRecommendation'], ['query' => ['data' => $data['formData']]]
-    ) ?>" class="btn btn-primary" data-lightbox data-lightbox-title="<?= $question ?>" onclick="$(this).parent().hide()">Anna palautetta</a>
+    ) ?>" class="btn btn-primary" data-lightbox data-lightbox-title="<?= $question ?>" onclick="$(this).parent().hide()">
+      <?= $this->translate('Give Feedback') ?>
+    </a></p>
   </div>
   <!-- END of: finna - Recommend/Feedback.phtml -->
 <?php endif; ?>
