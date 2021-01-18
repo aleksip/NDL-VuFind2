@@ -1,11 +1,13 @@
 <?php
   $attributes = $this->htmlAttributes($attributes ?? []);
-  $attributes['aria-label'] = $ariaLabel;
+  if (isset($ariaLabel)) {
+    $attributes['aria-label'] = $ariaLabel;
+  }
 ?>
 <nav<?= $attributes->add('class', ['finna-navbar-component', 'navbar']) ?>>
   <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#<?= $collapseId ?>" aria-expanded="false">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#<?= $collapseId ?? '' ?>" aria-expanded="false">
         <?php if (isset($toggleBtnSrOnly)): ?><span class="sr-only"><?= $toggleBtnSrOnly ?></span><?php endif; ?>
         <?php if (isset($toggleBtnLabel)): ?><?= $toggleBtnLabel ?><?php endif; ?>
         <?php if (isset($toggleBtnIconClass)): ?><i class="<?= $toggleBtnIconClass ?>"></i><?php endif; ?>
@@ -19,8 +21,8 @@
         </span>
       <?php endif; ?>
     </div>
-    <div class="collapse navbar-collapse" id="<?= $collapseId ?>">
-      <?= $collapseContent ?>
+    <div class="collapse navbar-collapse" id="<?= $collapseId ?? '' ?>">
+      <?= $collapseContent ?? '' ?>
     </div>
   </div>
 </nav>

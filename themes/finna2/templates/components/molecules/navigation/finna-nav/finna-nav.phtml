@@ -1,6 +1,9 @@
 <ul<?= $this->htmlAttributes($attributes ?? [])->add('class', ['finna-nav', 'nav']) ?>>
-  <?php foreach ($items as $__item): ?>
-    <?php if (isset($renderChildren)) $__item['renderChildren'] = $renderChildren; ?>
+  <?php foreach ($items ?? [] as $__item): ?>
+    <?php
+      if (isset($ariaCurrent)) $__item['ariaCurrent'] = $ariaCurrent;
+      if (isset($renderChildren)) $__item['renderChildren'] = $renderChildren;
+    ?>
     <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $__item); ?>
   <?php endforeach; ?>
 </ul>

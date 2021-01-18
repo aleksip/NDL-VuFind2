@@ -5,9 +5,9 @@
     'data-toggle' => 'tooltip',
     'data-html' => 'true',
     'data-placement' => $placement ?? 'bottom',
-    'data-original-title' => $content
+    'data-original-title' => $content ?? ''
   ]);
-  if (!isset($label)) {
+  if (!isset($label) && isset($ariaLabel)) {
     $attributes['aria-label'] = $ariaLabel;
   }
 ?>

@@ -7,9 +7,10 @@
     }
   ?>
   <?= $this->render('components/organisms/navigation/finna-tabs-nav/finna-tabs-nav.phtml', [
-      'ariaLabel' => $ariaLabel,
+      'ariaCurrent' => 'page',
+      'ariaLabel' => $ariaLabel ?? null,
       'attributes' => $__tabsNavAttributes,
-      'items' => $items,
+      'items' => $items ?? []
     ]); ?>
   <?php
     $__navbarAttributes = $this->htmlAttributes(['class' => 'visible-xs']);
@@ -18,16 +19,16 @@
     }
   ?>
   <?= $this->render('components/organisms/navigation/finna-navbar/finna-navbar.phtml', [
-      'ariaLabel' => $ariaLabel,
+      'ariaLabel' => $ariaLabel ?? null,
       'attributes' => $__navbarAttributes,
-      'brandContent' => $brandContent ?? '',
+      'brandContent' => $brandContent ?? null,
       'brandLink' => $brandLink ?? null,
       'brandSrOnly' => $brandSrOnly ?? null,
       'collapseContent' => $this->render('components/molecules/navigation/finna-nav/finna-nav.phtml', [
           'attributes' => ['class' => ['navbar-nav']],
-          'items' => $items
+          'items' => $items ?? []
         ]),
-      'collapseId' => $collapseId,
+      'collapseId' => $collapseId ?? null,
       'toggleBtnIconClass' => $toggleBtnIconClass ?? 'fa fa-handle-open',
       'toggleBtnLabel' => $toggleBtnLabel ?? null,
       'toggleBtnSrOnly' => $toggleBtnSrOnly ?? null
