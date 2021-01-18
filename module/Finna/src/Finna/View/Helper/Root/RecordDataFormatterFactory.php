@@ -164,15 +164,9 @@ class RecordDataFormatterFactory
             ]
         );
         $setTemplateLine(
-            'Actors', 'getAllPresenters', 'data-actors.phtml',
+            'Actors', 'getPresenters', 'data-actors.phtml',
             [
                 'context' => ['class' => 'recordPresenters']
-            ]
-        );
-        $setTemplateLine(
-            'Assistants', 'getAssistants', 'data-assistants.phtml',
-            [
-                'context' => ['class' => 'record-assistants']
             ]
         );
         $setTemplateLine(
@@ -456,10 +450,12 @@ class RecordDataFormatterFactory
             ]
         );
         $setTemplateLine(
-            'Classification',
+            'Other Classifications',
             'getOtherClassifications', 'data-keywords.phtml',
             [
-                'context' => ['class' => 'recordClassifications']
+                'context' => [
+                    'class' => 'recordClassifications', 'title' => 'Classification'
+                ]
             ]
         );
         $setTemplateLine(
