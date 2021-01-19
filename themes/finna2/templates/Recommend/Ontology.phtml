@@ -6,13 +6,11 @@
       <div class="result-type result-type-<?= $type ?>" data-result-type="<?= $type ?>">
       <?php foreach ($typeRecs as $term => $termRecs): ?>
         <div class="ontology-recommendation alert alert-info" data-term="<?= $this->escapeHtmlAttr($term) ?>">
-          <p><?= $this->transEsc(
-            'ontology_recommendation_' . $type,
-            ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]
-          ) ?>
+          <p class="clearfix"><span class="recommendation-label"><?= $this->transEsc('being_tested') ?></span>
+            <?= $this->transEsc('ontology_recommendation_' . $type, ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]) ?>
           <?php if (1 === count($termRecs)): ?>
               <?php $index += 1; ?>
-              <a href="<?= $termRecs[0]['href'] ?>" data-index="<?= $index ?>">'<?= $termRecs[0]['label'] ?>'</a>
+              '<a href="<?= $termRecs[0]['href'] ?>" data-index="<?= $index ?>"><?= $termRecs[0]['label'] ?></a>'
             </p>
           <?php else: ?>
             </p>
