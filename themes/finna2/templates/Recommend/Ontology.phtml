@@ -33,10 +33,10 @@
     $('.ontology-recommendation a').each(function() {
       $(this).click(function() {
         var key = $(this).parents('#ontology-recommendations').data('search-id') + '-' + $(this).data('index');
-        var recTerm = $(this).text();
-        var origTerm = $(this).parents('#ontology-recommendations').data('lookfor');
+        var rec = $(this).text();
+        var orig = $(this).parents('#ontology-recommendations').data('lookfor');
         var recType = $(this).parents('.result-type').data('result-type');
-        var value = finna.recommendationMemory.getDataString('Ontology', recTerm, origTerm, recType); 
+        var value = finna.recommendationMemory.getDataString('Ontology', rec, orig, recType);
         finna.common.setCookie(key, value);
         $(this).attr(
           'href', 

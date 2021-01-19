@@ -6,11 +6,11 @@ finna.recommendationMemory = (function finnaRecommendationMemory() {
     }));
   }
 
-  function getDataString(srcMod, recTerm, origTerm, recType) {
+  function getDataString(srcMod, rec, orig, recType) {
     var data = {
       'srcMod': srcMod,
-      'recTerm': recTerm,
-      'origTerm': origTerm,
+      'rec': rec,
+      'orig': orig,
       'recType': recType
     };
     return b64EncodeUnicode(JSON.stringify(data));

@@ -60,18 +60,18 @@ class RecommendationMemory
     public const SOURCE_MODULE = 'srcMod';
 
     /**
-     * Key for the recommended search term.
+     * Key for the recommended search term or query.
      *
      * @var string
      */
-    public const RECOMMENDED_TERM = 'recTerm';
+    public const RECOMMENDATION = 'rec';
 
     /**
-     * Key for the original search term.
+     * Key for the original search term or query.
      *
      * @var string
      */
-    public const ORIGINAL_TERM = 'origTerm';
+    public const ORIGINAL = 'orig';
 
     /**
      * Key for the recommendation type.
@@ -100,20 +100,20 @@ class RecommendationMemory
     /**
      * Returns a Base64 encoded string containing the provided recommendation data.
      *
-     * @param string $srcMod   Source recommendation module.
-     * @param string $recTerm  Recommended search term.
-     * @param string $origTerm Original search term (optional).
-     * @param string $recType  Recommendation type (optional).
+     * @param string $srcMod  Source recommendation module.
+     * @param string $rec     Recommended search term or query.
+     * @param string $orig    Original search term or query (optional).
+     * @param string $recType Recommendation type (optional).
      *
      * @return string
      */
     public function getDataString(
-        string $srcMod, string $recTerm, string $origTerm = '', string $recType = ''
+        string $srcMod, string $rec, string $orig = '', string $recType = ''
     ): string {
         $data = [
             self::SOURCE_MODULE => $srcMod,
-            self::RECOMMENDED_TERM => $recTerm,
-            self::ORIGINAL_TERM => $origTerm,
+            self::RECOMMENDATION => $rec,
+            self::ORIGINAL => $orig,
             self::RECOMMENDATION_TYPE => $recType
         ];
         return base64_encode(json_encode($data));

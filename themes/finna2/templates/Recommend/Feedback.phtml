@@ -2,7 +2,7 @@
   <!-- START of: finna - Recommend/Feedback.phtml -->
   <div class="recommendation-feedback alert alert-info">
     <p><?= $question = $this->transEsc(
-      'recommendation_feedback_question', ['%%term%%' => $data['recommended_term']]
+      'recommendation_feedback_question', ['%%term%%' => $data['recommendation']]
     ) ?></p>
     <a href="<?= $this->url(
       'feedback-form', ['id' => 'FeedbackRecommendation'], ['query' => ['data' => $data['formData']]]

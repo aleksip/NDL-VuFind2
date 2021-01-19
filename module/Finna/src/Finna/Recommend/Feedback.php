@@ -120,15 +120,15 @@ class Feedback implements RecommendInterface
             return [];
         }
         return [
-            'recommended_term'
-                => $this->recData[RecommendationMemory::RECOMMENDED_TERM],
+            'recommendation'
+                => $this->recData[RecommendationMemory::RECOMMENDATION],
             'formData' => [
                 'source_module'
                     => $this->recData[RecommendationMemory::SOURCE_MODULE],
-                'recommended_term'
-                    => $this->recData[RecommendationMemory::RECOMMENDED_TERM],
-                'original_term'
-                    => $this->recData[RecommendationMemory::ORIGINAL_TERM],
+                'recommendation'
+                    => $this->recData[RecommendationMemory::RECOMMENDATION],
+                'original'
+                    => $this->recData[RecommendationMemory::ORIGINAL],
                 'recommendation_type'
                     => $this->recData[RecommendationMemory::RECOMMENDATION_TYPE]
             ]
