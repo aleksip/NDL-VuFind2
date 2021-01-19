@@ -453,6 +453,12 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             return;
         }
 
+        // Do not add the result if the URI already exists in the original search.
+        $recommendedUri = 'topic_uri_str_mv:' . $fintoResult['uri'];
+        if ($key = array_search($recommendedUri, $this->lookforTerms)) {
+            return;
+        }
+
         $this->recommendationUris[] = $fintoResult['uri'];
 
         // Create the recommendation search link.
@@ -470,7 +476,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             }
         }
         // Add the URI of the recommended term.
-        $recommendedLookforTerms[] = 'topic_uri_str_mv:' . $fintoResult['uri'];
+        $recommendedLookforTerms[] = $recommendedUri;
         // Create lookfor string.
         foreach ($recommendedLookforTerms as $i => $recommendedLookforTerm) {
             if (preg_match('/\s/', $recommendedLookforTerm)) {
