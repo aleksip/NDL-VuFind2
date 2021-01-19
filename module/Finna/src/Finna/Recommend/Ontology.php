@@ -162,6 +162,14 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $lookforTerms = null;
 
     /**
+     * Recommendation URIs array, used to check for existing identical
+     * recommendations.
+     *
+     * @var array
+     */
+    protected $recommendationUris = [];
+
+    /**
      * Total number of API calls made.
      *
      * @var int
@@ -273,6 +281,16 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         return $this->request->get('searchId')
             ?? $this->results->getSearchId()
             ?? null;
+    }
+
+    /**
+     * Get current search query.
+     *
+     * @return string|null
+     */
+    public function getLookfor(): ?string
+    {
+        return $this->lookfor;
     }
 
     /**
@@ -429,6 +447,14 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected function addOntologyResult(
         string $term, array $fintoResult, string $resultType, ?string $termUri = null
     ): void {
+        // Do not add the result if the URI is the same as in an already added
+        // recommendation.
+        if (in_array($fintoResult['uri'], $this->recommendationUris)) {
+            return;
+        }
+
+        $this->recommendationUris[] = $fintoResult['uri'];
+
         // Create the recommendation search link.
         // Create a copy of the original search terms.
         $recommendedLookforTerms = $this->lookforTerms;

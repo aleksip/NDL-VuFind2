@@ -1,11 +1,12 @@
 <?php if ($recs = $this->recommend->getRecommendations()): ?>
   <!-- START of: finna - Recommend/Ontology.phtml -->
-  <div id="ontology-recommendations" data-search-id="<?= $this->recommend->getSearchId() ?>">
+  <div id="ontology-recommendations" data-search-id="<?= $this->recommend->getSearchId() ?>"
+    data-lookfor="<?= $this->escapeHtmlAttr($this->recommend->getLookfor()) ?>">
     <?php $index = 0; ?>
     <?php foreach ($recs as $type => $typeRecs): ?>
       <div class="result-type result-type-<?= $type ?>" data-result-type="<?= $type ?>">
       <?php foreach ($typeRecs as $term => $termRecs): ?>
-        <div class="ontology-recommendation alert alert-info" data-term="<?= $this->escapeHtmlAttr($term) ?>">
+        <div class="ontology-recommendation alert alert-info">
           <p class="clearfix"><span class="recommendation-label"><?= $this->transEsc('being_tested') ?></span>
             <?= $this->transEsc('ontology_recommendation_' . $type, ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]) ?>
           <?php if (1 === count($termRecs)): ?>
@@ -33,7 +34,7 @@
       $(this).click(function() {
         var key = $(this).parents('#ontology-recommendations').data('search-id') + '-' + $(this).data('index');
         var recTerm = $(this).text();
-        var origTerm = $(this).parents('.ontology-recommendation').data('term');
+        var origTerm = $(this).parents('#ontology-recommendations').data('lookfor');
         var recType = $(this).parents('.result-type').data('result-type');
         var value = finna.recommendationMemory.getDataString('Ontology', recTerm, origTerm, recType); 
         finna.common.setCookie(key, value);
