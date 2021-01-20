@@ -83,12 +83,12 @@
         <img class="extra-image" src="#" alt=""/>
         <img class="extra-image-2" src="#" alt=""/>
         <p class="building-name info-element"></p>
-        <p class="building-year info-element"><?=$this->translate('organisation_info_building_year')?>: <span></span></p>
+        <p class="building-year info-element"><?=$this->transEsc('organisation_info_building_year')?>: <span></span></p>
         <p class="office-description description-long info-element"></p>
       <?php $content = ob_get_clean(); ?>
       <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
           'attributes' => ['class' => ['finna-panel-borderless', 'introduction']],
-          'heading' => $this->translate('organisation_info_general'),
+          'heading' => $this->transEsc('organisation_info_general'),
           'headingLevel' => 4,
           'content' => $content,
           'headingId' => 'heading1',
@@ -99,7 +99,7 @@
     <div class="office-col opening-times-widget">
       <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
           'attributes' => ['class' => ['finna-panel-borderless', 'opening-times-library-information']],
-          'heading' => $this->translate('organisation_info_schedules'),
+          'heading' => $this->transEsc('organisation_info_schedules'),
           'headingLevel' => 4,
           'content' => $this->organisationInfo(['id' => $this->id, 'init' => false, 'target' => 'page']),
           'headingId' => 'heading2',
@@ -110,7 +110,7 @@
     <div class="office-col">
       <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
           'attributes' => ['class' => ['finna-panel-borderless', 'contact-details', 'contact-details-rss', 'info-element']],
-          'heading' => $this->translate('organisation_info_contact'),
+          'heading' => $this->transEsc('organisation_info_contact'),
           'headingLevel' => 4,
           'content' => $this->partial('Helpers/organisation-info-contacts'),
           'headingId' => 'heading3',
@@ -119,7 +119,7 @@
         ]); ?>
       <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
           'attributes' => ['class' => ['finna-panel-borderless', 'contact-details', 'contact-details-no-rss', 'info-element']],
-          'heading' => $this->translate('organisation_info_contact'),
+          'heading' => $this->transEsc('organisation_info_contact'),
           'headingLevel' => 4,
           'content' => $this->partial('Helpers/organisation-info-contacts'),
           'headingId' => 'heading4',
@@ -140,7 +140,7 @@
   <?php $content = ob_get_clean(); ?>
   <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
       'attributes' => ['class' => ['finna-panel-borderless', 'services', 'info-element']],
-      'heading' => $this->translate('organisation_info_services'),
+      'heading' => $this->transEsc('organisation_info_services'),
       'headingLevel' => 4,
       'content' => $content,
       'headingId' => 'heading5',
@@ -153,7 +153,7 @@
     <?php $content = ob_get_clean(); ?>
     <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
         'attributes' => ['class' => ['finna-panel-borderless', 'news-feed-container', 'rss-container', 'info-element']],
-        'heading' => $this->translate('organisation_info_rss_news'),
+        'heading' => $this->transEsc('organisation_info_rss_news'),
         'headingLevel' => 4,
         'content' => $content,
         'headingId' => 'heading6',
@@ -164,7 +164,7 @@
     <?php $content = ob_get_clean(); ?>
     <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
         'attributes' => ['class' => ['finna-panel-borderless', 'events-feed-container', 'rss-container', 'info-element']],
-        'heading' => $this->translate('organisation_info_rss_events'),
+        'heading' => $this->transEsc('organisation_info_rss_events'),
         'headingLevel' => 4,
         'content' => $content,
         'headingId' => 'heading7',

@@ -37,7 +37,7 @@
         <?php $content = ob_get_clean(); ?>
         <?= $this->render('components/molecules/finna-panel/finna-panel.phtml', [
             'attributes' => ['class' => ['finna-panel-default', 'organisation-info-panel']],
-            'heading' => $this->translate('organisation_info_navi_usage'),
+            'heading' => $this->transEsc('organisation_info_navi_usage'),
             'headingLevel' => 4,
             'content' => $content,
             'headingId' => 'heading-usage',
