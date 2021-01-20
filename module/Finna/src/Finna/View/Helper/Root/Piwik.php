@@ -66,10 +66,6 @@ class Piwik extends \VuFind\View\Helper\Root\Piwik
      */
     public function __invoke($params = null)
     {
-        if (!empty($params['getHelperObject'])) {
-            return $this;
-        }
-
         if (isset($params['results'])) {
             $this->results = $params['results'];
             unset($params['results']);
