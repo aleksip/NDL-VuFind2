@@ -10,6 +10,6 @@
       <?= $this->transEsc('Give Feedback') ?>
     </a>
   </div>
-  <?php $this->piwik(['getHelperObject' => true])->trackCustomVar('RecommendationFollowed', $data['customVar']); ?>
+  <?php $this->piwik(['getHelperObject' => true])->trackCustomVar($data['customVarName'], $data['customVarValue']); ?>
   <!-- END of: finna - Recommend/Feedback.phtml -->
 <?php endif; ?>
