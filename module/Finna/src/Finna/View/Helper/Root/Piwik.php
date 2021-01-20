@@ -51,6 +51,13 @@ class Piwik extends \VuFind\View\Helper\Root\Piwik
     protected $results = null;
 
     /**
+     * Custom variables added using the trackCustomVar method.
+     *
+     * @var array
+     */
+    protected $addedCustomVars = [];
+
+    /**
      * Returns Piwik code (if active) or empty string if not.
      *
      * @param array $params Parameters
@@ -59,6 +66,10 @@ class Piwik extends \VuFind\View\Helper\Root\Piwik
      */
     public function __invoke($params = null)
     {
+        if (!empty($params['getHelperObject'])) {
+            return $this;
+        }
+
         if (isset($params['results'])) {
             $this->results = $params['results'];
             unset($params['results']);
@@ -246,6 +257,34 @@ class Piwik extends \VuFind\View\Helper\Root\Piwik
             return $lightboxCustomVars;
         }
         return [];
+    }
+
+    /**
+     * Convert a Custom Variables Array to JavaScript Code
+     *
+     * @param array $customVars Custom Variables
+     *
+     * @return string JavaScript Code Fragment
+     */
+    protected function getCustomVarsCode($customVars)
+    {
+        if (!empty($this->addedCustomVars)) {
+            $customVars = array_merge($customVars, $this->addedCustomVars);
+        }
+        return parent::getCustomVarsCode($customVars);
+    }
+
+    /**
+     * Add a custom variable to be tracked.
+     *
+     * @param string $name  Name
+     * @param string $value Value
+     *
+     * @return void
+     */
+    public function trackCustomVar($name, $value)
+    {
+        $this->addedCustomVars[$name] = $value;
     }
 
     /**
