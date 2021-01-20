@@ -7,7 +7,7 @@
       <div class="result-type result-type-<?= $this->escapeHtmlAttr($type) ?>" data-result-type="<?= $this->escapeHtmlAttr($type) ?>">
       <?php foreach ($typeRecs as $term => $termRecs): ?>
         <div class="ontology-recommendation alert alert-info">
-          <p class="clearfix"><span class="recommendation-label"><?= $this->transEsc('being_tested') ?></span>
+          <p><span class="recommendation-label"><?= $this->transEsc('being_tested') ?></span>
             <?= $this->transEsc('ontology_recommendation_' . $type, ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]) ?>
           <?php if (1 === count($termRecs)): ?>
               <?php $index += 1; ?>
