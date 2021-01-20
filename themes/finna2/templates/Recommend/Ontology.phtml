@@ -1,24 +1,24 @@
 <?php if ($recs = $this->recommend->getRecommendations()): ?>
   <!-- START of: finna - Recommend/Ontology.phtml -->
-  <div id="ontology-recommendations" data-search-id="<?= $this->recommend->getSearchId() ?>"
+  <div id="ontology-recommendations" data-search-id="<?= $this->escapeHtmlAttr($this->recommend->getSearchId()) ?>"
     data-lookfor="<?= $this->escapeHtmlAttr($this->recommend->getLookfor()) ?>">
     <?php $index = 0; ?>
     <?php foreach ($recs as $type => $typeRecs): ?>
-      <div class="result-type result-type-<?= $type ?>" data-result-type="<?= $type ?>">
+      <div class="result-type result-type-<?= $this->escapeHtmlAttr($type) ?>" data-result-type="<?= $this->escapeHtmlAttr($type) ?>">
       <?php foreach ($typeRecs as $term => $termRecs): ?>
         <div class="ontology-recommendation alert alert-info">
           <p class="clearfix"><span class="recommendation-label"><?= $this->transEsc('being_tested') ?></span>
             <?= $this->transEsc('ontology_recommendation_' . $type, ['%%term%%' => $term, '%%results_count%%' => count($termRecs)]) ?>
           <?php if (1 === count($termRecs)): ?>
               <?php $index += 1; ?>
-              '<a href="<?= $termRecs[0]['href'] ?>" data-index="<?= $index ?>"><?= $termRecs[0]['label'] ?></a>'
+              '<a href="<?= $termRecs[0]['href'] ?>" data-index="<?= $index ?>"><?= $this->escapeHtml($termRecs[0]['label']) ?></a>'
             </p>
           <?php else: ?>
             </p>
             <ul<?php if (count($termRecs) > 5):?> class="truncate-field" data-rows="1"<?php endif;?>>
               <?php foreach ($termRecs as $termRec): ?>
                 <?php $index += 1; ?>
-                <li><a href="<?= $termRec['href'] ?>" data-index="<?= $index ?>"><?= $termRec['label'] ?></a></li>
+                <li><a href="<?= $termRec['href'] ?>" data-index="<?= $index ?>"><?= $this->escapeHtml($termRec['label']) ?></a></li>
               <?php endforeach; ?>
             </ul>
           <?php endif; ?>
