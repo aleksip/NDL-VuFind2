@@ -1,9 +1,6 @@
 <?php
   $attributes = $this->htmlAttributes($attributes ?? []);
   $renderChildren = $renderChildren ?? 'dropdown';
-  if (!empty($children) && 'false' !== $renderChildren) {
-    $attributes->add('class', 'has-children');
-  }
   if (!empty($children) && 'dropdown' === $renderChildren) {
     $attributes->add('class', 'dropdown');
   }
