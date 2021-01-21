@@ -1,9 +1,24 @@
-<ul<?= $this->htmlAttributes($attributes ?? [])->add('class', ['finna-nav', 'nav']) ?>>
-  <?php foreach ($items ?? [] as $__item): ?>
-    <?php
-      if (isset($ariaCurrent)) $__item['ariaCurrent'] = $ariaCurrent;
-      if (isset($renderChildren)) $__item['renderChildren'] = $renderChildren;
-    ?>
+<?php
+  $attributes = $this->htmlAttributes($attributes ?? []);
+  $items = $items ?? [];
+
+  // Items are processed at this point so that the is-multi-level class can be
+  // added to the parent's attributes.
+  foreach ($items as $__i => $__item) {
+    if (!empty($__item['children'])) {
+      $attributes->add('class', 'is-multi-level');
+    }
+    if (isset($ariaCurrent)) {
+      $__item['ariaCurrent'] = $ariaCurrent;
+    }
+    if (isset($renderChildren)) {
+      $__item['renderChildren'] = $renderChildren;
+    }
+    $items[$__i] = $__item;
+  }
+?>
+<ul<?= $attributes->add('class', ['finna-nav', 'nav']) ?>>
+  <?php foreach ($items as $__item): ?>
     <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $__item); ?>
   <?php endforeach; ?>
 </ul>

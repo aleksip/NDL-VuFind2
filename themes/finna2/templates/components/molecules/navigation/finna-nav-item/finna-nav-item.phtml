@@ -1,6 +1,9 @@
 <?php
   $attributes = $this->htmlAttributes($attributes ?? []);
   $renderChildren = $renderChildren ?? 'dropdown';
+  if (!empty($children) && 'false' !== $renderChildren) {
+    $attributes->add('class', 'has-children');
+  }
   if (!empty($children) && 'dropdown' === $renderChildren) {
     $attributes->add('class', 'dropdown');
   }
@@ -11,8 +14,8 @@
     }
   }
 
-  // Possible child attributes are processed already at this point so that the
-  // active-trail class can be added to the parent's attributes.
+  // Child attributes are processed at this point so that the active-trail
+  // class can be added to the parent's attributes.
   if (!empty($children) && 'false' !== $renderChildren) {
     foreach ($children as $__i => $__child) {
       $__childAttributes = $this->htmlAttributes($__child['attributes'] ?? []);

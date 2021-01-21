@@ -1,8 +1,13 @@
 .finna-nav {
+  font-size: 1em;
+
   // Bootstrap tabs variation.
   &.nav-tabs {
     position: relative;
     border-bottom: 1px solid @nav-tabs-border-color;
+    &.is-multi-level {
+      margin-bottom: 3.2em;
+    }
     > li {
       display: flex;
       justify-content: center;
@@ -26,8 +31,8 @@
       > a:focus {
         margin: 0;
         border: 0;
-        padding: .6em .5em;
-        line-height: 1.5;
+        padding: .6em .6em;
+        font-size: 1em;
       }
       > button {
         padding-left: 0;
@@ -48,9 +53,7 @@
         list-style: none;
         > li {
           flex: 1 0 auto;
-          padding: 1em .6em;
-          font-size: 1.1em;
-          line-height: 1.5;
+          padding: .8em .6em;
         }
         > li > a {
           color: @text-color;
@@ -69,11 +72,8 @@
 
 // Large variation.
 .finna-nav-lg {
-  > li > a,
-  > li:not(.dropdown) > ul > li > a {
-    font-size: 16px;
-    @media (min-width: @screen-md-min) {
-      font-size: @font-size-large;
-    }
+  font-size: 1.14em;
+  @media (min-width: @screen-md-min) {
+    font-size: 1.357em;
   }
 }
