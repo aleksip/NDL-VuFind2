@@ -22,7 +22,7 @@
           <span class="gauge-meter hide">
             <canvas width="75" height="60" class="finna-coverage-gauge"></canvas>
             <span class="gauge-value"><span class="val"></span> %</span>
-            <span class="gauge-label"><?=$this->translate('organisation_info_coverage')?></span>
+            <span class="gauge-label"><?=$this->transEsc('organisation_info_coverage')?></span>
           </span>
         </div>
         <?php ob_start(); ?>
@@ -45,7 +45,7 @@
           ]); ?>
         <?php ob_start(); ?>
           <div class="links hide">
-            <h4><?=$this->translate('organisation_info_page_finna_link')?></h4>
+            <h4><?=$this->transEsc('organisation_info_page_finna_link')?></h4>
             <ul class="list-group">
               <li class="list-group-item template"><a href="#" target="_blank">Template text</a></li>
             </ul>
