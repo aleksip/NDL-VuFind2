@@ -21,10 +21,10 @@
     </div>
     <div class="flex-item map-buttons">
       <div class="map-ui map-control-buttons" aria-hidden="true">
-        <span class="show-map"><a href="#"><?=$this->translate('organisation_info_page_map_show')?></a></span>
+        <span class="show-map"><a href="#"><?=$this->transEsc('organisation_info_page_map_show')?></a></span>
         <span class="map-controls hidden">
-          <span class="show-service-point"><a href="#"><?= $this->translate('zoom_center') ?></a></span>
-          <span class="show-all"><a href="#"><?=$this->translate('organisation_info_page_map_show_all')?></a></span>
+          <span class="show-service-point"><a href="#"><?= $this->transEsc('zoom_center') ?></a></span>
+          <span class="show-all"><a href="#"><?=$this->transEsc('organisation_info_page_map_show_all')?></a></span>
         </span>
       </div>
     </div>
@@ -45,7 +45,7 @@
   </div>
 </div>
 <div class="office-information-loader">
-  <p><i class="fa fa-spinner fa-spin" style="text-align: center;"></i> <?=$this->translate('Loading')?></p>
+  <p><i class="fa fa-spinner fa-spin" style="text-align: center;"></i> <?=$this->transEsc('Loading')?></p>
 </div>
 <div class="office-quick-information info-element hide">
   <div class="office-title">
@@ -53,21 +53,21 @@
     <div>
       <p>
         <span class="office-links address"></span>
-        <a href="#" target="_blank" class="office-links route info-element"><i class="fa fa-bus"></i> <?=$this->translate('organisation_info_route')?></a>
-        <a href="" class="office-links reserve-computer info-element"><i class="fa fa-desktop"></i> <?=$this->translate('organisation_info_reserve_computer')?></a>
-        <span class="office-links office-website info-element"><a href="#" target="_blank"><i class="fa fa-home"></i> <?=$this->translate('organisation_info_homepage')?></a></span>
+        <a href="#" target="_blank" class="office-links route info-element"><i class="fa fa-bus"></i> <?=$this->transEsc('organisation_info_route')?></a>
+        <a href="" class="office-links reserve-computer info-element"><i class="fa fa-desktop"></i> <?=$this->transEsc('organisation_info_reserve_computer')?></a>
+        <span class="office-links office-website info-element"><a href="#" target="_blank"><i class="fa fa-home"></i> <?=$this->transEsc('organisation_info_homepage')?></a></span>
       </p>
       <p class="office-links email info-element"><i class="fa fa-envelope"></i> <span class="email"></span></p>
     </div>
   </div>
   <div class="open-closed-info">
     <h4 class="open-or-closed">
-      <span class="library-is-open info-element"><?=$this->translate('organisation_info_is_open')?></span>
-      <span class="library-is-closed info-element"><?=$this->translate('organisation_info_is_closed')?></span>
+      <span class="library-is-open info-element"><?=$this->transEsc('organisation_info_is_open')?></span>
+      <span class="library-is-closed info-element"><?=$this->transEsc('organisation_info_is_closed')?></span>
     </h4>
     <p class="time-open info-element">
-      <span class="opening-times"><i class="fa fa-clock-o"></i> <?=$this->translate('organisation_info_open_today')?> <span class="opens"></span> - <span class="closes"></span></span>
-      <span class="hide staff-times">(<?=$this->translate('organisation_info_schedule_staff')?> <span class="hide shift-template"><span class="opens"></span> - <span class="closes"></span></span>)</span>
+      <span class="opening-times"><i class="fa fa-clock-o"></i> <?=$this->transEsc('organisation_info_open_today')?> <span class="opens"></span> - <span class="closes"></span></span>
+      <span class="hide staff-times">(<?=$this->transEsc('organisation_info_schedule_staff')?> <span class="hide shift-template"><span class="opens"></span> - <span class="closes"></span></span>)</span>
     </p>
   </div>
   <div class="social-button info-element"><a aria-label="Facebook" href="#" target="_blank"><i class="fa fa-facebook"></i></a></div>
