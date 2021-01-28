@@ -833,7 +833,10 @@ class RecordDataFormatterFactory
             ]
         );
         $setTemplateLine(
-            'Date', 'getUnitDates', 'data-lines-with-detail.phtml'
+            'Dates', 'getUnitDates', 'data-lines-with-detail.phtml',
+            [
+                'context' => ['title' => 'Date']
+            ]
         );
         $setTemplateLine(
             'Source of Acquisition', 'getAcquisitionSource', 'data-escapeHtml.phtml',
@@ -910,6 +913,13 @@ class RecordDataFormatterFactory
             'Place of Origin', 'getAssociatedPlace', 'data-escapeHtml.phtml',
             [
                 'context' => ['class' => 'record-associated-place']
+            ]
+        );
+        $setTemplateLine(
+            'Related Places', 'getRelatedPlacesExtended',
+            'data-lines-with-detail.phtml',
+            [
+                'context' => ['class' => 'record-related-place']
             ]
         );
         $setTemplateLine(
