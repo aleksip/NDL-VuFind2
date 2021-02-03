@@ -1,23 +1,24 @@
 <?php
-  $attributes = $this->htmlAttributes($attributes ?? []);
-  $renderChildren = $renderChildren ?? 'dropdown';
-  if (!empty($children) && 'dropdown' === $renderChildren) {
-    $attributes->add('class', 'dropdown');
+  $__attributes = $this->htmlAttributes($attributes ?? []);
+  $__renderChildren = $renderChildren ?? 'dropdown';
+  if (!empty($children) && 'dropdown' === $__renderChildren) {
+    $__attributes->add('class', 'dropdown');
   }
   elseif (!empty($active)) {
-    $attributes->add('class', 'active');
+    $__attributes->add('class', 'active');
     if (isset($ariaCurrent)) {
-        $attributes['aria-current'] = $ariaCurrent;
+      $__attributes['aria-current'] = $ariaCurrent;
     }
   }
 
   // Child attributes are processed at this point so that the active-trail
   // class can be added to the parent's attributes.
-  if (!empty($children) && 'false' !== $renderChildren) {
+  if (!empty($children) && 'false' !== $__renderChildren) {
+    $__children = [];
     foreach ($children as $__i => $__child) {
       $__childAttributes = $this->htmlAttributes($__child['attributes'] ?? []);
       if (!empty($__child['active'])) {
-        $attributes->add('class', 'active-trail');
+        $__attributes->add('class', 'active-trail');
         $__childAttributes->add('class', 'active');
         if (isset($ariaCurrent)) {
           $__childAttributes['aria-current'] = $ariaCurrent;
@@ -30,15 +31,15 @@
       $__childLinkAttributes = $this->htmlAttributes($__child['linkAttributes'] ?? []);
       $__childLinkAttributes['href'] = $__child['link'] ?? '';
       $__child['linkAttributes'] = $__childLinkAttributes;
-      $children[$__i] = $__child;
+      $__children[$__i] = $__child;
     }
   }
 ?>
-<li<?= $attributes ?>>
+<li<?= $__attributes ?>>
   <?php
-    $linkAttributes = $this->htmlAttributes($linkAttributes ?? []);
-    if ($__hasDropdown = (!empty($children) && 'dropdown' === $renderChildren)) {
-      $linkAttributes->set([
+    $__linkAttributes = $this->htmlAttributes($__linkAttributes ?? []);
+    if ($__hasDropdown = (!empty($__children) && 'dropdown' === $__renderChildren)) {
+      $__linkAttributes->set([
         'href' => '#',
         'class' => 'dropdown-toggle',
         'data-toggle' => 'dropdown',
@@ -48,17 +49,17 @@
       ]);
     }
     else {
-      $linkAttributes['href'] = $link ?? '';
+      $__linkAttributes['href'] = $link ?? '';
     }
   ?>
-  <a<?= $linkAttributes ?>><?= $label ?? '' ?><?php if ($__hasDropdown): ?> <b class="caret"></b><?php endif; ?></a>
+  <a<?= $__linkAttributes ?>><?= $label ?? '' ?><?php if ($__hasDropdown): ?> <b class="caret"></b><?php endif; ?></a>
   <?php if (!$__hasDropdown && isset($tooltipBtn)): ?>
     <?= $this->render('components/molecules/tooltips/finna-tooltip-btn/finna-tooltip-btn.phtml', $tooltipBtn) ?>
   <?php endif; ?>
 
-  <?php if (!empty($children) && 'false' !== $renderChildren): ?>
-    <ul<?php if ('simple' !== $renderChildren): ?> class="dropdown-menu"<?php endif; ?>>
-      <?php foreach ($children as $__child): ?>
+  <?php if (!empty($__children) && 'false' !== $__renderChildren): ?>
+    <ul<?php if ('simple' !== $__renderChildren): ?> class="dropdown-menu"<?php endif; ?>>
+      <?php foreach ($__children as $__child): ?>
         <li<?= $__child['attributes'] ?>>
           <a<?= $__child['linkAttributes'] ?>><span><?= $__child['label'] ?? '' ?></span>
           <?php if (isset($__child['description'])): ?><span role="note"><?= $__child['description'] ?></span><?php endif; ?></a>

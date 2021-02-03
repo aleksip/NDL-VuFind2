@@ -1,11 +1,15 @@
 <?php
-  $attributes = $this->htmlAttributes($attributes ?? []);
-  $items = $items ?? [];
+  $__attributes = $this->htmlAttributes($attributes ?? []);
+  if ($__attributes->hasValue('class', 'finna-nav-tabs')) {
+    // Internally use Bootstrap nav-tabs styles as a base.
+    $__attributes->add('class', 'nav-tabs');
+  }
 
   // Items are processed at this point so that the active-multi-level class
   // can be added to the parent's attributes.
   $__activeMultiLevel = false;
-  foreach ($items as $__i => $__item) {
+  $__items = [];
+  foreach ($items ?? [] as $__i => $__item) {
     if (!empty($__item['children'])) {
       if (!empty($__item['active'])) {
         $__activeMultiLevel = true;
@@ -24,14 +28,14 @@
     if (isset($renderChildren)) {
       $__item['renderChildren'] = $renderChildren;
     }
-    $items[$__i] = $__item;
+    $__items[$__i] = $__item;
   }
   if ($__activeMultiLevel) {
-    $attributes->add('class', 'active-multi-level');
+    $__attributes->add('class', 'active-multi-level');
   }
 ?>
-<ul<?= $attributes->add('class', ['finna-nav', 'nav']) ?>>
-  <?php foreach ($items as $__item): ?>
+<ul<?= $__attributes->add('class', ['finna-nav', 'nav']) ?>>
+  <?php foreach ($__items as $__item): ?>
     <?= $this->render('components/molecules/navigation/finna-nav-item/finna-nav-item.phtml', $__item); ?>
   <?php endforeach; ?>
 </ul>

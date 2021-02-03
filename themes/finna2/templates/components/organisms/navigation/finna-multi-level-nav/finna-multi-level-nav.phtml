@@ -1,8 +1,8 @@
-<?php $attributes = $this->htmlAttributes($attributes ?? []); ?>
-<div<?= $attributes->add('class', 'finna-multi-level-nav') ?>>
+<?php $__attributes = $this->htmlAttributes($attributes ?? []); ?>
+<div<?= $__attributes->add('class', 'finna-multi-level-nav') ?>>
   <?php
     $__tabsNavAttributes = $this->htmlAttributes(['class' => 'hidden-xs']);
-    if ($attributes->hasValue('class', 'finna-multi-level-nav-lg')) {
+    if ($__attributes->hasValue('class', 'finna-multi-level-nav-lg')) {
       $__tabsNavAttributes->add('class', 'finna-tabs-nav-lg');
     }
   ?>
@@ -14,7 +14,7 @@
     ]); ?>
   <?php
     $__navbarAttributes = $this->htmlAttributes(['class' => 'visible-xs']);
-    if ($attributes->hasValue('class', 'finna-multi-level-nav-content')) {
+    if ($__attributes->hasValue('class', 'finna-multi-level-nav-content')) {
       $__navbarAttributes->add('class', 'finna-navbar-content');
     }
   ?>

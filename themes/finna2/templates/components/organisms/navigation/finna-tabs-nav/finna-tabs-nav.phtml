@@ -1,13 +1,13 @@
 <?php
-  $attributes = $this->htmlAttributes($attributes ?? []);
+  $__attributes = $this->htmlAttributes($attributes ?? []);
   if (isset($ariaLabel)) {
-    $attributes['aria-label'] = $ariaLabel;
+    $__attributes['aria-label'] = $ariaLabel;
   }
 ?>
-<nav<?= $attributes->add('class', ['finna-tabs-nav', 'clearfix']) ?>>
+<nav<?= $__attributes->add('class', ['finna-tabs-nav', 'clearfix']) ?>>
   <?php
-    $__navAttributes = $this->htmlAttributes(['class' => 'nav-tabs']);
-    if ($attributes->hasValue('class', 'finna-tabs-nav-lg')) {
+    $__navAttributes = $this->htmlAttributes(['class' => 'finna-nav-tabs']);
+    if ($__attributes->hasValue('class', 'finna-tabs-nav-lg')) {
       $__navAttributes->add('class', 'finna-nav-lg');
     }
   ?>
@@ -18,4 +18,3 @@
       'renderChildren' => 'simple'
     ]); ?>
 </nav>
-<?php $this->headScript()->appendFile('components/organisms/navigation/finna-tabs-nav/finna-tabs-nav.js'); ?>
