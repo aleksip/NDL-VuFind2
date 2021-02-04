@@ -18,6 +18,17 @@
   }
 }
 
+.finna-navbar-icon-caret {
+  font-family: finnaicons;
+  font-style: normal;
+  &::after {
+    content: '\e612';
+  }
+  .finna-navbar-component .navbar-toggle.collapsed &::after {
+    content: '\e613';
+  }
+}
+
 // Content navbar variation with own variables for customization.
 
 @finna-navbar-content-color:             mix(@brand-primary, contrast(@brand-primary), 5%);;
