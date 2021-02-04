@@ -1,7 +1,11 @@
 <?php
   $__attributes = $this->htmlAttributes($attributes ?? []);
+
+  // Internally use Bootstrap styles as a base.
+  if ($__attributes->hasValue('class', 'finna-nav-navbar')) {
+    $__attributes->add('class', 'navbar-nav');
+  }
   if ($__attributes->hasValue('class', 'finna-nav-tabs')) {
-    // Internally use Bootstrap nav-tabs styles as a base.
     $__attributes->add('class', 'nav-tabs');
   }
 
