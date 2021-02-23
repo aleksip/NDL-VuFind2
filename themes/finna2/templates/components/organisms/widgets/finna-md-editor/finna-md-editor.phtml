@@ -1,0 +1,12 @@
+<?php
+  $__attributes = $this->htmlAttributes($attributes ?? [])->add('class', 'finna-md-editor');
+  $__containerAttributes = $this->htmlAttributes(['data-markdown' => $markdown ?? '']);
+  if (isset($empty)) {
+    $__containerAttributes['data-empty'] = $empty;
+  }
+?>
+<?= $this->render('components/molecules/containers/finna-editable/finna-editable.phtml', [
+    'attributes' => $__attributes,
+    'containerAttributes' => $__containerAttributes,
+    'content' => $html ?? ''
+  ]); ?>

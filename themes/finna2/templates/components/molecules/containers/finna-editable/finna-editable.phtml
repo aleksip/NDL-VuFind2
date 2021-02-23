@@ -1,0 +1,8 @@
+<div<?= $this->htmlAttributes($attributes ?? [])->add('class', 'finna-editable') ?>>
+  <div class="editable">
+    <i class="fa fa-pen icon js-edit" aria-hidden="true"></i>
+    <div<?= $containerAttributes ?? '' ?>>
+      <?= $content ?? '' ?>
+    </div>
+  </div>
+</div>
