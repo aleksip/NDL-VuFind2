@@ -675,6 +675,8 @@ showMoreCount = 30
 
 ; This section defines settings for the Ontology Recommendations Module.
 [OntologyModuleRecommendations]
+; Maximum number of search terms for recommendation processing. Leave unset for an unlimited number of search terms.
+;maxSearchTerms = 2
 ; Maximum number of API calls to make per search. Leave unset for an unlimited number of API calls.
 ;maxApiCalls = 10
 ; Maximum number of recommendations to show per search. Leave unset for an unlimited number of recommendations.
