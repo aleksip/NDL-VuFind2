@@ -58,6 +58,13 @@ class Piwik extends \VuFind\View\Helper\Root\Piwik
     protected $addedCustomVars = [];
 
     /**
+     * Custom variables passed in a helper call.
+     *
+     * @var array
+     */
+    protected $passedCustomVars = [];
+
+    /**
      * Returns Piwik code (if active) or empty string if not.
      *
      * @param array $params Parameters
@@ -81,7 +88,14 @@ class Piwik extends \VuFind\View\Helper\Root\Piwik
             }
         }
 
-        return parent::__invoke($params);
+        // Passed custom variables are stored for this call only.
+        if (isset($params['customVars'])) {
+            $this->passedCustomVars = $params['customVars'];
+        }
+        $inlineScript = parent::__invoke($params);
+        $this->passedCustomVars = [];
+
+        return $inlineScript;
     }
 
     /**
@@ -267,6 +281,10 @@ class Piwik extends \VuFind\View\Helper\Root\Piwik
         if (!empty($this->addedCustomVars)) {
             $customVars = array_merge($customVars, $this->addedCustomVars);
         }
+        if (!empty($this->passedCustomVars)) {
+            $customVars = array_merge($customVars, $this->passedCustomVars);
+        }
+
         return parent::getCustomVarsCode($customVars);
     }
 
