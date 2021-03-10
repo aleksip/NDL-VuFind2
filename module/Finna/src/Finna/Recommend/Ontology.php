@@ -33,6 +33,7 @@ use VuFind\Cookie\CookieManager;
 use VuFind\I18n\Translator\TranslatorAwareInterface;
 use VuFind\I18n\Translator\TranslatorAwareTrait;
 use VuFind\Recommend\RecommendInterface;
+use VuFind\Search\SearchRunner;
 use VuFind\View\Helper\Root\Url;
 
 /**
@@ -86,8 +87,17 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $configLoader;
 
     /**
+     * Search runner
+     *
+     * @var SearchRunner
+     */
+    protected $searchRunner;
+
+    /**
      * Maximum number of search terms for recommendation processing. Setting to
      * null indicates an unlimited number of search terms.
+     *
+     * @var int|null
      */
     protected $maxSearchTerms = null;
 
@@ -131,6 +141,27 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      * @var int|null
      */
     protected $maxTimesShownPerSession = null;
+
+    /**
+     * Minimum result set total number for a recommended search. Searches will
+     * not be checked for result set totals if this is not set to a number
+     * greater than zero.
+     *
+     * @var int|null
+     */
+    protected $minResultTotalForRecommendedSearch = null;
+
+    /**
+     * Maximum number of recommended searches to check for result set totals.
+     * Setting to null indicates an unlimited number of checks. If checks are
+     * done and there are more recommended searches than indicated by this
+     * variable, the recommendation will not be shown at all. The value of this
+     * variable can have a serious effect on performance and that there might
+     * be a hard-coded maximum set elsewhere.
+     *
+     * @var int|null
+     */
+    protected $maxResultChecks = null;
 
     /**
      * Parameter object representing user request.
@@ -196,15 +227,17 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      * @param CookieManager $cookieManager Cookie manager
      * @param Url           $urlHelper     Url helper
      * @param PluginManager $configLoader  Configuration loader
+     * @param SearchRunner  $searchRunner  Search runner
      */
     public function __construct(
         Finto $finto, CookieManager $cookieManager, Url $urlHelper,
-        PluginManager $configLoader
+        PluginManager $configLoader, SearchRunner $searchRunner
     ) {
         $this->finto = $finto;
         $this->cookieManager = $cookieManager;
         $this->urlHelper = $urlHelper;
         $this->configLoader = $configLoader;
+        $this->searchRunner = $searchRunner;
     }
 
     /**
@@ -235,6 +268,9 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         $this->maxSmallResultTotal = $config->get('maxSmallResultTotal');
         $this->minLargeResultTotal = $config->get('minLargeResultTotal');
         $this->maxTimesShownPerSession = $config->get('maxTimesShownPerSession');
+        $this->minResultTotalForRecommendedSearch
+            = $config->get('minResultTotalForRecommendedSearch');
+        $this->maxResultChecks = $config->get('maxResultChecks');
     }
 
     /**
@@ -412,6 +448,9 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
             }
         }
 
+        // Do result set total checks for recommended searches if so configured.
+        $this->doResultChecks();
+
         if ($this->recommendationTotal > 0) {
             // There are recommendations, so set a new cookie value.
             $this->cookieManager->set(self::COOKIE_NAME, $timesShownTotal + 1);
@@ -529,7 +568,57 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         }
         $this->recommendations[$resultType][$term][] = [
             'label' => $fintoResult['prefLabel'],
-            'href' => $href
+            'href' => $href,
+            'params' => $params
         ];
+    }
+
+    /**
+     * Do search result checks for all recommendations and remove recommendations
+     * that do not meet configured criteria.
+     *
+     * @return void
+     */
+    protected function doResultChecks(): void
+    {
+        if (null === $this->minResultTotalForRecommendedSearch
+            || $this->minResultTotalForRecommendedSearch < 1
+            || 0 === $this->maxResultChecks
+        ) {
+            // No checks needed.
+            return;
+        }
+
+        foreach ($this->recommendations as $type => $terms) {
+            foreach ($terms as $term => $searches) {
+                if ($this->maxResultChecks !== null
+                    && count($searches) > $this->maxResultChecks
+                ) {
+                    // Not possible to check all searches for this recommendation so
+                    // remove all searches.
+                    $this->recommendations[$type][$term] = [];
+                }
+                foreach ($this->recommendations[$type][$term] as $i => $search) {
+                    $results = $this->searchRunner->run($search['params']);
+                    $resultTotal = $results->getResultTotal();
+                    if ($resultTotal < $this->minResultTotalForRecommendedSearch) {
+                        // Not enough results for this search so remove it.
+                        unset($this->recommendations[$type][$term][$i]);
+                        continue;
+                    }
+                    $this->recommendations[$type][$term][$i]['resultTotal']
+                        = $resultTotal;
+                }
+                if (0 === count($this->recommendations[$type][$term])) {
+                    // All searches for this recommendation have been removed.
+                    unset($this->recommendations[$type][$term]);
+                    $this->recommendationTotal -= 1;
+                }
+            }
+            if (0 === count($this->recommendations[$type])) {
+                // All recommendations of this type have been removed.
+                unset($this->recommendations[$type]);
+            }
+        }
     }
 }
