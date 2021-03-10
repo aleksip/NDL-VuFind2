@@ -143,21 +143,11 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $maxTimesShownPerSession = null;
 
     /**
-     * Minimum result set total number for a recommended search. Searches will
-     * not be checked for result set totals if this is not set to a number
-     * greater than zero.
-     *
-     * @var int|null
-     */
-    protected $minResultTotalForRecommendedSearch = null;
-
-    /**
      * Maximum number of recommended searches to check for result set totals.
-     * Setting to null indicates an unlimited number of checks. If checks are
-     * done and there are more recommended searches than indicated by this
-     * variable, the recommendation will not be shown at all. The value of this
-     * variable can have a serious effect on performance and that there might
-     * be a hard-coded maximum set elsewhere.
+     * Setting to null or zero indicates that no checks should be done. If
+     * checks are done and the recommendation would have more recommended
+     * searches than indicated by this variable, the recommendation will not
+     * contain any recommended search links at all.
      *
      * @var int|null
      */
@@ -268,8 +258,6 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         $this->maxSmallResultTotal = $config->get('maxSmallResultTotal');
         $this->minLargeResultTotal = $config->get('minLargeResultTotal');
         $this->maxTimesShownPerSession = $config->get('maxTimesShownPerSession');
-        $this->minResultTotalForRecommendedSearch
-            = $config->get('minResultTotalForRecommendedSearch');
         $this->maxResultChecks = $config->get('maxResultChecks');
     }
 
@@ -574,43 +562,43 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     }
 
     /**
-     * Do search result checks for all recommendations and remove recommendations
-     * that do not meet configured criteria.
+     * Do search result checks for all recommendations and remove recommended
+     * search links that do not meet configured criteria.
      *
      * @return void
      */
     protected function doResultChecks(): void
     {
-        if (null === $this->minResultTotalForRecommendedSearch
-            || $this->minResultTotalForRecommendedSearch < 1
-            || 0 === $this->maxResultChecks
-        ) {
+        if (null === $this->maxResultChecks || 0 === $this->maxResultChecks) {
             // No checks needed.
             return;
         }
 
         foreach ($this->recommendations as $type => $terms) {
             foreach ($terms as $term => $searches) {
-                if ($this->maxResultChecks !== null
-                    && count($searches) > $this->maxResultChecks
-                ) {
-                    // Not possible to check all searches for this recommendation so
-                    // remove all searches.
-                    $this->recommendations[$type][$term] = [];
+                if (count($searches) > $this->maxResultChecks) {
+                    foreach (array_keys($searches) as $i) {
+                        // Not possible to check all searches for this recommendation
+                        // so remove all search links.
+                        unset($this->recommendations[$type][$term][$i]['href']);
+                    }
+                    continue;
                 }
-                foreach ($this->recommendations[$type][$term] as $i => $search) {
+                $grandTotal = 0;
+                foreach ($searches as $i => $search) {
                     $results = $this->searchRunner->run($search['params']);
                     $resultTotal = $results->getResultTotal();
-                    if ($resultTotal < $this->minResultTotalForRecommendedSearch) {
-                        // Not enough results for this search so remove it.
-                        unset($this->recommendations[$type][$term][$i]);
-                        continue;
+                    if (0 === $resultTotal) {
+                        // No results for this search so remove the link.
+                        unset($this->recommendations[$type][$term][$i]['href']);
                     }
                     $this->recommendations[$type][$term][$i]['resultTotal']
                         = $resultTotal;
+                    $grandTotal += $resultTotal;
                 }
-                if (0 === count($this->recommendations[$type][$term])) {
-                    // All searches for this recommendation have been removed.
+                if (0 === $grandTotal) {
+                    // None of the recommended searches have any results so remove
+                    // the recommendation.
                     unset($this->recommendations[$type][$term]);
                     $this->recommendationTotal -= 1;
                 }
