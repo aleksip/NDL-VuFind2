@@ -143,11 +143,11 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $maxTimesShownPerSession = null;
 
     /**
-     * Maximum number of recommended searches to check for result set totals.
-     * Setting to null or zero indicates that no checks should be done. If
-     * checks are done and the recommendation would have more recommended
-     * searches than indicated by this variable, the recommendation will not
-     * contain any recommended search links at all.
+     * Maximum number of recommended searches to check for result set totals. This is
+     * the total maximum for all search terms. Setting to null indicates that no
+     * checks should be done. If checks are done and a recommendation would have more
+     * recommended searches than set here, the recommendation will not contain any
+     * recommended search links at all.
      *
      * @var int|null
      */
@@ -569,14 +569,15 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
      */
     protected function doResultChecks(): void
     {
-        if (null === $this->maxResultChecks || 0 === $this->maxResultChecks) {
+        if (null === $this->maxResultChecks) {
             // No checks needed.
             return;
         }
 
+        $resultChecksDone = 0;
         foreach ($this->recommendations as $type => $terms) {
             foreach ($terms as $term => $searches) {
-                if (count($searches) > $this->maxResultChecks) {
+                if (count($searches) > $this->maxResultChecks - $resultChecksDone) {
                     foreach (array_keys($searches) as $i) {
                         // Not possible to check all searches for this recommendation
                         // so remove all search links.
@@ -595,6 +596,7 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
                     $this->recommendations[$type][$term][$i]['resultTotal']
                         = $resultTotal;
                     $grandTotal += $resultTotal;
+                    $resultChecksDone += 1;
                 }
                 if (0 === $grandTotal) {
                     // None of the recommended searches have any results so remove
