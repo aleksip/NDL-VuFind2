@@ -23,6 +23,7 @@
  * @package  Controller
  * @author   Samuli Sillanpää <samuli.sillanpaa@helsinki.fi>
  * @author   Ere Maijala <ere.maijala@helsinki.fi>
+ * @author   Aleksi Peebles <aleksi.peebles@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     https://vufind.org/wiki/development:plugins:controllers Wiki
  */
@@ -35,6 +36,7 @@ namespace Finna\Controller;
  * @package  Controller
  * @author   Samuli Sillanpää <samuli.sillanpaa@helsinki.fi>
  * @author   Ere Maijala <ere.maijala@helsinki.fi>
+ * @author   Aleksi Peebles <aleksi.peebles@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     https://vufind.org/wiki/development:plugins:controllers Wiki
  */
@@ -51,5 +53,33 @@ class AjaxController extends \VuFind\Controller\AjaxController
     {
         // Use text/html to avoid any output
         return $this->callAjaxMethod('onlinePaymentNotify', 'text/html');
+    }
+
+    /**
+     * Load a custom element via AJAX.
+     *
+     * @return \Laminas\Http\Response
+     */
+    public function customElementAction()
+    {
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine('Access-Control-Allow-Origin: *');
+
+        return $this->callAjaxMethod('customElement');
+    }
+
+    /**
+     * Load a custom element via AJAX.
+     *
+     * @return \Laminas\Http\Response
+     */
+    public function customElementHtmlAction()
+    {
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine('Access-Control-Allow-Origin: *');
+
+        return $this->callAjaxMethod('customElementHtml', 'text/html');
     }
 }

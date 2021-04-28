@@ -386,6 +386,8 @@ $config = [
                         'VuFind\AjaxHandler\AbstractIlsAndUserActionFactory',
                     'Finna\AjaxHandler\CommentRecord' =>
                         'Finna\AjaxHandler\CommentRecordFactory',
+                    'Finna\AjaxHandler\CustomElement' =>
+                        'Finna\AjaxHandler\CustomElementFactory',
                     'Finna\AjaxHandler\DeleteRecordComment' =>
                         'VuFind\AjaxHandler\DeleteRecordCommentFactory',
                     'Finna\AjaxHandler\EditList' =>
@@ -454,6 +456,7 @@ $config = [
                     'changePickupLocation' => 'Finna\AjaxHandler\ChangePickupLocation',
                     'changeRequestStatus' => 'Finna\AjaxHandler\ChangeRequestStatus',
                     'checkRequestsAreValid' => 'Finna\AjaxHandler\CheckRequestsAreValid',
+                    'customElement' => 'Finna\AjaxHandler\CustomElement',
                     'editList' => 'Finna\AjaxHandler\EditList',
                     'editListResource' => 'Finna\AjaxHandler\EditListResource',
                     'getAccountNotifications' => 'Finna\AjaxHandler\GetAccountNotifications',
