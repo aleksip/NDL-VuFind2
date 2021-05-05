@@ -30,6 +30,7 @@ namespace Finna\View\CustomElement;
 use Laminas\View\Model\ModelInterface;
 use Laminas\View\Model\ViewModel;
 use PHPHtmlParser\Dom;
+use PHPHtmlParser\Options;
 
 /**
  * Abstract base custom element
@@ -51,6 +52,10 @@ abstract class AbstractBase implements CustomElementInterface
      *     Array of attributes for the custom element. These will overwrite
      *     attributes parsed from outerHTML.
      *
+     * - element
+     *     The name of the element. This is a required option and an exception will
+     *     be thrown if it is missing.
+     *
      * - outerHTML
      *     Outer HTML of the element. This will be parsed to a DOM object and
      *     attributes.
@@ -58,6 +63,13 @@ abstract class AbstractBase implements CustomElementInterface
      * @var array
      */
     protected $options;
+
+    /**
+     * Element name
+     *
+     * @var string
+     */
+    protected $name;
 
     /**
      * Attributes
@@ -83,17 +95,24 @@ abstract class AbstractBase implements CustomElementInterface
     /**
      * AbstractBase constructor.
      *
-     * @param ?array $options       Options
-     * @param bool   $convertToBool Convert string true/false values to booleans.
+     * @param array $options       Options
+     * @param bool  $convertToBool Convert string true/false values to booleans.
      */
-    public function __construct(?array $options = [], bool $convertToBool = false)
+    public function __construct(array $options, bool $convertToBool = false)
     {
-        $options = $options ?? [];
+        if (!isset($options['element'])) {
+            throw new \Exception('Element option missing.');
+        }
+        $this->name = $options['element'];
+
         $attributes = $options['attributes'] ?? [];
 
         // If outer HTML is set, set up the DOM object and process attributes.
         if (isset($options['outerHTML'])) {
-            $dom = (new Dom())->loadStr($options['outerHTML']);
+            $dom = (new Dom())->loadStr(
+                $options['outerHTML'],
+                (new Options())->setCleanupInput(false)
+            );
             if ($dom->countChildren() === 1
                 && $dom->firstChild()->getTag()->name() === $this->getName()
             ) {
@@ -132,6 +151,16 @@ abstract class AbstractBase implements CustomElementInterface
         $this->options = $options;
         $this->attributes = $attributes;
         $this->viewModel = new ViewModel($variables);
+    }
+
+    /**
+     * Get the name of the element.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
