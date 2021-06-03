@@ -4,22 +4,31 @@
 
 ```html
 <finna-panel>
- <finna-panel-heading>Otsikko</finna-panel-heading>
- Sisältö
+ <span slot="heading">
+  Otsikko
+ </span>
+
+ Sisältö.
 </finna-panel>
 ```
 
 <finna-panel>
- <finna-panel-heading level="4">Otsikko</finna-panel-heading>
- Sisältö
+ <span slot="heading">
+  Otsikko
+ </span>
+
+ Sisältö.
 </finna-panel>
 
-Oletusotsikkotaso on H2, mutta sitä voi muuttaa level-attribuutilla:
+Oletusotsikkotaso on H2, mutta sitä voi muuttaa heading-level-attribuutilla:
 
-`<finna-panel-heading level="4">Tästä tulee H4-otsikko</finna-panel-heading>`
+`<finna-panel heading-level="4">`
 
-<finna-panel collapsed="false">
- <finna-panel-heading level="4">Tämä on finna-panel on oletuksena auki</finna-panel-heading>
+<finna-panel collapsed="false" heading-level="4">
+ <span slot="heading">
+  Tämä finna-panel on oletuksena auki
+ </span>
+
  Oletuksena auki olevan paneelin saa tehtyä lisäämällä collapsed-attribuutin:
 
  `<finna-panel collapsed="false">`
@@ -30,15 +39,21 @@ Oletusotsikkotaso on H2, mutta sitä voi muuttaa level-attribuutilla:
   
  Finna-panel on täsmälleen sama <a href="https://natlibfi.github.io/NDL-VuFind-ui-components/?p=molecules-finna-panel-collapsible">komponenttikirjaston komponentti</a> joka on jo käytössä <a href="https://finna.fi/OrganisationInfo/Home?id=NLF#86154">organisaatiosivuilla</a>.
 
- <finna-panel>
-  <finna-panel-heading level="5">Maatuskapaneeli</finna-panel-heading>
+ <finna-panel heading-level="5">
+  <span slot="heading">
+   Maatuskapaneeli
+  </span>
+
   Kyllä, näitä voi jopa laittaa sisäkkäin, vaikka se ei kauhean järkevää olisikaan.
  </finna-panel>
 
 </finna-panel>
 
-<finna-panel collapsible="false">
-  <finna-panel-heading level="5">Aina auki oleva paneeli</finna-panel-heading>
+<finna-panel collapsible="false" heading-level="5">
+  <span slot="heading">
+   Aina auki oleva paneeli
+  </span>
+
   Lisäattribuutilla collapsible voi myös tehdä paneelista aina auki olevan version:
 
  `<finna-panel collapsible="false">`
@@ -84,17 +99,23 @@ Alla olevat esimerkit on kehystetty finna-panel:iin, osittain selkeyden vuoksi j
  </finna-truncate>
 </finna-panel>
 
- Oman etiketin voi asettaa finna-truncate-label-tagilla:
+ Oman etiketin voi asettaa label-tagilla:
 
  ```html
  <finna-truncate>
-  <finna-truncate-label>Oma etiketti</finna-truncate-label>
-   Sisältö
+  <span slot="label">
+   Oma etiketti
+  </span>
+
+  Sisältö
  </finna-truncate>
  ```
 
  <finna-truncate>
-  <finna-truncate-label>Oma etiketti</finna-truncate-label>
+  <span slot="label">
+   Oma etiketti
+  </span>
+
   Lorem ipsum dolor sit amet, consectetur adipiscing elit,
   sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
   Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
