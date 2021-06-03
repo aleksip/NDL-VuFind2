@@ -41,7 +41,9 @@ namespace Finna\RecordDriver;
  */
 class SolrAuthEacCpf extends SolrAuthDefault
 {
-    use SolrAuthFinnaTrait;
+    use SolrAuthFinnaTrait {
+        getOccupations as _getOccupations;
+    }
     use XmlReaderTrait;
 
     /**
@@ -193,6 +195,66 @@ class SolrAuthEacCpf extends SolrAuthDefault
             }
         }
         return $result;
+    }
+
+    /**
+     * Return relations to other authority records.
+     *
+     * @return array
+     */
+    public function getRelations()
+    {
+        $record = $this->getXmlRecord();
+        $result = [];
+        foreach ($record->cpfDescription->relations->cpfRelation ?? []
+            as $relation
+        ) {
+            $attr = $relation->attributes();
+            $id = (string)$attr->href;
+            $name = (string)$relation->relationEntry;
+            if ($id && $name) {
+                $result[] = [
+                    'id' => $id,
+                    'name' => $name,
+                    'role' => (string)$attr->title,
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return occupations.
+     *
+     * @return array
+     */
+    public function getOccupations()
+    {
+        $result = [];
+        $record = $this->getXmlRecord();
+        if (isset($record->cpfDescription->description->occupations)) {
+            $languages = $this->mapLanguageCode($this->getLocale());
+            foreach ($record->cpfDescription->description->occupations
+                as $occupations
+            ) {
+                if (!isset($occupations->occupation)) {
+                    continue;
+                }
+                foreach ($occupations->occupation as $occupation) {
+                    if (!isset($occupation->term)) {
+                        continue;
+                    }
+                    $term = $occupation->term;
+                    $attr = $term->attributes();
+                    if ($attr->lang && in_array((string)$attr->lang, $languages)
+                    ) {
+                        $result[] = (string)$term;
+                    }
+                }
+            }
+        }
+        return $result ?: $this->_getOccupations();
     }
 
     /**
