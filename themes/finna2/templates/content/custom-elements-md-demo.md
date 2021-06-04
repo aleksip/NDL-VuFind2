@@ -4,19 +4,13 @@
 
 ```html
 <finna-panel>
- <span slot="heading">
-  Otsikko
- </span>
-
+ <span slot="heading">Otsikko</span>
  Sisältö.
 </finna-panel>
 ```
 
 <finna-panel>
- <span slot="heading">
-  Otsikko
- </span>
-
+ <span slot="heading">Otsikko</span>
  Sisältö.
 </finna-panel>
 
@@ -103,19 +97,13 @@ Alla olevat esimerkit on kehystetty finna-panel:iin, osittain selkeyden vuoksi j
 
  ```html
  <finna-truncate>
-  <span slot="label">
-   Oma etiketti
-  </span>
-
+  <span slot="label">Oma etiketti</span>
   Sisältö
  </finna-truncate>
  ```
 
  <finna-truncate>
-  <span slot="label">
-   Oma etiketti
-  </span>
-
+  <span slot="label">Oma etiketti</span>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit,
   sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
   Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
