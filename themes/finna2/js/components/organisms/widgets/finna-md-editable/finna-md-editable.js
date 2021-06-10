@@ -216,13 +216,44 @@ FinnaMdEditable.prototype.closeEditable = function closeEditable() {
   return this;
 };
 
+FinnaMdEditable.prototype.getEditorCursorPos = function getEditorCursorPos() {
+  var doc = this.editor.codemirror.getDoc();
+  var cursorPos = doc.getCursor();
+  return {
+    line: cursorPos.line,
+    ch: cursorPos.ch
+  };
+};
+
+FinnaMdEditable.prototype.insertElement = function insertElement(element) {
+  var doc = this.editor.codemirror.getDoc();
+  doc.replaceRange(element, this.getEditorCursorPos());
+  this.editor.codemirror.focus();
+};
+
 FinnaMdEditable.prototype.insertPanel = function insertPanel() {
-  return;
-}
+  var headingPlaceholder = VuFind.translate('details_summary_placeholder');
+  var panelElement = '\n<finna-panel>\n'
+    + '<span slot="heading">' + headingPlaceholder + '</span>\n'
+    + VuFind.translate('details_text_placeholder') + '\n'
+    + '</finna-panel>\n';
+  this.insertElement(panelElement);
+  var doc = this.editor.codemirror.getDoc();
+  var cursorPos = this.getEditorCursorPos();
+  doc.setCursor({line: cursorPos.line - 3, ch: 21 + headingPlaceholder.length});
+};
 
 FinnaMdEditable.prototype.insertTruncate = function insertTruncate() {
-  return;
-}
+  var labelPlaceholder = VuFind.translate('details_summary_placeholder');
+  var truncateElement = '\n<finna-truncate>\n'
+    + '<span slot="label">' + labelPlaceholder + '</span>\n'
+    + VuFind.translate('details_text_placeholder') + '\n'
+    + '</finna-truncate>\n';
+  this.insertElement(truncateElement);
+  var doc = this.editor.codemirror.getDoc();
+  var cursorPos = this.getEditorCursorPos();
+  doc.setCursor({line: cursorPos.line - 3, ch: 19 + labelPlaceholder.length});
+};
 
 finna.mdEditable = (function finnaMdEditable() {
   var editables = [];
