@@ -132,7 +132,7 @@ class Results extends \VuFind\Search\Favorites\Results
     {
         $filters = $this->getParams()->getRawFilters();
         $listId = $filters['lists'][0] ?? null;
-        if ($listId) {
+        if (null !== $listId) {
             $listId = intval($listId);
         }
 
