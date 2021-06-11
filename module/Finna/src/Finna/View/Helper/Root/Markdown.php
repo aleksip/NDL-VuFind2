@@ -105,7 +105,7 @@ class Markdown extends \VuFind\View\Helper\Root\Markdown
         // Replace details > summary elements, which have the markdown attribute.
         $markdown = preg_replace(
             $this->getTagContentRegex('summary', ' markdown="1"'),
-            "<span slot=\"heading\">$1</span>\n",
+            "  <span slot=\"heading\">$1</span>\n",
             $markdown
         );
 
@@ -120,7 +120,7 @@ class Markdown extends \VuFind\View\Helper\Root\Markdown
         // attribute.
         $markdown = preg_replace(
             $this->getTagContentRegex('summary'),
-            "<span slot=\"label\">$1</span>\n",
+            "  <span slot=\"label\">$1</span>\n",
             $markdown
         );
 
