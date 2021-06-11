@@ -57,10 +57,6 @@ class FinnaTruncate extends AbstractBase
             $this->removeSlotElement($labelElement);
         }
 
-        $this->viewModel->setVariable(
-            'content', $this->dom->firstChild()->innerHTML()
-        );
-
         // If only one of the 'rows' and 'row-height' attributes is set, unset the
         // default value of the other attribute.
         if (isset($this->attributes['rows'])
@@ -73,6 +69,10 @@ class FinnaTruncate extends AbstractBase
         ) {
             $this->getViewModel()->setVariable('rows', null);
         }
+
+        $this->viewModel->setVariable(
+            'content', $this->dom->firstChild()->innerHTML()
+        );
 
         $this->getViewModel()->setTemplate(
             'components/molecules/containers/finna-truncate/finna-truncate'
@@ -87,7 +87,7 @@ class FinnaTruncate extends AbstractBase
     protected function getDefaultVariables(): array
     {
         return [
-            'rows' => 1,
+            'rows'      => 1,
             'rowHeight' => 5
         ];
     }
