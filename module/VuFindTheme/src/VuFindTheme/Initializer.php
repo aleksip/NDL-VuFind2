@@ -31,7 +31,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\Config\Config;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\RequestInterface as Request;
-use Laminas\View\Resolver\TemplatePathStack;
+use VuFind\View\VuFindRendererStrategy;
 
 /**
  * VuFind Theme Initializer
@@ -383,9 +383,9 @@ class Initializer
             }
         }
 
-        // Inject the path stack generated above into the resolver:
-        $resolver = $this->serviceManager->get(TemplatePathStack::class);
-        $resolver->addPaths($templatePathStack);
+        // Inject the path stack generated above into the renderer strategy
+        $strategy = $this->serviceManager->get(VuFindRendererStrategy::class);
+        $strategy->setPaths($templatePathStack);
 
         // Add theme specific language files for translation
         $this->updateTranslator($themes);

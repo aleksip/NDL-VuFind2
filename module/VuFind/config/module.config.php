@@ -443,6 +443,7 @@ $config = [
             'VuFind\UrlShortener\PluginManager' => 'VuFind\ServiceManager\AbstractPluginManagerFactory',
             'VuFind\UrlShortener\UrlShortenerInterface' => 'VuFind\UrlShortener\ServiceFactory',
             'VuFind\Validator\SessionCsrf' => 'VuFind\Validator\SessionCsrfFactory',
+            'VuFind\View\VuFindRendererStrategy' => 'VuFind\View\VuFindRendererStrategyFactory',
             'VuFindHttp\HttpService' => 'VuFind\Service\HttpServiceFactory',
             'VuFindSearch\Service' => 'VuFind\Service\SearchServiceFactory',
             'Laminas\Db\Adapter\Adapter' => 'VuFind\Db\AdapterFactory',
@@ -548,7 +549,13 @@ $config = [
         'display_exceptions'       => APPLICATION_ENV == 'development',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
+        'strategies' => [
+            'VuFind\View\VuFindRendererStrategy'
+        ],
         'template_path_stack'      => [],
+    ],
+    'zend_twig' => [
+        'force_twig_strategy' => false
     ],
     // This section contains all VuFind-specific settings (i.e. configurations
     // unrelated to specific Laminas components).

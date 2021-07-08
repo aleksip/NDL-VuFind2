@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5839667bfa23e0cde43d5601f07fbe23",
+    "content-hash": "19c1e173b5539edf21d6a7d46b346264",
     "packages": [
         {
             "name": "ahand/mobileesp",
@@ -5645,6 +5645,69 @@
                 "source": "https://github.com/Ocramius/ProxyManager/tree/2.2.x"
             },
             "time": "2019-08-10T08:37:15+00:00"
+        },
+        {
+            "name": "oxcom/zend-twig",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OxCom/zf3-twig.git",
+                "reference": "39e50d3820c92aacf340c8769cfd7962b8c46d09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OxCom/zf3-twig/zipball/39e50d3820c92aacf340c8769cfd7962b8c46d09",
+                "reference": "39e50d3820c92aacf340c8769cfd7962b8c46d09",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-eventmanager": "^3.1",
+                "laminas/laminas-modulemanager": "^2.7",
+                "laminas/laminas-mvc": "^3.0",
+                "laminas/laminas-mvc-plugin-flashmessenger": "^1.0",
+                "laminas/laminas-servicemanager": "^3.2",
+                "laminas/laminas-view": "^2.8",
+                "php": ">=7.0",
+                "twig/twig": "^2.12|^3.0.1"
+            },
+            "require-dev": {
+                "laminas/laminas-i18n": "^2.7",
+                "laminas/laminas-mvc-i18n": "^1.0",
+                "laminas/laminas-navigation": "^2.8",
+                "laminas/laminas-server": "^2.7",
+                "laminas/laminas-test": "^3.0",
+                "phpunit/phpunit": "^6.5.13|^7.5.20",
+                "squizlabs/php_codesniffer": "^3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZendTwig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "OxCom",
+                    "email": "lancer.oxcom@gmail.com"
+                }
+            ],
+            "description": "ZendTwig is a module that integrates the Twig template engine with Zend Framework 3.",
+            "homepage": "https://github.com/OxCom/zf3-twig",
+            "keywords": [
+                "module",
+                "twig",
+                "zf",
+                "zf3"
+            ],
+            "support": {
+                "issues": "https://github.com/OxCom/zf3-twig/issues",
+                "source": "https://github.com/OxCom/zf3-twig/tree/master"
+            },
+            "time": "2020-09-02T09:21:43+00:00"
         },
         {
             "name": "paquettg/php-html-parser",
@@ -14092,5 +14155,5 @@
     "platform-overrides": {
         "php": "7.3.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
