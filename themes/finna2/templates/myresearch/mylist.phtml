@@ -27,7 +27,7 @@
 
   $lists = $user ? $user->getLists() : null;
 
-  $this->jsTranslations()->addStrings(['add_note' => 'Add note', 'add_list_description' => 'Add list description', 'loading' => 'Loading', 'preview' => 'Preview', 'details_summary_placeholder' => 'details_summary_placeholder', 'details_text_placeholder' => 'details_text_placeholder']);
+  $this->jsTranslations()->addStrings(['add_list_description' => 'Add list description', 'loading' => 'Loading']);
 ?>
 
 <!-- Leftside navigationbar -->
@@ -61,7 +61,7 @@
         <?= $this->render('components/organisms/widgets/finna-md-editable/finna-md-editable.phtml', [
             'attributes' => ['class' => 'list-description'],
             'markdown' => $markdown,
-            'html' => !empty($markdown) ? $this->markdown()->toHtml($markdown, false) : '',
+            'html' => $markdown ? $this->markdown()->toHtml($markdown, false) : '',
             'emptyHtml' => $this->translate('Add list description'),
             'preview' => true
           ]); ?>

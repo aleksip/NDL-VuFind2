@@ -1,11 +1,5 @@
 /* global VuFind, finna, EasyMDE */
 
-FinnaMdEditable.prototype.eventOpenEditable = 'finna:openEditable';
-FinnaMdEditable.prototype.eventEditableClosed = 'finna:editableClosed';
-
-FinnaMdEditable.prototype.busyClass = 'finna-editable-busy';
-FinnaMdEditable.prototype.openClass = 'finna-editable-open';
-
 /**
  * Finna Markdown editable.
  *
@@ -19,15 +13,23 @@ function FinnaMdEditable(element) {
   this.emptyHtml = this.container.data('empty-html');
   this.editor = null;
 
-  this.element.on('click.finnaEditable', { instance: this }, function onClickFinnaEditable(event) {
+  this.element.on('click.finnaEditable', { editable: this }, function onClickFinnaEditable(event) {
     event.stopPropagation();
     if (event.target.nodeName === 'A') {
       // Do not open the editor when a link within the editable area was clicked.
       return;
     }
-    event.data.instance.openEditable();
+    event.data.editable.openEditable();
   });
+
+  this.element.addClass('inited');
 }
+
+FinnaMdEditable.prototype.eventOpenEditable = 'finna:openEditable';
+FinnaMdEditable.prototype.eventEditableClosed = 'finna:editableClosed';
+
+FinnaMdEditable.prototype.busyClass = 'finna-editable-busy';
+FinnaMdEditable.prototype.openClass = 'finna-editable-open';
 
 /**
  * Returns the open state of the editable.
@@ -61,11 +63,11 @@ FinnaMdEditable.prototype.setBusy = function setBusy(busy) {
     return this;
   }
   if (this.isBusy()) {
-    if (false === busy) {
+    if (!busy) {
       this.element.removeClass(this.busyClass);
     }
   }
-  else if (true === busy) {
+  else if (busy) {
     this.element.addClass(this.busyClass);
   }
   return this;
@@ -89,8 +91,6 @@ FinnaMdEditable.prototype.openEditable = function openEditable() {
   }
   this.element.addClass(this.openClass);
 
-  var instance = this;
-
   // Hide container and insert textarea for editor.
   this.container.hide();
   var textArea = $('<textarea/>');
@@ -98,51 +98,104 @@ FinnaMdEditable.prototype.openEditable = function openEditable() {
   textArea.text(currentVal);
   textArea.insertAfter(this.container);
 
+  var editable = this;
+
   // Create editor.
   var toolbar = [
-    'bold', 'italic',
-    'heading', '|',
-    'quote', 'unordered-list',
-    'ordered-list', '|',
-    'link', 'image',
+    {
+      name: 'bold',
+      action: EasyMDE.toggleBold,
+      className: 'fa fa-bold',
+      title: VuFind.translate('editor_format_bold')
+    },
+    {
+      name: 'italic',
+      action: EasyMDE.toggleItalic,
+      className: 'fa fa-italic',
+      title: VuFind.translate('editor_format_italic')
+    },
+    {
+      name: 'heading',
+      action: EasyMDE.toggleHeadingSmaller,
+      className: 'fa fa-header fa-heading',
+      title: VuFind.translate('editor_format_heading')
+    },
     '|',
     {
-      name: "other",
-      className: "fa fa-plus-small",
-      title: "Other",
+      name: 'quote',
+      action: EasyMDE.toggleBlockquote,
+      className: 'fa fa-quote-left',
+      title: VuFind.translate('editor_format_quote')
+    },
+    {
+      name: 'unordered-list',
+      action: EasyMDE.toggleUnorderedList,
+      className: 'fa fa-list-ul',
+      title: VuFind.translate('editor_format_unordered_list')
+    },
+    {
+      name: 'ordered-list',
+      action: EasyMDE.toggleOrderedList,
+      className: 'fa fa-list-ol',
+      title: VuFind.translate('editor_format_ordered_list')
+    },
+    '|',
+    {
+      name: 'link',
+      action: EasyMDE.drawLink,
+      className: 'fa fa-link',
+      title: VuFind.translate('editor_create_link')
+    },
+    {
+      name: 'image',
+      action: EasyMDE.drawImage,
+      className: 'fa fa-image',
+      title: VuFind.translate('editor_insert_image')
+    },
+    '|',
+    {
+      name: 'other',
+      className: 'fa fa-plus-small',
+      title: VuFind.translate('editor_other_commands'),
       children: [
         {
           name: 'panel',
           action: function toolbarPanelAction() {
-            instance.insertPanel();
+            editable._insertPanel();
           },
           className: 'fa details-icon',
-          title: 'Insert panel element'
+          title: VuFind.translate('editor_insert_panel')
         },
         {
           name: 'truncate',
           action: function toolbarTruncateAction() {
-            instance.insertTruncate();
+            editable._insertTruncate();
           },
           className: 'fa fa-pagebreak',
-          title: 'Insert truncate element'
+          title: VuFind.translate('editor_insert_truncate')
         }
       ]
     },
     {
       name: 'close',
       action: function toolbarCloseAction() {
-        instance.closeEditable();
+        editable.closeEditable();
       },
       className: 'fa fa-times editor-toolbar-close',
-      title: 'Close'
+      title: VuFind.translate('editor_close_editor')
     }
   ];
+  var promptTexts = {
+    link: VuFind.translate('editor_prompt_link'),
+    image: VuFind.translate('editor_prompt_image')
+  };
   var settings = {
     autoDownloadFontAwesome: false,
     autofocus: true,
     element: textArea[0],
     indentWithTabs: false,
+    promptTexts: promptTexts,
+    promptURLs: true,
     toolbar: toolbar,
     spellChecker: false,
     status: false
@@ -166,7 +219,7 @@ FinnaMdEditable.prototype.openEditable = function openEditable() {
     preview.appendTo(this.element);
 
     this.editor.codemirror.on('change', function onChangeEditor() {
-      var result = instance.editor.options.previewRender(instance.editor.value());
+      var result = editable.editor.options.previewRender(editable.editor.value());
       preview.find('.data').html(result);
     });
   }
@@ -210,43 +263,32 @@ FinnaMdEditable.prototype.closeEditable = function closeEditable() {
   return this;
 };
 
-FinnaMdEditable.prototype.getEditorCursorPos = function getEditorCursorPos() {
+FinnaMdEditable.prototype._insertElement = function _insertElement(element, cursorLineOffset, cursorCh) {
   var doc = this.editor.codemirror.getDoc();
-  var cursorPos = doc.getCursor();
-  return {
-    line: cursorPos.line,
-    ch: cursorPos.ch
-  };
-};
-
-FinnaMdEditable.prototype.insertElement = function insertElement(element) {
-  var doc = this.editor.codemirror.getDoc();
-  doc.replaceRange(element, this.getEditorCursorPos());
+  doc.replaceRange(element, doc.getCursor());
   this.editor.codemirror.focus();
+  var cursor = doc.getCursor();
+  cursor.line = cursor.line + cursorLineOffset;
+  cursor.ch = cursorCh;
+  doc.setCursor(cursor);
 };
 
-FinnaMdEditable.prototype.insertPanel = function insertPanel() {
+FinnaMdEditable.prototype._insertPanel = function _insertPanel() {
   var headingPlaceholder = VuFind.translate('details_summary_placeholder');
   var panelElement = '\n<finna-panel>\n'
     + '  <span slot="heading">' + headingPlaceholder + '</span>\n\n'
     + '  ' + VuFind.translate('details_text_placeholder') + '\n'
     + '</finna-panel>\n';
-  this.insertElement(panelElement);
-  var doc = this.editor.codemirror.getDoc();
-  var cursorPos = this.getEditorCursorPos();
-  doc.setCursor({line: cursorPos.line - 4, ch: 23 + headingPlaceholder.length});
+  this._insertElement(panelElement, -4, 23 + headingPlaceholder.length);
 };
 
-FinnaMdEditable.prototype.insertTruncate = function insertTruncate() {
+FinnaMdEditable.prototype._insertTruncate = function _insertTruncate() {
   var labelPlaceholder = VuFind.translate('details_summary_placeholder');
   var truncateElement = '\n<finna-truncate>\n'
     + '  <span slot="label">' + labelPlaceholder + '</span>\n\n'
     + '  ' + VuFind.translate('details_text_placeholder') + '\n'
     + '</finna-truncate>\n';
-  this.insertElement(truncateElement);
-  var doc = this.editor.codemirror.getDoc();
-  var cursorPos = this.getEditorCursorPos();
-  doc.setCursor({line: cursorPos.line - 4, ch: 21 + labelPlaceholder.length});
+  this._insertElement(truncateElement, -4, 21 + labelPlaceholder.length);
 };
 
 finna.mdEditable = (function finnaMdEditable() {
@@ -255,7 +297,7 @@ finna.mdEditable = (function finnaMdEditable() {
   var my = {
     editables: editables,
     init: function init() {
-      $('.finna-md-editable').each(function initFinnaMdEditable() {
+      $('.finna-md-editable:not(.inited)').each(function initFinnaMdEditable() {
         editables.push(new FinnaMdEditable($(this)));
       });
     }
