@@ -155,7 +155,7 @@ finna-list näyttää suosikkilistan. Finna-list tukee attribuutteina kaikkia `u
 
 ### finna-tabs
 
- ````html
+```html
 <finna-tabs>
  <h3 slot="label">Ensimmäinen</h3>
  <div slot="content">
@@ -167,7 +167,7 @@ finna-list näyttää suosikkilistan. Finna-list tukee attribuutteina kaikkia `u
  </div>
  
 </finna-tabs>
- ````
+```
 
 <finna-tabs>
  <h3 slot="label">Ensimmäinen</h3>
@@ -198,6 +198,19 @@ Myös muun kuin ensimmäisen välilehden voi asettaa oletuksena aktiiviseksi kä
  </div>
 
 </finna-tabs>
+
+ </div>
+
+ <h2 slot="label" data-active="true">&lt;finna-feed&gt;</h2>
+ <div slot="content">
+
+### finna-feed
+
+ ```html
+<finna-feed id="carousel-finna"></finna-feed>
+```
+
+<finna-feed id="carousel-finna"></finna-feed>
 
  </div>
 
