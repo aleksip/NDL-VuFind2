@@ -1,0 +1,18 @@
+.a11y-issue {
+  outline: 5px solid red;
+}
+
+html:not([lang]),
+html[lang=""] {
+  &:extend(.a11y-issue);
+}
+
+img:not([alt]),
+img[alt=""] {
+  &:extend(.a11y-issue);
+}
+
+button:not([aria-label]):empty,
+button[aria-label=""]:empty {
+  &:extend(.a11y-issue);
+}
