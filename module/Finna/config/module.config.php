@@ -910,11 +910,13 @@ $config = [
                 'factories' => [
                     'Finna\View\CustomElement\FinnaList' => 'Finna\View\CustomElement\AbstractBaseFactory',
                     'Finna\View\CustomElement\FinnaPanel' => 'Finna\View\CustomElement\AbstractBaseFactory',
+                    'Finna\View\CustomElement\FinnaTabs' => 'Finna\View\CustomElement\AbstractBaseFactory',
                     'Finna\View\CustomElement\FinnaTruncate' => 'Finna\View\CustomElement\AbstractBaseFactory',
                 ],
                 'aliases' => [
                     'finna-list' => 'Finna\View\CustomElement\FinnaList',
                     'finna-panel' => 'Finna\View\CustomElement\FinnaPanel',
+                    'finna-tabs' => 'Finna\View\CustomElement\FinnaTabs',
                     'finna-truncate' => 'Finna\View\CustomElement\FinnaTruncate',
                 ]
             ]
