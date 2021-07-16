@@ -1,0 +1,56 @@
+// Responsive variation.
+.finna-tabs-responsive {
+  // Selector specificity is increased to override current global Bootstrap defaults.
+  .finna-nav.finna-nav-tabs {
+    border-bottom: none;
+    > li {
+      margin: 3px;
+      border: 1px solid @nav-tabs-active-color;
+      background-color: #fff;
+      &.active,
+      &.active-trail {
+        border: 1px solid @nav-tabs-active-color;
+        > a,
+        > a:hover,
+        > a:focus {
+          color: #fff;
+          background-color: @nav-tabs-active-color;
+        }
+      }
+      > a,
+      > a:hover,
+      > a:focus {
+        padding: 10px;
+      }
+    }
+  }
+}
+.finna-tabs-responsive-max-xxs {
+  @media screen and (max-width: @screen-xxs) {
+    .finna-tabs-responsive();
+  }
+}
+.finna-tabs-responsive-max-xs {
+  @media screen and (max-width: @screen-xs) {
+    .finna-tabs-responsive();
+  }
+}
+.finna-tabs-responsive-max-sm {
+  @media screen and (max-width: @screen-sm) {
+    .finna-tabs-responsive();
+  }
+}
+.finna-tabs-responsive-max-md {
+  @media screen and (max-width: @screen-md) {
+    .finna-tabs-responsive();
+  }
+}
+
+// Minimal custom element styling for Markdown preview.
+finna-tabs {
+  display: block;
+  > [slot="label"] {
+  }
+  > [slot="content"] {
+  }
+}

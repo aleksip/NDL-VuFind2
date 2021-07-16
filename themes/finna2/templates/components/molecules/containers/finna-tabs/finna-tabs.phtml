@@ -1,0 +1,47 @@
+<div<?= $this->htmlAttributes($attributes ?? [])->add('class', 'finna-tabs') ?>>
+  <?php if (!empty($items)): ?>
+    <?php
+      $__items = [];
+      $__active = false;
+      foreach ($items as $__i => $__item) {
+        $__item['link'] = '#' . $__item['id'];
+        $__item['linkAttributes'] = [
+          'aria-controls' => $__item['id'],
+          'role' => 'tab',
+          'data-toggle' => 'tab'
+        ];
+        $__items[$__i] = $__item;
+        if ($__item['active'] ?? false) {
+          $__active = true;
+        }
+      }
+      if (!$__active) {
+        $__items[0]['active'] = true;
+      }
+    ?>
+    <?= $this->render('components/molecules/navigation/finna-nav/finna-nav.phtml', [
+        'attributes' => [
+          'class' => 'finna-nav-tabs',
+          'role' => 'tablist'
+        ],
+        'items' => $__items
+      ]); ?>
+    <div class="finna-tab-content tab-content">
+      <?php foreach ($__items as $__item): ?>
+        <?php
+          $__tabPanelAttributes = $this->htmlAttributes([
+            'role' => 'tabpanel',
+            'class' => 'tab-pane',
+            'id' => $__item['id']
+          ]);
+          if (!empty($__item['active'])) {
+            $__tabPanelAttributes->add('class', 'active');
+          }
+        ?>
+        <div<?= $__tabPanelAttributes ?>>
+          <?= $__item['content'] ?>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
+</div>

@@ -1,5 +1,6 @@
 <?php
   $__attributes = $this->htmlAttributes($attributes ?? []);
+  $__attributes['role'] = 'presentation';
   $__renderChildren = $renderChildren ?? 'dropdown';
   if (!empty($children) && 'dropdown' === $__renderChildren) {
     $__attributes->add('class', 'dropdown');
@@ -37,7 +38,7 @@
 ?>
 <li<?= $__attributes ?>>
   <?php
-    $__linkAttributes = $this->htmlAttributes($__linkAttributes ?? []);
+    $__linkAttributes = $this->htmlAttributes($linkAttributes ?? []);
     if ($__hasDropdown = (!empty($__children) && 'dropdown' === $__renderChildren)) {
       $__linkAttributes->set([
         'href' => '#',
