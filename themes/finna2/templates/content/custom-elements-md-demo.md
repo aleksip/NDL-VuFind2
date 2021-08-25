@@ -51,6 +51,7 @@ Oman etiketin voi asettaa seuraavasti:
  ```html
  <finna-truncate>
   <span slot="label">Oma etiketti</span>
+
   Sisältö
  </finna-truncate>
  ```
@@ -59,10 +60,7 @@ Oman etiketin voi asettaa seuraavasti:
  <finna-truncate>
   <span slot="label">Oma etiketti</span>
 
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-  nisi ut aliquip ex ea commodo consequat.
+  Sisältö
  </finna-truncate>
 
 </finna-panel>
@@ -201,7 +199,7 @@ Myös muun kuin ensimmäisen välilehden voi asettaa oletuksena aktiiviseksi kä
 
  </div>
 
- <h2 slot="label" data-active="true">&lt;finna-feed&gt;</h2>
+ <h2 slot="label">&lt;finna-feed&gt;</h2>
  <div slot="content">
 
 ### finna-feed
