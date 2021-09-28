@@ -27,7 +27,7 @@
  */
 namespace Finna\Recommend;
 
-use Finna\Connection\Finto;
+use NatLibFi\Finto\PhpClient\Finto;
 use VuFind\Config\PluginManager;
 use VuFind\Cookie\CookieManager;
 use VuFind\I18n\Translator\TranslatorAwareInterface;

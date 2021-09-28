@@ -66,7 +66,7 @@ class OntologyFactory implements FactoryInterface
             throw new \Exception('Unexpected options passed to factory.');
         }
         return new $requestedName(
-            $container->get(\Finna\Connection\Finto::class),
+            $container->get(\NatLibFi\Finto\PhpClient\Finto::class),
             $container->get(\VuFind\Cookie\CookieManager::class),
             $container->get('ViewHelperManager')->get('url'),
             $container->get(\VuFind\Config\PluginManager::class),
