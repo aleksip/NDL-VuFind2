@@ -204,13 +204,6 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     protected $recommendationUris = [];
 
     /**
-     * Total number of API calls made.
-     *
-     * @var int
-     */
-    protected $apiCallTotal = 0;
-
-    /**
      * Total number of recommendations.
      *
      * @var int
@@ -390,63 +383,27 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
         $resultTotal = $this->request->get('resultTotal')
             ?? $this->results->getResultTotal();
 
-        // Set up recommendations array.
-        $this->recommendations = [];
-
-        // Process each term and make API calls if applicable.
-        foreach ($this->lookforTerms as $term) {
-            // Determine if the term can or should be searched for.
-            if (!($this->canMakeApiCalls() && $this->canAddRecommendation())) {
-                break;
-            }
-
-            // Determine if narrower concepts should be looked for if applicable.
-            $narrower = ((null === $this->minLargeResultTotal
-                || $resultTotal >= $this->minLargeResultTotal))
-                && $this->canMakeApiCalls(2);
-
-            // Make the Finto API call(s).
-            $fintoTerm = $term . '*';
-            while (false !== strpos($fintoTerm, '**')) {
-                $fintoTerm = str_replace('**', '*', $fintoTerm);
-            }
-            $fintoResults = $this->finto->extendedSearch(
-                $fintoTerm,
-                $language,
-                [],
-                $narrower
+        // Get recommendations.
+        $recommendations
+            = $this->finto->getRecommendations(
+                $this->lookforTerms,
+                [
+                    'maxApiCalls' => $this->maxApiCalls,
+                    'maxRecommendations' => $this->maxRecommendations,
+                    'resultTotal' => $resultTotal,
+                    'minLargeResultTotal' => $this->minLargeResultTotal,
+                    'language' => $language
+                ]
             );
-            $this->apiCallTotal += 1;
 
-            // Continue to next term if no results or "other" results.
-            if (!$fintoResults
-                || Finto::TYPE_OTHER === $fintoResults[Finto::RESULT_TYPE]
-            ) {
-                continue;
-            }
+        $this->recommendations = $recommendations['recommendations'];
+        $this->recommendationTotal = $recommendations['recommendationTotal'];
 
-            // Process and add Finto results.
-            if (Finto::TYPE_HYPONYM === $fintoResults[Finto::RESULT_TYPE]) {
-                // Hyponym results have required an additional API call.
-                $this->apiCallTotal += 1;
-                // Get the URI of the searched term from the original results.
-                $termUri = $fintoResults[Finto::RESULTS]['results'][0]['uri'];
-                // Narrower results are used for hyponym recommendations.
-                foreach ($fintoResults[Finto::NARROWER_RESULTS] as $fintoResult) {
-                    $this->addOntologyResult(
-                        $term,
-                        $fintoResult,
-                        $fintoResults[Finto::RESULT_TYPE],
-                        $termUri
-                    );
-                }
-            } else {
-                foreach ($fintoResults[Finto::RESULTS]['results'] as $fintoResult) {
-                    $this->addOntologyResult(
-                        $term,
-                        $fintoResult,
-                        $fintoResults[Finto::RESULT_TYPE]
-                    );
+        // Process recommendations.
+        foreach ($this->recommendations as $type => $terms) {
+            foreach ($terms as $term => $fintoRecommendations) {
+                foreach (array_keys($fintoRecommendations) as $key) {
+                    $this->processRecommendation($type, $term, $key);
                 }
             }
         }
@@ -505,96 +462,70 @@ class Ontology implements RecommendInterface, TranslatorAwareInterface
     }
 
     /**
-     * Can more API calls be made.
+     * Process a specific recommendation in the recommendations array.
      *
-     * @param int $count Number of API calls needed, defaults to 1.
+     * Updates recommendation data or alternatively removes the recommendation.
      *
-     * @return bool
-     */
-    protected function canMakeApiCalls(int $count = 1): bool
-    {
-        return is_numeric($this->maxApiCalls)
-            ? ($this->apiCallTotal + $count) <= $this->maxApiCalls
-            : true;
-    }
-
-    /**
-     * Can another recommendation be added.
-     *
-     * @return bool
-     */
-    protected function canAddRecommendation(): bool
-    {
-        return is_numeric($this->maxRecommendations)
-            ? $this->recommendationTotal < $this->maxRecommendations
-            : true;
-    }
-
-    /**
-     * Adds an ontology result to the recommendations array.
-     *
-     * @param string      $term        The term searched for
-     * @param array       $fintoResult Finto result
-     * @param string      $resultType  Result type
-     * @param string|null $termUri     URI of the searched term if applicable
+     * @param $type mixed  Recommendation type
+     * @param $term string Term
+     * @param $key  mixed  Term recommendation key
      *
      * @return void
      */
-    protected function addOntologyResult(
-        string $term,
-        array $fintoResult,
-        string $resultType,
-        ?string $termUri = null
-    ): void {
-        // Do not add the result if the URI already exists in the original search.
-        if (false !== strpos($this->lookfor, $fintoResult['uri'])) {
+    protected function processRecommendation($type, string $term, $key)
+    {
+        $recommendation = $this->recommendations[$type][$term][$key];
+        $resultUri = $recommendation['result']['uri'];
+
+        // Remove recommendation if the URI already exists in the original search.
+        if (false !== strpos($this->lookfor, $resultUri)) {
+            unset($this->recommendations[$type][$term][$key]);
             return;
         }
 
-        // Do not add the result if the URI is the same as in an already added
+        // Remove recommendation if the URI is the same as in an already added
         // recommendation.
-        if (in_array($fintoResult['uri'], $this->recommendationUris)) {
+        if (in_array($resultUri, $this->recommendationUris)) {
+            unset($this->recommendations[$type][$term][$key]);
             return;
         }
 
         // Replace original search term with the recommended term in the lookfor.
         $recommendationLookfor = $this->replaceWithRecommendedTerm(
             $this->lookfor,
-            $fintoResult['prefLabel'],
-            $fintoResult['uri'],
+            $recommendation['result']['prefLabel'],
+            $resultUri,
             $term,
-            $termUri
+            $recommendation['termUri']
         );
 
-        // Abort if the replacement failed for some reason.
+        // Remove recommendation if the replacement failed for some reason.
         if ($recommendationLookfor === $this->lookfor) {
+            unset($this->recommendations[$type][$term][$key]);
             return;
         }
 
         // Set up other recommendation link parameters and build the link.
         $params = $this->request->toArray();
         $params['lookfor'] = $recommendationLookfor;
-        foreach (['mod', 'searchId', 'resultTotal'] as $key) {
-            if (isset($params[$key])) {
-                unset($params[$key]);
+        foreach (['mod', 'searchId', 'resultTotal'] as $param) {
+            if (isset($params[$param])) {
+                unset($params[$param]);
             }
         }
         $href = ($this->urlHelper)('search-results', [], ['query' => $params]);
 
-        // Add result and increase counter if the result is for a new term.
-        $this->recommendationUris[] = $fintoResult['uri'];
-        if (!isset($this->recommendations[$resultType])) {
-            $this->recommendations[$resultType] = [];
-        }
-        if (!isset($this->recommendations[$resultType][$term])) {
-            $this->recommendations[$resultType][$term] = [];
-            $this->recommendationTotal += 1;
-        }
-        $this->recommendations[$resultType][$term][] = [
-            'label' => $fintoResult['prefLabel'],
-            'href' => $href,
-            'params' => $params
-        ];
+        // Add recommendation search link data.
+        $this->recommendations[$type][$term][$key] = array_merge(
+            $recommendation,
+            [
+                'label' => $recommendation['result']['prefLabel'],
+                'href' => $href,
+                'params' => $params
+            ]
+        );
+
+        $this->recommendationUris[] = $resultUri;
     }
 
     /**
