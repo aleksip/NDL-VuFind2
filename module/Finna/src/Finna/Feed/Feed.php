@@ -476,9 +476,12 @@ class Feed implements
             'contentDate' => 'getDateCreated',
         ];
 
-        $xpathContent = [
-            'html' => '//item/content:encoded',
-        ];
+        $selectHtmlContent = ($config->toArray()['selectHtmlContent'] ?? [])
+            + ['html' => '.'];
+        $xpathContent = [];
+        foreach ($selectHtmlContent as $key => $value) {
+            $xpathContent[$key] = '//item/content:encoded';
+        }
 
         $xcalContent = [
             'dtstart',
@@ -672,7 +675,8 @@ class Feed implements
                             $searchReplace,
                             $cleanContent,
                             $id ?? '',
-                            $allowedImages
+                            $allowedImages,
+                            $selectHtmlContent[$setting]
                         );
 
                         $item[$setting] = $content;
@@ -718,11 +722,12 @@ class Feed implements
     /**
      * Process item content.
      *
-     * @param string $content       Content as string
-     * @param array  $searchReplace Search and replacement values
-     * @param bool   $cleanContent  Whether to run the content through cleanHtml
-     * @param string $feedId        Feed ID
-     * @param array  $allowedImages Allowed images
+     * @param string $content           Content as string
+     * @param array  $searchReplace     Search and replacement values
+     * @param bool   $cleanContent      Whether to run the content through cleanHtml
+     * @param string $feedId            Feed ID
+     * @param array  $allowedImages     Allowed images
+     * @param string $selectHtmlContent XPath expression for selecting HTML content
      *
      * @return string
      */
@@ -731,7 +736,8 @@ class Feed implements
         array $searchReplace,
         bool $cleanContent,
         string $feedId,
-        array &$allowedImages
+        array &$allowedImages,
+        string $selectHtmlContent
     ): string {
         if (!$content) {
             return $content;
@@ -776,6 +782,21 @@ class Feed implements
                     'src',
                     $this->proxifyImageUrl($srcAttr, $feedId)
                 );
+            }
+        }
+
+        // Select content:
+        if (!in_array($selectHtmlContent, ['.', '..'])) {
+            $keep = [];
+            foreach ($domx->query($selectHtmlContent) as $node) {
+                $keep[] = $node;
+            }
+            $root = $dom->documentElement;
+            while ($root->hasChildNodes()) {
+                $root->removeChild($root->firstChild);
+            }
+            foreach ($keep as $node) {
+                $root->appendChild($node);
             }
         }
 
