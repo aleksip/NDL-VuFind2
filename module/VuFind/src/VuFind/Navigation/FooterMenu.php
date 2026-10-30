@@ -29,7 +29,10 @@
 
 namespace VuFind\Navigation;
 
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Mvc\Application;
 use Symfony\Component\Yaml\Yaml;
+use VuFind\Http\RouteHelper;
 use VuFind\Section\SectionServiceInterface;
 use VuFind\ServiceManager\Factory\Autowire;
 
@@ -52,13 +55,21 @@ class FooterMenu extends AbstractMenu
      * @param SectionServiceInterface $sectionService Section service
      * @param array                   $sectionConfig  Section configuration
      * @param array                   $config         Main configuration
+     * @param Request                 $request        Request
+     * @param Application             $application    Application
+     * @param RouteHelper             $routeHelper    Route helper
      */
     public function __construct(
         SectionServiceInterface $sectionService,
         #[Autowire(config: 'FooterMenu')]
         array $sectionConfig,
         #[Autowire(config: 'config')]
-        array $config
+        array $config,
+        #[Autowire(service: 'Request')]
+        Request $request,
+        #[Autowire(service: 'Application')]
+        Application $application,
+        RouteHelper $routeHelper
     ) {
         $this->addRequiredSettings(
             [
@@ -81,7 +92,14 @@ class FooterMenu extends AbstractMenu
             ],
             self::ITEM_CONTEXT
         );
-        parent::__construct($sectionService, $sectionConfig, $config);
+        parent::__construct(
+            $sectionService,
+            $sectionConfig,
+            $config,
+            $request,
+            $application,
+            $routeHelper
+        );
     }
 
     /**

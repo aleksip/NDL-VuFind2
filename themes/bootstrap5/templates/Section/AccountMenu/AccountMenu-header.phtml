@@ -1,0 +1,9 @@
+<?php foreach ($this->menu as $menuGroup): ?>
+  <?=$this->component('menu-group', [
+    'menuGroup' => $menuGroup,
+    'iconMethodObject' => $this->{\VuFind\View\Helper\Root\Section::SECTION_PLUGIN_KEY} ?? null,
+    'idPrefix' => $this->idPrefix ?? null,
+    'active' => $this->active ?? null,
+    'activeItemParentPath' => $this->activeItemParentPath ?? null,
+  ])?>
+<?php endforeach ?>

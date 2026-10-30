@@ -29,8 +29,12 @@
 
 namespace VuFind\Navigation;
 
-use Exception;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Mvc\Application;
+use Laminas\Router\RouteMatch;
 use VuFind\Exception\BadConfig;
+use VuFind\Http\RouteHelper;
+use VuFind\Section\PageRegion;
 use VuFind\Section\Plugin\AbstractBase;
 use VuFind\Section\SectionServiceInterface;
 
@@ -56,6 +60,13 @@ abstract class AbstractMenu extends AbstractBase implements NavigationInterface
     protected const ITEM_CONTEXT = 'item';
 
     /**
+     * Route match.
+     *
+     * @var ?RouteMatch $routeMatch
+     */
+    protected ?RouteMatch $routeMatch;
+
+    /**
      * Processed and filtered menu configuration returned by getMenu().
      *
      * @var ?array
@@ -63,22 +74,43 @@ abstract class AbstractMenu extends AbstractBase implements NavigationInterface
     protected ?array $menu;
 
     /**
+     * Tabs for the current request.
+     *
+     * @var array
+     */
+    protected array $currentTabs;
+
+    /**
+     * Parent path for the currently active item.
+     *
+     * @var array
+     */
+    protected array $activeItemParentPath;
+
+    /**
      * Constructor.
      *
      * @param SectionServiceInterface $sectionService Section service
      * @param array                   $sectionConfig  Section configuration
      * @param array                   $config         Main configuration
+     * @param Request                 $request        Request
+     * @param Application             $application    Application
+     * @param RouteHelper             $routeHelper    Route helper
      */
     public function __construct(
         protected SectionServiceInterface $sectionService,
         array $sectionConfig,
-        protected array $config
+        protected array $config,
+        protected Request $request,
+        Application $application,
+        protected RouteHelper $routeHelper
     ) {
         $this->requiredSettings[self::GROUP_CONTEXT] ??= [];
         $this->requiredSettings[self::ITEM_CONTEXT] ??= [];
         $this->localizableSettings[self::GROUP_CONTEXT] ??= [];
         $this->localizableSettings[self::ITEM_CONTEXT] ??= [];
-        $this->setSectionService($this->sectionService);
+        $this->routeMatch = $application->getMvcEvent()->getRouteMatch();
+        $this->setSectionService($sectionService);
         $this->setSectionConfig($sectionConfig);
         $this->localizeSectionConfig();
     }
@@ -101,7 +133,6 @@ abstract class AbstractMenu extends AbstractBase implements NavigationInterface
      * Get section service.
      *
      * @return SectionServiceInterface
-     * @throws Exception if section service has not been set
      */
     public function getSectionService(): SectionServiceInterface
     {
@@ -176,13 +207,24 @@ abstract class AbstractMenu extends AbstractBase implements NavigationInterface
     /**
      * Return context variables that can be used to render the section.
      *
+     * @param ?PageRegion $pageRegion Page region in which the section is used (optional)
+     *
      * @return array
      */
-    public function getSectionContext(): array
+    public function getSectionContext(?PageRegion $pageRegion = null): array
     {
-        return [
-            'menu' => $this->getMenu(),
+        if (!$this->isActive()) {
+            return [];
+        }
+        $context = [
+            'requestUri' => $this->request->getRequestUri(),
+            'activeItemParentPath' => $this->getActiveItemParentPath(),
         ];
+        if ($pageRegion === PageRegion::MenuTabs) {
+            return array_merge($context, $this->getCurrentTabs());
+        }
+        $context['menu'] = $this->getMenu();
+        return $context;
     }
 
     /**
@@ -198,6 +240,68 @@ abstract class AbstractMenu extends AbstractBase implements NavigationInterface
             $this->menu = $this->processGroups($config);
         }
         return $this->menu;
+    }
+
+    /**
+     * Get menu tabs for the current request.
+     *
+     * @return array Tab items under 'submenuItems' key, or empty array if no tabs
+     */
+    public function getCurrentTabs(): array
+    {
+        return $this->currentTabs ?? [];
+    }
+
+    /**
+     * Get parent path for the currently active item.
+     *
+     * @return array URIs of menu items in the path
+     */
+    public function getActiveItemParentPath(): array
+    {
+        return $this->activeItemParentPath ?? [];
+    }
+
+    /**
+     * Will the menu render items in the specified region?
+     *
+     * @param PageRegion $pageRegion Page region
+     *
+     * @return bool
+     */
+    public function hasPageRegion(PageRegion $pageRegion): bool
+    {
+        return !empty($this->getSectionContext($pageRegion));
+    }
+
+    /**
+     * Helper method for global sidebar.
+     *
+     * @return bool
+     */
+    public function hasGlobalSidebar(): bool
+    {
+        return $this->hasPageRegion(PageRegion::GlobalSidebar);
+    }
+
+    /**
+     * Helper method for menu tabs.
+     *
+     * @return bool
+     */
+    public function hasMenuTabs(): bool
+    {
+        return $this->hasPageRegion(PageRegion::MenuTabs);
+    }
+
+    /**
+     * Helper method for sidebar.
+     *
+     * @return bool
+     */
+    public function hasSidebar(): bool
+    {
+        return $this->hasPageRegion(PageRegion::Sidebar);
     }
 
     /**
@@ -289,5 +393,15 @@ abstract class AbstractMenu extends AbstractBase implements NavigationInterface
     public function checkSiteMapPage(): bool
     {
         return $this->config['Site']['siteMapPageEnabled'] ?? false;
+    }
+
+    /**
+     * Check whether the global sidebar is enabled.
+     *
+     * @return bool
+     */
+    public function checkGlobalSidebarEnabled(): bool
+    {
+        return $this->config['Site']['globalSidebarEnabled'] ?? false;
     }
 }

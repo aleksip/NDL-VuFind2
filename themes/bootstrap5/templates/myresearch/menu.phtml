@@ -1,18 +1,15 @@
+<?php
+  // This template is not used and kept for legacy compatibility only.
+  // Child themes should call the Section helper or use the 'menu-group'
+  // or 'menu-item' components directly.
+?>
 <?=$this->component('hide-offcanvas-button')?>
 <?php foreach ($this->menu as $menuGroup): ?>
-  <h3 id="<?=$this->idPrefix ?? ''?><?=$menuGroup['id']?>"><?=$this->transEsc($menuGroup['label'])?></h3>
-  <nav class="myresearch-menu" aria-labelledby="<?=$this->idPrefix ?? ''?><?=$menuGroup['id']?>">
-    <ul<?=!empty($menuGroup['class']) ? ' class="' . $menuGroup['class'] . '"' : ''?>>
-      <?php foreach ($menuGroup['MenuItems'] as $item): ?>
-        <?php
-          $context = [
-            'sectionPlugin' => $this->{\VuFind\View\Helper\Root\Section::SECTION_PLUGIN_KEY},
-            'active' => $this->active,
-            ...$item,
-          ];
-        ?>
-        <?=$this->render($item['template'] ?? 'myresearch/menu-item.phtml', $context)?>
-      <?php endforeach; ?>
-    </ul>
-  </nav>
+  <?=$this->component('menu-group', [
+    'menuGroup' => $menuGroup,
+    'iconMethodObject' => $this->{\VuFind\View\Helper\Root\Section::SECTION_PLUGIN_KEY} ?? null,
+    'idPrefix' => $this->idPrefix ?? null,
+    'active' => $this->active ?? null,
+    'activeItemParentPath' => $this->activeItemParentPath ?? null,
+  ])?>
 <?php endforeach ?>

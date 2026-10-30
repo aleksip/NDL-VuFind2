@@ -1,18 +1,19 @@
 <?php
-  if (isset($this->iconMethod) && !isset($this->icon)) {
-    $this->icon = $this->sectionPlugin->{$this->iconMethod}();
-  }
-
-  $url = $this->url ?: $this->url($this->route, $this->routeParams ?? []);
+  // This template is not used and kept for legacy compatibility only.
+  // Child themes should call the Section helper or use the 'menu-group'
+  // or 'menu-item' components directly.
 ?>
-<li>
-  <a href="<?=$url?>" class="<?=$this->name?> nav-link icon-link<?=$this->active == $this->name ? ' active' : ''?>">
-    <?php if (isset($this->icon)): ?>
-      <?=$this->icon($this->icon, 'icon-link__icon') ?>
-    <?php endif; ?>
-    <span class="icon-link__label"><?=$this->transEsc($this->label)?></span>
-    <?php if (($this->status ?? false) && $this->auth()->getManager()->ajaxEnabled()): ?>
-      <span class="<?=strtolower($this->name)?>-status status hidden"><?=$this->icon('spinner') ?></span>
-    <?php endif; ?>
-  </a>
-</li>
+<?=$this->component('menu-item', [
+    'name' => $this->name,
+    'label' => $this->label,
+    'route' => $this->route ?? null,
+    'routeParams' => $this->routeParams ?? null,
+    'url' => $this->url ?? null,
+    'icon' => $this->icon ?? null,
+    'iconMethod' => $this->iconMethod ?? null,
+    'iconMethodObject' => $this->sectionPlugin,
+    'status' => $this->status ?? null,
+    'active' => $this->active,
+    'requestUri' => $this->requestUri ?? null,
+    'activeItemParentPath' => $this->activeItemParentPath ?? null,
+  ])?>
